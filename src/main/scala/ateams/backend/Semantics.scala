@@ -27,9 +27,9 @@ object Semantics extends SOS[Act,St]:
 
   /** What are the set of possible evolutions (label and new state) */
   def next[A>:Act](st: St): Set[(A, St)] =
-    nextPr(st.sys.main)(using st)
+    nextPr(st.sys.main)(using st).asInstanceOf[Set[(A,St)]]
 
-  def nextPr[A>:Act](procs:Procs)(using st:St): Set[(A,St)] =
+  def nextPr(procs:Procs)(using st:St): Set[(Act,St)] =
     val canGo =
       for (n,p) <- procs.toSet; (a,p2) <- nextProc(p)
       yield a -> (n->p2)
