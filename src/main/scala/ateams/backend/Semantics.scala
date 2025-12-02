@@ -16,10 +16,13 @@ import scala.language.implicitConversions
 /** Small-step semantics for both commands and boolean+integer expressions.  */
 object Semantics extends SOS[Act,St]:
 
+  /**
+   * State of our operational semantics.
+   * @param sys has the full program, including the current state of the local processes.
+   * @param buffers contain all the buffers storing messages in transit.
+   */
   case class St(sys: ASystem,
                 buffers: Map[Loc,Buffer])
-//                fifos:Map[Loc,Queue[String]],
-//                msets:Map[Loc,MSet[String]])
 
   case class Loc(snd: Option[String], rcv: Option[String])
   type Defs = Map[String,Proc]
@@ -27,18 +30,24 @@ object Semantics extends SOS[Act,St]:
 
   /** What are the set of possible evolutions (label and new state) */
   def next[A>:Act](st: St): Set[(A, St)] =
-    nextPr(st.sys.main)(using st).asInstanceOf[Set[(A,St)]]
+    nextState(st).asInstanceOf[Set[(A,St)]]
 
-  def nextPr(procs:Procs)(using st:St): Set[(Act,St)] =
+  /**
+   * Possible evolution from a given state
+   * @param st current state to evaluate
+   * @return set of pairs (a',st') with the possible actions and next states
+   */
+  def nextState(st:St): Set[(Act,St)] =
+    implicit val state:St = st
     val canGo =
-      for (n,p) <- procs.toSet; (a,p2) <- nextProc(p)
+      for (n,p) <- st.sys.main.toSet; (a,p2) <- nextProc(p)
       yield a -> (n->p2)
     updateSt(nextIO(canGo)) ++
     updateSt(nextSync(canGo)) ++
     nextSend(canGo) ++
     nextRcv(canGo)
 
-  def updateSt(aps: Set[(Act,Procs)])(using st:St): Set[(Act,St)] =
+  private def updateSt(aps: Set[(Act,Procs)])(using st:St): Set[(Act,St)] =
     for (a,ps) <- aps yield
       a -> st.copy( sys = st.sys.copy( main = st.sys.main ++ ps))
 
@@ -47,6 +56,7 @@ object Semantics extends SOS[Act,St]:
   // Semantics of the "tau" action //
   ///////////////////////////////////
 
+  /** How to evolve a state using internal actions. */
   def nextIO(canGo: Set[(Act,(String,Proc))])(using st:St): Set[(Act,Procs)] =
     for case (a@Act.IO(_,_,_),(n,p)) <- canGo
       yield  a -> Map(n->p) // just the updates
@@ -55,6 +65,7 @@ object Semantics extends SOS[Act,St]:
   // Semantics of synchronous messages //
   ///////////////////////////////////////
 
+  /** How to evolve a state using syncrhonous actions. */
   def nextSync(canGo: Set[(Act,(String,Proc))])(using st:St): Set[(Act,Procs)] = {
     // compile map "action-name" -> ([("snd-agent","nextProc","rcv-agt?"), ...] , [("rcv-agent","nextProc","snd-agt?"), ...])
     var syncsMap = Map[String,(List[(String,Proc,Set[String])],List[(String,Proc,Set[String])])]()
@@ -103,6 +114,7 @@ object Semantics extends SOS[Act,St]:
   // Semantics of the FIFO/unsorted sends //
   //////////////////////////////////////////
 
+  /** How to evolve a state using asyncrhonous sending actions. */
   def nextSend(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] =
     //println(s"## can send? ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (a@Act.Out(s,to), (n, p)) <- canGo
@@ -164,19 +176,20 @@ object Semantics extends SOS[Act,St]:
          case _ => sys.error(s"case not supported for sending ${Show(a)}")
      })
 
+  /** Checks if a number `n` is in the bounds of an interval `intrv`. */
   def inInterval(n: Int, intr: Intrv): Boolean =
     n >= intr._1 && (intr._2.isEmpty || n <= intr._2.get)
 
   private def getRcv(ag: String, styp: SyncType): Option[String] =
     styp match
       case Async(LocInfo(_,true),_) => Some(ag)
-//      case Unsorted(LocInfo(_,true)) => Some(ag)
       case _ => None
 
   //////////////////////////////////////////
   // Semantics of the FIFO/unsorted sends //
   //////////////////////////////////////////
 
+  /** How to evolve a state using asyncrhonous receiving actions. */
   def nextRcv(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] =
     //println(s"## can receive?") // ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (a@Act.In(s,from), (n, p)) <- canGo
@@ -238,6 +251,7 @@ object Semantics extends SOS[Act,St]:
        }
      }).flatten
 
+
   private def updateSt(a:Act, loc:Loc, buffer: Buffer
                        ,n:ActName, p:Proc)(using st:St): (Act,St) =
     a -> st.copy(sys = st.sys.copy(main = st.sys.main + (n -> p)),
@@ -262,6 +276,7 @@ object Semantics extends SOS[Act,St]:
   // Semantics of a process //
   ////////////////////////////
 
+  /** How to evolve an individual process, as in CCS. */
   def nextProc(p:Proc)(using st:St): Set[(Act,Proc)] = p match
     case End => Set()
     case ProcCall(p) => nextProc(st.sys.defs.getOrElse(p,End))
@@ -289,7 +304,6 @@ object Semantics extends SOS[Act,St]:
       case Sync => sys.error(s"Cannot get buffers of sync message \"$act\"")
       case Async(locInfo,_)     => getLocInfo(locInfo,act,snd,rcv)
       case Internal => sys.error(s"Cannot get buffers of internal messages")
-//      case SyncType.Unsorted(locInfo) => getLocInfo(locInfo,act,snd,rcv)
 
   private def getLocInfo(linfo: LocInfo, act:String,
                          snd: Option[String],
@@ -304,11 +318,9 @@ object Semantics extends SOS[Act,St]:
   def arit(act: String)(using st:St): (Intrv, Intrv) =
     aritSys(act)(using st.sys)
   def aritSys(act: String)(using s:ASystem): (Intrv, Intrv) =
-//    s.msgs.get(act).flatMap(_.arity).getOrElse(MsgInfo.defaultArity)
     s.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action $act."))
 
   def stype(act: String)(using st:St): SyncType =
-//    st.sys.msgs.get(act).flatMap(_.st).getOrElse(MsgInfo.defaultST)
     st.sys.msgs.get(act).flatMap(_.st).getOrElse(Internal)//sys.error(s"[st] Unknown action $act."))
 
   def isAsync(syncType: Program.SyncType): Boolean =
@@ -319,8 +331,3 @@ object Semantics extends SOS[Act,St]:
   private def checkBuffType(b1: Buffer, b2: Buffer, msg: String): Unit =
     if b1.getClass != b2.getClass then
       sys.error(s"Conflicting buffer types when $msg: had ${b1.getClass} and now has ${b2.getClass}.")
-
-//  private def isUnsorted(syncType: Program.SyncType): Boolean =
-//    syncType match
-//      case SyncType.Unsorted(_) => true
-//      case _ => false
