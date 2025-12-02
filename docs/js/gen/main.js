@@ -18722,39 +18722,39 @@ function $c_Lateams_frontend_CaosConfig$() {
   }));
   this.Lateams_frontend_CaosConfig$__f_parser = $f_F1__andThen__F1__F1(this$3, g);
   $n($m_s_package$().s_package$__f_List);
-  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_Lcaos_frontend_Configurator$Example.getArrayOf().constr)([new $c_Lcaos_frontend_Configurator$Example("acts\n  default: sync, 1->1;\n  coin; coffee;\n  pub: 1->0;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n CM = coin!.tau.coffee?.CM\n CS = pub!.coin?.coffee!.CS\ninit\n CM||CS", "coffee-sync", "Simple coffee with synchronous channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo, 1->1;\n  coin; coffee;\n  pub: 1->0;\n\nproc\n CM = coin!cs.coffee?.CM\n CS = pub!.coin?.coffee!cm.CS\ninit\n cm:CM||cs:CS", "coffee-async", "Asynchronous version of the coffee machine with FIFO channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@rcv, 1->1;\n  coin; coffee;\n\nproc\n // Coffee machine may turn off\n CM = coin!cs.coffee?.(off+CM)\n CS = coin?.coffee!cm.CS\n // start with a coin\n CM2 = coin!cs.CM\ninit\n cm:CM2||cs:CS", "coffee-async-off", "Variation of the asynchronous coffee machine with an extra coin and a terminating option, to create orphan messages."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  finish: 1->1, sync;\nproc\n Ctr = start!.finish?.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R", "race-sync", "Synchronous runner example, without internal actions"), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!r1,r2.finish?.Ctr\n R = start?.finish!c.R\ninit\n c:Ctr || r1:R || r2:R", "race@rcv", "Race async - both actions send asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@snd", "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@global", "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R", "race@unbounded", "Variation of the race example with an unbounded fifo growing forever."), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@snd-rcv;\n  fndCor; assRes; perFunc; mkPropRHS; gvCrite; proAcc; chkAut; rptAut; chkPol; confChkPol; proCriteEV; confCriteEV; seekAcc; forAcc; perInvs; rptInvs; decAcc; grntAcc; manVer; chkAutAcc; tecAss; rptTec; tcAss; rtTec; rprTec; sndPro; takAct; rptMon;\n\nproc\n  GDH =   fndCor!rC. \n          assRes!rCOO. \n          perFunc!rCOO. \n          Loop1GDH  | Loop3GDH | Loop5GDH\n  Loop1GDH = proAcc?rCOO. Loop1GDH\n  Loop3GDH = chkPol?rCOO. confChkPol!rCOO. Loop3GDH\n  Loop5GDH = seekAcc?lHA. forAcc!rCOO.  \n          (Loop5GDH\n           +\n           Loop51GDH)\n  Loop51GDH= (sndPro?rCOO.\n              takAct!lHA.\n              Loop5GDH\n              +\n              rptMon?rCOO.\n              takAct!lHA.\n              Loop5GDH)\n\n  RC =  fndCor?gDH. \n        mkPropRHS?rCOO. \n        gvCrite!rHS.\n        Loop4RC\n  Loop4RC = proCriteEV?oTAM. confCriteEV!oTAM. Loop4RC\n\n\n  RCOO = assRes?gDH. \n         perFunc?gDH. \n         mkPropRHS!rC. \n         Loop1RCOO | Loop2RCOO | Loop3RCOO | Loop5RCOO\n  Loop1RCOO = proAcc!gDH. Loop1RCOO\n  Loop2RCOO = chkAut!aC. rptAut?aC. Loop2RCOO\n  Loop3RCOO = chkPol!gDH. confChkPol?gDH. Loop3RCOO\n  Loop5RCOO = forAcc?gDH. perInvs!hAS. rptInvs?hAS.\n          ((decAcc!lHA. Loop5RCOO)\n           +\n           (grntAcc!lHA. manVer!oTA. Loop51RCOO +\n            manVer!oTA. grntAcc!lHA. Loop51RCOO))\n  Loop51RCOO = rprTec?oTAM.\n          ( sndPro!gDH. Loop5RCOO\n            +\n            rptMon!gDH. Loop5RCOO)\n\n  RHS = gvCrite?rC\n\n  AC = chkAut?rCOO. rptAut!rCOO. AC\n\n  OTAM = Loop4OTAM | Loop5OTAM\n  Loop4OTAM = proCriteEV!rC. confCriteEV?rC. Loop4OTAM\n  Loop5OTAM = chkAutAcc?oTA.\n     tecAss!eV. rptTec?eV.\n     tcAss!eT.  rtTec?eT.\n     rprTec!rCOO. Loop5OTAM\n\n  LHA = seekAcc!gDH.      \n          ((decAcc?rCOO. LHA)\n           +\n           (grntAcc?rCOO. takAct?gDH. LHA))\n\n  OTA = manVer?rCOO. chkAutAcc?oTAM. OTA\n\n  ET = tcAss?oTAM. rtTec!oTAM. ET\n\n  EV =  tecAss?oTAM. rptTec!oTAM. ET\n\n  HAS = perInvs?rCOO. rptInvs!rCOO. HAS\n\ninit\n  rC:RC || gDH:GDH || rCOO:RCOO || rHS:RHS ||\n  aC:AC || lHA:LHA || oTAM:OTAM || oTA:OTA ||\n  eT:ET || eV:EV   || hAS:HAS", "healthcare-sync", "Healthcare example (realisable version), from Pal et al. in an ICTAC'25 publication using pomsets to analyse realisability. Our version uses synchronous communication, also described by Pal et al. When using instead asynchronous communication, an unbounded buffer is found.")]));
+  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_Lcaos_frontend_Configurator$Example.getArrayOf().constr)([new $c_Lcaos_frontend_Configurator$Example("acts\n  default: sync, 1->1;\n  coin; coffee;\n  pub: 1->0;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n CM = coin!.tau.coffee?.CM\n CS = pub!.coin?.coffee!.CS\ninit\n CM||CS", "coffee-sync", "Simple coffee with synchronous channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo, 1->1;\n  coin; coffee;\n  pub: 1->0;\n\nproc\n CM = coin!cs.coffee?.CM\n CS = pub!.coin?.coffee!cm.CS\ninit\n cm:CM||cs:CS", "coffee-async", "Asynchronous version of the coffee machine with FIFO channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@rcv, 1->1;\n  coin; coffee;\n\nproc\n // Coffee machine may turn off\n CM = coin!cs.coffee?.(off+CM)\n CS = coin?.coffee!cm.CS\n // start with a coin\n CM2 = coin!cs.CM\ninit\n cm:CM2||cs:CS", "coffee-async-off", "Variation of the asynchronous coffee machine with an extra coin and a terminating option, to create orphan messages."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  finish: 1->1, sync;\nproc\n Ctr = start!.finish?.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R", "race-sync", "Synchronous runner example, without internal actions"), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!r1,r2.finish?.Ctr\n R = start?.finish!c.R\ninit\n c:Ctr || r1:R || r2:R", "race@rcv", "Race async - both actions send asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@snd", "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@global", "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R", "race@unbounded", "Variation of the race example with an unbounded fifo growing forever."), new $c_Lcaos_frontend_Configurator$Example("acts start:  1->2, sync;\n     finish: 2->1, fifo@snd;\nproc Ctr = start!.finish?r1.Ctr\n\t\t R = start?.finish!c.R\ninit c:Ctr || r1:R || r2:R", "race@errors", "Race variation with type errors (ill-formed)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@snd-rcv;\n  fndCor; assRes; perFunc; mkPropRHS; gvCrite; proAcc; chkAut; rptAut; chkPol; confChkPol; proCriteEV; confCriteEV; seekAcc; forAcc; perInvs; rptInvs; decAcc; grntAcc; manVer; chkAutAcc; tecAss; rptTec; tcAss; rtTec; rprTec; sndPro; takAct; rptMon;\n\nproc\n  GDH =   fndCor!rC. \n          assRes!rCOO. \n          perFunc!rCOO. \n          Loop1GDH  | Loop3GDH | Loop5GDH\n  Loop1GDH = proAcc?rCOO. Loop1GDH\n  Loop3GDH = chkPol?rCOO. confChkPol!rCOO. Loop3GDH\n  Loop5GDH = seekAcc?lHA. forAcc!rCOO.  \n          (Loop5GDH\n           +\n           Loop51GDH)\n  Loop51GDH= (sndPro?rCOO.\n              takAct!lHA.\n              Loop5GDH\n              +\n              rptMon?rCOO.\n              takAct!lHA.\n              Loop5GDH)\n\n  RC =  fndCor?gDH. \n        mkPropRHS?rCOO. \n        gvCrite!rHS.\n        Loop4RC\n  Loop4RC = proCriteEV?oTAM. confCriteEV!oTAM. Loop4RC\n\n\n  RCOO = assRes?gDH. \n         perFunc?gDH. \n         mkPropRHS!rC. \n         Loop1RCOO | Loop2RCOO | Loop3RCOO | Loop5RCOO\n  Loop1RCOO = proAcc!gDH. Loop1RCOO\n  Loop2RCOO = chkAut!aC. rptAut?aC. Loop2RCOO\n  Loop3RCOO = chkPol!gDH. confChkPol?gDH. Loop3RCOO\n  Loop5RCOO = forAcc?gDH. perInvs!hAS. rptInvs?hAS.\n          ((decAcc!lHA. Loop5RCOO)\n           +\n           (grntAcc!lHA. manVer!oTA. Loop51RCOO +\n            manVer!oTA. grntAcc!lHA. Loop51RCOO))\n  Loop51RCOO = rprTec?oTAM.\n          ( sndPro!gDH. Loop5RCOO\n            +\n            rptMon!gDH. Loop5RCOO)\n\n  RHS = gvCrite?rC\n\n  AC = chkAut?rCOO. rptAut!rCOO. AC\n\n  OTAM = Loop4OTAM | Loop5OTAM\n  Loop4OTAM = proCriteEV!rC. confCriteEV?rC. Loop4OTAM\n  Loop5OTAM = chkAutAcc?oTA.\n     tecAss!eV. rptTec?eV.\n     tcAss!eT.  rtTec?eT.\n     rprTec!rCOO. Loop5OTAM\n\n  LHA = seekAcc!gDH.      \n          ((decAcc?rCOO. LHA)\n           +\n           (grntAcc?rCOO. takAct?gDH. LHA))\n\n  OTA = manVer?rCOO. chkAutAcc?oTAM. OTA\n\n  ET = tcAss?oTAM. rtTec!oTAM. ET\n\n  EV =  tecAss?oTAM. rptTec!oTAM. ET\n\n  HAS = perInvs?rCOO. rptInvs!rCOO. HAS\n\ninit\n  rC:RC || gDH:GDH || rCOO:RCOO || rHS:RHS ||\n  aC:AC || lHA:LHA || oTAM:OTAM || oTA:OTA ||\n  eT:ET || eV:EV   || hAS:HAS", "healthcare-sync", "Healthcare example (realisable version), from Pal et al. in an ICTAC'25 publication using pomsets to analyse realisability. Our version uses synchronous communication, also described by Pal et al. When using instead asynchronous communication, an unbounded buffer is found.")]));
   this.Lateams_frontend_CaosConfig$__f_examples = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems);
   $n($m_s_package$().s_package$__f_List);
   var $$x10 = $m_sr_ScalaRunTime$();
   var a = new $c_sjsr_AnonFunction1(((x) => {
     var x$1 = $as_Lateams_syntax_Program$ASystem(x);
-    var this$60 = $n($m_Lateams_backend_TypeCheck$().check__Lateams_syntax_Program$ASystem__sci_Set(x$1));
-    return $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$60)
+    var this$66 = $n($m_Lateams_backend_TypeCheck$().check__Lateams_syntax_Program$ASystem__sci_Set(x$1));
+    return $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$66)
   }));
   var y = new $c_Lcaos_frontend_widgets_WidgetInfo$Analyse(a);
   var $$x9 = new $c_T2("check well-formed", y);
-  var this$66 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((s) => {
+  var this$72 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((s) => {
     var s$1 = $as_Lateams_syntax_Program$ASystem(s);
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$ASystem__T(s$1)
   })), new $c_Lcaos_view_Code("haskell")));
-  var y$1 = $f_Lcaos_frontend_widgets_WidgetInfo__moveTo__I__Lcaos_frontend_widgets_WidgetInfo(this$66, 1);
+  var y$1 = $f_Lcaos_frontend_widgets_WidgetInfo__moveTo__I__Lcaos_frontend_widgets_WidgetInfo(this$72, 1);
   var $$x8 = new $c_T2("View pretty data", y$1);
-  var this$72 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((x$2) => {
+  var this$78 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((x$2) => {
     var x$3 = $as_Lateams_syntax_Program$ASystem(x$2);
     var $$x6 = $m_Lateams_backend_BehaviourCheck$();
-    var this$69 = $n($m_s_Predef$().s_Predef$__f_Map);
-    var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers = this$69.from__sc_IterableOnce__sci_Map(elems$1);
-    var this$71 = $n($as_sc_IterableOnceOps($n($n($$x6).randomWalk__Lateams_backend_Semantics$St__I__T3(new $c_Lateams_backend_Semantics$St(x$3, buffers), 2000)).T3__f__3));
-    return $f_sc_IterableOnceOps__mkString__T__T__T__T(this$71, "", "\n", "")
-  })), $m_Lcaos_view_Text$()));
-  var y$2 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$72);
-  var $$x7 = new $c_T2("Well-behaved?", y$2);
-  var this$77 = $n($m_Lcaos_frontend_Configurator$().steps__F1__Lcaos_sos_SOS__F1__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e) => {
-    var e$1 = $as_Lateams_syntax_Program$ASystem(e);
     var this$75 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+    var buffers = this$75.from__sc_IterableOnce__sci_Map(elems$1);
+    var this$77 = $n($as_sc_IterableOnceOps($n($n($$x6).randomWalk__Lateams_backend_Semantics$St__I__T3(new $c_Lateams_backend_Semantics$St(x$3, buffers), 2000)).T3__f__3));
+    return $f_sc_IterableOnceOps__mkString__T__T__T__T(this$77, "", "\n", "")
+  })), $m_Lcaos_view_Text$()));
+  var y$2 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$78);
+  var $$x7 = new $c_T2("Well-behaved?", y$2);
+  var this$83 = $n($m_Lcaos_frontend_Configurator$().steps__F1__Lcaos_sos_SOS__F1__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e) => {
+    var e$1 = $as_Lateams_syntax_Program$ASystem(e);
+    var this$81 = $n($m_s_Predef$().s_Predef$__f_Map);
     var elems$2 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers$1 = this$75.from__sc_IterableOnce__sci_Map(elems$2);
+    var buffers$1 = this$81.from__sc_IterableOnce__sci_Map(elems$2);
     return new $c_Lateams_backend_Semantics$St(e$1, buffers$1)
   })), $m_Lateams_backend_Semantics$(), new $c_sjsr_AnonFunction1(((x$3$1) => {
     var x$4 = $as_Lateams_backend_Semantics$St(x$3$1);
@@ -18763,13 +18763,13 @@ function $c_Lateams_frontend_CaosConfig$() {
     var _$1$1 = $as_Lateams_syntax_Program$Act(_$1);
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(_$1$1)
   })), $m_Lcaos_view_Text$()));
-  var y$3 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$77);
+  var y$3 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$83);
   var $$x5 = new $c_T2("Run semantics", y$3);
   var y$4 = $m_Lcaos_frontend_Configurator$().lts__F1__Lcaos_sos_SOS__F1__F1__I__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e$2) => {
     var e$3 = $as_Lateams_syntax_Program$ASystem(e$2);
-    var this$80 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var this$86 = $n($m_s_Predef$().s_Predef$__f_Map);
     var elems$3 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers$2 = this$80.from__sc_IterableOnce__sci_Map(elems$3);
+    var buffers$2 = this$86.from__sc_IterableOnce__sci_Map(elems$3);
     return new $c_Lateams_backend_Semantics$St(e$3, buffers$2)
   })), $m_Lateams_backend_Semantics$(), new $c_sjsr_AnonFunction1(((st) => {
     var st$1 = $as_Lateams_backend_Semantics$St(st);
@@ -18779,16 +18779,16 @@ function $c_Lateams_frontend_CaosConfig$() {
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(_$2$1)
   })), 80);
   var $$x4 = new $c_T2("Build LTS", y$4);
-  var this$89 = $n($m_Lcaos_frontend_Configurator$().viewMerms__F1__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy) => {
+  var this$95 = $n($m_Lcaos_frontend_Configurator$().viewMerms__F1__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy) => {
     var sy$1 = $as_Lateams_syntax_Program$ASystem(sy);
-    var this$84 = $n($n(sy$1).Lateams_syntax_Program$ASystem__f_main);
+    var this$90 = $n($n(sy$1).Lateams_syntax_Program$ASystem__f_main);
     $m_sci_List$();
-    var this$86 = $n($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$84));
+    var this$92 = $n($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$90));
     var p = new $c_sjsr_AnonFunction1(((x$1$1) => {
       var x$1$2 = $as_T2(x$1$1);
       return ((x$1$2 !== null) && ($as_T($n(x$1$2)._1__O()), $as_Lateams_syntax_Program$Proc($n(x$1$2)._2__O()), true))
     }));
-    return $as_sci_List($ct_sc_IterableOps$WithFilter__sc_IterableOps__F1__(new $c_sc_IterableOps$WithFilter(), this$86, p).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2$1) => {
+    return $as_sci_List($ct_sc_IterableOps$WithFilter__sc_IterableOps__F1__(new $c_sc_IterableOps$WithFilter(), this$92, p).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2$1) => {
       var x$1$3 = $as_T2(x$1$2$1);
       if ((x$1$3 !== null)) {
         var nm$1 = $as_T($n(x$1$3)._1__O());
@@ -18806,7 +18806,7 @@ function $c_Lateams_frontend_CaosConfig$() {
       throw new $c_s_MatchError(x$1$3)
     }))))
   }))));
-  var y$6 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$89);
+  var y$6 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$95);
   var $$x3 = new $c_T2("Local components", y$6);
   var y$7 = $m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy$2) => {
     var sy$3 = $as_Lateams_syntax_Program$ASystem(sy$2);
@@ -18816,9 +18816,9 @@ function $c_Lateams_frontend_CaosConfig$() {
       var \u03b41$___3;
       var $$x2 = $m_Lcaos_sos_SOS$();
       var $$x1 = $m_Lateams_backend_Semantics$();
-      var this$92 = $n($m_s_Predef$().s_Predef$__f_Map);
+      var this$98 = $n($m_s_Predef$().s_Predef$__f_Map);
       var elems$4 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-      var buffers$3 = this$92.from__sc_IterableOnce__sci_Map(elems$4);
+      var buffers$3 = this$98.from__sc_IterableOnce__sci_Map(elems$4);
       var x7 = $n($$x2).traverse__Lcaos_sos_SOS__O__I__T3($$x1, new $c_Lateams_backend_Semantics$St(sy$3, buffers$3), 2000);
       if ((x7 !== null)) {
         var st$2 = $as_sci_Set($n(x7).T3__f__1);
