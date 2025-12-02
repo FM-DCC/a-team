@@ -35,7 +35,10 @@ object BehaviourCheck:
           var newProbs = checkState(st,next2) // check here for problems
           val moreSts = next2.map(_._2)
           val nNewEdges = moreSts.size
-          if moreSts.isEmpty then newProbs =  s"Deadlock found: ${Show.oneLine(st)}" :: newProbs
+          // deadlock if there are no more steps, but there is an agent that can do an action
+          if moreSts.isEmpty &&
+             st.sys.main.values.exists(proc => Semantics.nextProc(proc)(using st).nonEmpty)
+          then newProbs =  s"Deadlock found: ${Show.oneLine(st)}" :: newProbs
           if newProbs.exists(pr => pr.startsWith("[unbounded-loop]")) then
             (done+st,nEdges+nNewEdges,"Stopped searching after an unbounded loop."::newProbs:::probs)
           else
