@@ -11,7 +11,7 @@ import caos.sos.SOS
 
 /** Object used to configure which analysis appear in the browser */
 object CaosConfig extends Configurator[ASystem]:
-  val name = "<span class=\"ateam\">A-Team</span> – Animator of Team Automata with asynchronous actions"
+  val name = "<span class=\"ateam\">A-Team</span> – Animator of Team Automata with asynchronous communication"
   override val languageName: String = "Input program"
 
   /** Parser, converting a string into a System in A-Teams */
@@ -38,13 +38,13 @@ object CaosConfig extends Configurator[ASystem]:
       -> "Synchronous runner example, without internal actions",
     "race@rcv"
       -> "acts\n  start:  1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!r1,r2.finish?.Ctr\n R = start?.finish!c.R\ninit\n c:Ctr || r1:R || r2:R"
-      -> "Race async - both actions sends asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2).",
+      -> "Race async - both actions send asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2).",
     "race@snd"
       -> "acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R"
-      -> "Race async - both actions sends asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock).",
+      -> "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock).",
     "race@global"
       -> "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R"
-      -> "Race async - both actions sends asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts.",
+      -> "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts.",
     "race@unbounded"
       -> "acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R"
       -> "Variation of the race example with an unbounded fifo growing forever.",
