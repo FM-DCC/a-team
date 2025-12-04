@@ -1583,6 +1583,90 @@ function $m_Lateams_backend_BehaviourCheck$() {
   };
   return $n_Lateams_backend_BehaviourCheck$
 }
+function $p_Lateams_backend_TypeCheck$__check__Lateams_syntax_Program$ASystem__sci_Set($thiz, sy) {
+  var this$1 = $n($n(sy).Lateams_syntax_Program$ASystem__f_defs);
+  var $$x1 = $as_sc_IterableOps($n($m_sci_Set$().from__sc_IterableOnce__sci_Set(this$1)).map__F1__O(new $c_sjsr_AnonFunction1(((x) => {
+    var x$1 = $as_T2(x);
+    return $thiz.check__Lateams_syntax_Program$Proc__Lateams_syntax_Program$ASystem__T__sci_Set($as_Lateams_syntax_Program$Proc($n(x$1)._2__O()), sy, $as_T($n(x$1)._1__O()))
+  }))));
+  var this$4 = $m_s_$less$colon$less$();
+  return $as_sci_Set($n($$x1).flatten__F1__O(this$4.s_$less$colon$less$__f_singleton))
+}
+function $p_Lateams_backend_TypeCheck$__getSndRcv__T__Lateams_syntax_Program$Act__Lateams_syntax_Program$LocInfo__sci_Set($thiz, self, act, li) {
+  var x160 = new $c_T2(act, li);
+  var x195 = $as_Lateams_syntax_Program$Act(x160.T2__f__1);
+  var x196 = $as_Lateams_syntax_Program$LocInfo(x160.T2__f__2);
+  if ((x195 instanceof $c_Lateams_syntax_Program$Act$In)) {
+    var x$1 = $as_Lateams_syntax_Program$Act$In(x195);
+    var this$3 = $n(x$1);
+    var this$4 = $n(x$1);
+    var x203 = this$4.Lateams_syntax_Program$Act$In__f_from;
+    if ((x196 !== null)) {
+      var this$6 = $n(x196);
+      var x198 = this$6.Lateams_syntax_Program$LocInfo__f_snd;
+      var this$7 = $n(x196);
+      var x199 = this$7.Lateams_syntax_Program$LocInfo__f_rcv;
+      if ((x198 === true)) {
+        return $as_sci_Set($n(x203).map__F1__O(new $c_sjsr_AnonFunction1(((f) => {
+          var f$1 = $as_T(f);
+          var snd = new $c_s_Some(f$1);
+          var rcv = (x199 ? new $c_s_Some(self) : $m_s_None$());
+          var self$1 = new $c_Lateams_backend_Semantics$Loc(snd, rcv);
+          return new $c_T2(self$1, act)
+        }))))
+      };
+      if ((x198 === false)) {
+        var this$18 = $n($m_s_Predef$().s_Predef$__f_Set);
+        var $$x1 = $m_sr_ScalaRunTime$();
+        var snd$1 = $m_s_None$();
+        var rcv$1 = (x199 ? new $c_s_Some(self) : $m_s_None$());
+        var self$2 = new $c_Lateams_backend_Semantics$Loc(snd$1, rcv$1);
+        var elems = $n($$x1).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([new $c_T2(self$2, act)]));
+        return this$18.from__sc_IterableOnce__sci_Set(elems)
+      }
+    }
+  };
+  if ((x195 instanceof $c_Lateams_syntax_Program$Act$Out)) {
+    var x$1$1 = $as_Lateams_syntax_Program$Act$Out(x195);
+    var this$20 = $n(x$1$1);
+    var this$21 = $n(x$1$1);
+    var x185 = this$21.Lateams_syntax_Program$Act$Out__f_to;
+    if ((x196 !== null)) {
+      var this$23 = $n(x196);
+      var x180 = this$23.Lateams_syntax_Program$LocInfo__f_snd;
+      var this$24 = $n(x196);
+      var x181 = this$24.Lateams_syntax_Program$LocInfo__f_rcv;
+      if ((x181 === true)) {
+        return $as_sci_Set($n(x185).map__F1__O(new $c_sjsr_AnonFunction1(((t) => {
+          var t$1 = $as_T(t);
+          var snd$2 = (x180 ? new $c_s_Some(self) : $m_s_None$());
+          var rcv$2 = new $c_s_Some(t$1);
+          var self$3 = new $c_Lateams_backend_Semantics$Loc(snd$2, rcv$2);
+          return new $c_T2(self$3, act)
+        }))))
+      };
+      if ((x181 === false)) {
+        var this$34 = $n($m_s_Predef$().s_Predef$__f_Set);
+        var $$x2 = $m_sr_ScalaRunTime$();
+        var snd$3 = (x180 ? new $c_s_Some(self) : $m_s_None$());
+        var rcv$3 = $m_s_None$();
+        var self$4 = new $c_Lateams_backend_Semantics$Loc(snd$3, rcv$3);
+        var elems$1 = $n($$x2).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([new $c_T2(self$4, act)]));
+        return this$34.from__sc_IterableOnce__sci_Set(elems$1)
+      }
+    }
+  };
+  if ((x195 instanceof $c_Lateams_syntax_Program$Act$IO)) {
+    var x$1$2 = $as_Lateams_syntax_Program$Act$IO(x195);
+    var this$36 = $n(x$1$2);
+    var this$37 = $n(x$1$2);
+    var this$38 = $n(x$1$2);
+    var this$39 = $n($m_s_Predef$().s_Predef$__f_Set);
+    var elems$2 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+    return this$39.from__sc_IterableOnce__sci_Set(elems$2)
+  };
+  throw new $c_s_MatchError(x160)
+}
 /** @constructor */
 function $c_Lateams_backend_TypeCheck$() {
   /*<skip>*/
@@ -1594,14 +1678,10 @@ function $h_Lateams_backend_TypeCheck$() {
   /*<skip>*/
 }
 $h_Lateams_backend_TypeCheck$.prototype = $c_Lateams_backend_TypeCheck$.prototype;
-$c_Lateams_backend_TypeCheck$.prototype.check__Lateams_syntax_Program$ASystem__sci_Set = (function(sy) {
-  var this$1 = $n($n(sy).Lateams_syntax_Program$ASystem__f_defs);
-  var $$x1 = $as_sc_IterableOps($n($m_sci_Set$().from__sc_IterableOnce__sci_Set(this$1)).map__F1__O(new $c_sjsr_AnonFunction1(((x) => {
-    var x$1 = $as_T2(x);
-    return this.check__Lateams_syntax_Program$Proc__Lateams_syntax_Program$ASystem__T__sci_Set($as_Lateams_syntax_Program$Proc($n(x$1)._2__O()), sy, $as_T($n(x$1)._1__O()))
-  }))));
-  var this$4 = $m_s_$less$colon$less$();
-  return $as_sci_Set($n($$x1).flatten__F1__O(this$4.s_$less$colon$less$__f_singleton))
+$c_Lateams_backend_TypeCheck$.prototype.check__Lateams_backend_Semantics$St__sci_Set = (function(st) {
+  var this$1 = $n($p_Lateams_backend_TypeCheck$__check__Lateams_syntax_Program$ASystem__sci_Set(this, $n(st).Lateams_backend_Semantics$St__f_sys));
+  var that = this.checkBTypes__Lateams_backend_Semantics$St__sci_Set(st);
+  return $as_sci_Set(this$1.concat__sc_IterableOnce__sc_SetOps(that))
 });
 $c_Lateams_backend_TypeCheck$.prototype.check__Lateams_syntax_Program$Proc__Lateams_syntax_Program$ASystem__T__sci_Set = (function(p, sy, pname) {
   var p$tailLocal1 = p;
@@ -1928,6 +2008,231 @@ $c_Lateams_backend_TypeCheck$.prototype.checkAct__T__sci_Set__Lateams_syntax_Pro
     return (((((("[" + pname) + "] Unknown agent ") + an$3) + " used by action ") + a) + ".")
   }))));
   return $as_sci_Set(this$4.concat__sc_IterableOnce__sc_SetOps(that))
+});
+$c_Lateams_backend_TypeCheck$.prototype.getAllLocs__Lateams_backend_Semantics$St__sci_Map = (function(st) {
+  var res = $as_sci_Iterable($n($n($n($n(st).Lateams_backend_Semantics$St__f_sys).Lateams_syntax_Program$ASystem__f_main).withFilter__F1__sc_MapOps$WithFilter(new $c_sjsr_AnonFunction1(((x$1) => {
+    var x$1$1 = $as_T2(x$1);
+    return ((x$1$1 !== null) && ($as_T($n(x$1$1)._1__O()), $as_Lateams_syntax_Program$Proc($n(x$1$1)._2__O()), true))
+  })))).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2) => {
+    var x$1$3 = $as_T2(x$1$2);
+    if ((x$1$3 !== null)) {
+      var ag$1 = $as_T($n(x$1$3)._1__O());
+      var p$1 = $as_Lateams_syntax_Program$Proc($n(x$1$3)._2__O());
+      var this$3 = $n($m_s_Predef$().s_Predef$__f_Set);
+      var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)([]));
+      return this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(p$1, this$3.from__sc_IterableOnce__sci_Set(elems), ag$1, st)
+    };
+    throw new $c_s_MatchError(x$1$3)
+  }))));
+  var this$4 = $n($m_s_Predef$().s_Predef$__f_Map);
+  var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+  return $as_sci_Map($n(res).foldLeft__O__F2__O(this$4.from__sc_IterableOnce__sci_Map(elems$1), new $c_sjsr_AnonFunction2(((m1, m2) => {
+    var m1$1 = $as_sci_Map(m1);
+    var m2$1 = $as_sci_Map(m2);
+    return this.mjoin__sci_Map__sci_Map__sci_Map(m1$1, m2$1)
+  }))))
+});
+$c_Lateams_backend_TypeCheck$.prototype.checkBTypes__Lateams_backend_Semantics$St__sci_Set = (function(st) {
+  var locs = this.getAllLocs__Lateams_backend_Semantics$St__sci_Map(st);
+  var bts = $as_sci_Map($n($n(locs).withFilter__F1__sc_MapOps$WithFilter(new $c_sjsr_AnonFunction1(((x$1) => {
+    var x$1$1 = $as_T2(x$1);
+    return ((x$1$1 !== null) && ($as_Lateams_backend_Semantics$Loc($n(x$1$1)._1__O()), $as_sci_Set($n(x$1$1)._2__O()), true))
+  })))).map__F1__sc_IterableOps(new $c_sjsr_AnonFunction1(((x$1$2) => {
+    var x$1$3 = $as_T2(x$1$2);
+    if ((x$1$3 !== null)) {
+      var loc$1 = $as_Lateams_backend_Semantics$Loc($n(x$1$3)._1__O());
+      var acts$1 = $as_sci_Set($n(x$1$3)._2__O());
+      var _2 = $n(acts$1).flatMap__F1__O(new $c_sjsr_AnonFunction1(((act) => {
+        var act$1 = $as_Lateams_syntax_Program$Act(act);
+        var x107 = $m_Lateams_backend_Semantics$().stype__T__Lateams_backend_Semantics$St__Lateams_syntax_Program$SyncType($m_Lateams_backend_Semantics$().getActName__Lateams_syntax_Program$Act__T(act$1), st);
+        var x = $s_Lateams_syntax_Program$SyncType$__Sync__Lateams_syntax_Program$SyncType();
+        if (((x === null) ? (x107 === null) : $n(x).equals__O__Z(x107))) {
+          var this$3 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var elems = $m_sr_ScalaRunTime$().genericWrapArray__O__sci_ArraySeq(new ($d_sr_Nothing$.getArrayOf().constr)([]));
+          return this$3.from__sc_IterableOnce__sci_Set(elems)
+        };
+        if ((x107 instanceof $c_Lateams_syntax_Program$SyncType$Async)) {
+          var x$1$4 = $as_Lateams_syntax_Program$SyncType$Async(x107);
+          var this$5 = $n(x$1$4);
+          var this$6 = $n(x$1$4);
+          var x111 = this$6.Lateams_syntax_Program$SyncType$Async__f_buf;
+          var this$8 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var $$x1 = $m_sr_ScalaRunTime$();
+          var this$7 = $n(x111);
+          var elems$1 = $n($$x1).wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)([$objectGetClass(this$7).getName__T()]));
+          return this$8.from__sc_IterableOnce__sci_Set(elems$1)
+        };
+        var x$3 = $s_Lateams_syntax_Program$SyncType$__Internal__Lateams_syntax_Program$SyncType();
+        if (((x$3 === null) ? (x107 === null) : $n(x$3).equals__O__Z(x107))) {
+          var this$9 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var elems$2 = $m_sr_ScalaRunTime$().genericWrapArray__O__sci_ArraySeq(new ($d_sr_Nothing$.getArrayOf().constr)([]));
+          return this$9.from__sc_IterableOnce__sci_Set(elems$2)
+        };
+        throw new $c_s_MatchError(x107)
+      })));
+      return new $c_T2(loc$1, _2)
+    };
+    throw new $c_s_MatchError(x$1$3)
+  }))));
+  var this$11 = $n(bts);
+  return $as_sci_Set($n($n($n($m_sci_Set$().from__sc_IterableOnce__sci_Set(this$11)).withFilter__F1__sc_WithFilter(new $c_sjsr_AnonFunction1(((x$1$3$1) => {
+    var x$1$5 = $as_T2(x$1$3$1);
+    return ((x$1$5 !== null) && ($as_Lateams_backend_Semantics$Loc($n(x$1$5)._1__O()), $as_sci_Set($n(x$1$5)._2__O()), true))
+  })))).withFilter__F1__sc_WithFilter(new $c_sjsr_AnonFunction1(((x$1$4$1) => {
+    var x$1$6 = $as_T2(x$1$4$1);
+    if ((x$1$6 !== null)) {
+      $as_Lateams_backend_Semantics$Loc($n(x$1$6)._1__O());
+      var buffs$1 = $as_sci_Set($n(x$1$6)._2__O());
+      return ($n(buffs$1).size__I() > 1)
+    };
+    throw new $c_s_MatchError(x$1$6)
+  })))).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$5$1) => {
+    var x$1$7 = $as_T2(x$1$5$1);
+    if ((x$1$7 !== null)) {
+      var loc$4 = $as_Lateams_backend_Semantics$Loc($n(x$1$7)._1__O());
+      var buffs$2 = $as_sci_Set($n(x$1$7)._2__O());
+      var $$x4 = $m_Lateams_syntax_Show$().apply__Lateams_backend_Semantics$Loc__T(loc$4);
+      var this$14 = $n($as_sc_IterableOnceOps($n(buffs$2).map__F1__O(new $c_sjsr_AnonFunction1(((_$1) => {
+        var _$1$1 = $as_T(_$1);
+        var $$x2 = $m_sc_StringOps$();
+        var this$12 = $n(_$1$1);
+        return $n($n($$x2).split$extension__T__C__AT(this$12, 36)).get(1)
+      })))));
+      var $$x3 = $f_sc_IterableOnceOps__mkString__T__T__T__T(this$14, "", ",", "");
+      var this$15 = $n($as_sc_IterableOnceOps($n($as_sc_IterableOps($n(locs).apply__O__O(loc$4))).map__F1__O(new $c_sjsr_AnonFunction1(((a) => {
+        var a$1 = $as_Lateams_syntax_Program$Act(a);
+        return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(a$1)
+      })))));
+      return (((((("[Buffer-type] incompatible buffer types @ " + $$x4) + " (") + $$x3) + "), by messages ") + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$15, "", ", ", "")) + ".")
+    };
+    throw new $c_s_MatchError(x$1$7)
+  }))))
+});
+$c_Lateams_backend_TypeCheck$.prototype.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map = (function(p, done, self, st) {
+  var done$tailLocal1 = done;
+  var p$tailLocal2 = p;
+  while (true) {
+    var x141 = p$tailLocal2;
+    var x = $s_Lateams_syntax_Program$Proc$__End__Lateams_syntax_Program$Proc();
+    if (((x === null) ? (x141 === null) : $n(x).equals__O__Z(x141))) {
+      var this$1 = $n($m_s_Predef$().s_Predef$__f_Map);
+      var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+      return this$1.from__sc_IterableOnce__sci_Map(elems)
+    };
+    if ((x141 instanceof $c_Lateams_syntax_Program$Proc$ProcCall)) {
+      var x$1 = $as_Lateams_syntax_Program$Proc$ProcCall(x141);
+      var this$3 = $n(x$1);
+      var x159 = this$3.Lateams_syntax_Program$Proc$ProcCall__f_p;
+      var this$4 = $n(done$tailLocal1);
+      if (this$4.contains__O__Z(x159)) {
+        var this$5 = $n($m_s_Predef$().s_Predef$__f_Map);
+        var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+        return this$5.from__sc_IterableOnce__sci_Map(elems$1)
+      };
+      var p$tailLocal2$tmp1 = $as_Lateams_syntax_Program$Proc($n($n($n(st).Lateams_backend_Semantics$St__f_sys).Lateams_syntax_Program$ASystem__f_defs).apply__O__O(x159));
+      var this$6 = $n(done$tailLocal1);
+      var done$tailLocal1$tmp1 = $as_sci_Set(this$6.incl__O__sci_SetOps(x159));
+      p$tailLocal2 = p$tailLocal2$tmp1;
+      done$tailLocal1 = done$tailLocal1$tmp1;
+      continue
+    };
+    if ((x141 instanceof $c_Lateams_syntax_Program$Proc$Choice)) {
+      var x$1$1 = $as_Lateams_syntax_Program$Proc$Choice(x141);
+      var this$8 = $n(x$1$1);
+      var x152 = this$8.Lateams_syntax_Program$Proc$Choice__f_p1;
+      var this$9 = $n(x$1$1);
+      var x153 = this$9.Lateams_syntax_Program$Proc$Choice__f_p2;
+      return this.mjoin__sci_Map__sci_Map__sci_Map(this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(x152, done$tailLocal1, self, st), this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(x153, done$tailLocal1, self, st))
+    };
+    if ((x141 instanceof $c_Lateams_syntax_Program$Proc$Par)) {
+      var x$1$2 = $as_Lateams_syntax_Program$Proc$Par(x141);
+      var this$11 = $n(x$1$2);
+      var x148 = this$11.Lateams_syntax_Program$Proc$Par__f_p1;
+      var this$12 = $n(x$1$2);
+      var x149 = this$12.Lateams_syntax_Program$Proc$Par__f_p2;
+      return this.mjoin__sci_Map__sci_Map__sci_Map(this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(x148, done$tailLocal1, self, st), this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(x149, done$tailLocal1, self, st))
+    };
+    if ((x141 instanceof $c_Lateams_syntax_Program$Proc$Prefix)) {
+      var x$1$3 = $as_Lateams_syntax_Program$Proc$Prefix(x141);
+      var this$14 = $n(x$1$3);
+      var x144 = this$14.Lateams_syntax_Program$Proc$Prefix__f_act;
+      var this$15 = $n(x$1$3);
+      var x145 = this$15.Lateams_syntax_Program$Proc$Prefix__f_p;
+      var rest = this.getLocs__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$St__sci_Map(x145, done$tailLocal1, self, st);
+      var x136 = $m_Lateams_backend_Semantics$().stype__T__Lateams_backend_Semantics$St__Lateams_syntax_Program$SyncType($m_Lateams_backend_Semantics$().getActName__Lateams_syntax_Program$Act__T(x144), st);
+      var x$3 = $s_Lateams_syntax_Program$SyncType$__Sync__Lateams_syntax_Program$SyncType();
+      if (((x$3 === null) ? (x136 === null) : $n(x$3).equals__O__Z(x136))) {
+        return rest
+      };
+      var x$5 = $s_Lateams_syntax_Program$SyncType$__Internal__Lateams_syntax_Program$SyncType();
+      if (((x$5 === null) ? (x136 === null) : $n(x$5).equals__O__Z(x136))) {
+        return rest
+      };
+      if ((x136 instanceof $c_Lateams_syntax_Program$SyncType$Async)) {
+        var x$1$4 = $as_Lateams_syntax_Program$SyncType$Async(x136);
+        var this$17 = $n(x$1$4);
+        var x139 = this$17.Lateams_syntax_Program$SyncType$Async__f_where;
+        var this$18 = $n(x$1$4);
+        var sndrcvs = $p_Lateams_backend_TypeCheck$__getSndRcv__T__Lateams_syntax_Program$Act__Lateams_syntax_Program$LocInfo__sci_Set(this, self, x144, x139);
+        var locs = $as_sci_Set($n($n(sndrcvs).withFilter__F1__sc_WithFilter(new $c_sjsr_AnonFunction1(((x$1$5) => {
+          var x$1$6 = $as_T2(x$1$5);
+          if ((x$1$6 !== null)) {
+            var x125 = $as_Lateams_backend_Semantics$Loc($n(x$1$6)._1__O());
+            if ((x125 !== null)) {
+              var this$21 = $n(x125);
+              var this$22 = $n(x125);
+              $as_Lateams_syntax_Program$Act($n(x$1$6)._2__O());
+              return true
+            }
+          };
+          return false
+        })))).map__F1__O(new $c_sjsr_AnonFunction1(((x139) => ((x$1$2$1) => {
+          var x$1$7 = $as_T2(x$1$2$1);
+          if ((x$1$7 !== null)) {
+            var x131 = $as_Lateams_backend_Semantics$Loc($n(x$1$7)._1__O());
+            if ((x131 !== null)) {
+              var this$24 = $n(x131);
+              var x134 = this$24.Lateams_backend_Semantics$Loc__f_snd;
+              var this$25 = $n(x131);
+              var x135 = this$25.Lateams_backend_Semantics$Loc__f_rcv;
+              var a$1 = $as_Lateams_syntax_Program$Act($n(x$1$7)._2__O());
+              var self$1 = $m_Lateams_backend_Semantics$().getLoc__Lateams_syntax_Program$LocInfo__T__s_Option__s_Option__Lateams_backend_Semantics$Loc(x139, $m_Lateams_backend_Semantics$().getActName__Lateams_syntax_Program$Act__T(a$1), x134, x135);
+              var this$27 = $n($m_s_Predef$().s_Predef$__f_Set);
+              var elems$2 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_Lateams_syntax_Program$Act.getArrayOf().constr)([a$1]));
+              var y = this$27.from__sc_IterableOnce__sci_Set(elems$2);
+              return new $c_T2(self$1, y)
+            }
+          };
+          throw new $c_s_MatchError(x$1$7)
+        }))(x139))));
+        var this$30 = $n(locs);
+        var this$29 = $m_s_$less$colon$less$();
+        return this.mjoin__sci_Map__sci_Map__sci_Map(rest, $m_sci_Map$().from__sc_IterableOnce__sci_Map(this$30))
+      };
+      throw new $c_s_MatchError(x136)
+    };
+    throw new $c_s_MatchError(x141)
+  }
+});
+$c_Lateams_backend_TypeCheck$.prototype.mjoin__sci_Map__sci_Map__sci_Map = (function(m1, m2) {
+  return $as_sci_Map($n(m1).$plus$plus__sc_IterableOnce__sc_IterableOps($n($n(m2).withFilter__F1__sc_MapOps$WithFilter(new $c_sjsr_AnonFunction1(((x$1) => {
+    var x$1$1 = $as_T2(x$1);
+    return ((x$1$1 !== null) && ($n(x$1$1)._1__O(), $as_sci_Set($n(x$1$1)._2__O()), true))
+  })))).map__F1__sc_IterableOps(new $c_sjsr_AnonFunction1(((x$1$2) => {
+    var x$1$3 = $as_T2(x$1$2);
+    if ((x$1$3 !== null)) {
+      var k$1 = $n(x$1$3)._1__O();
+      var v$1 = $as_sci_Set($n(x$1$3)._2__O());
+      var this$5 = $n($as_sc_SetOps($n(m1).getOrElse__O__F0__O(k$1, new $c_sjsr_AnonFunction0((() => {
+        var this$4 = $n($m_s_Predef$().s_Predef$__f_Set);
+        var elems = $m_sr_ScalaRunTime$().genericWrapArray__O__sci_ArraySeq(new $ac_O([]));
+        return this$4.from__sc_IterableOnce__sci_Set(elems)
+      })))));
+      var y = this$5.concat__sc_IterableOnce__sc_SetOps(v$1);
+      return new $c_T2(k$1, y)
+    };
+    throw new $c_s_MatchError(x$1$3)
+  })))))
 });
 var $d_Lateams_backend_TypeCheck$ = new $TypeData().initClass({
   Lateams_backend_TypeCheck$: 0
@@ -12772,6 +13077,19 @@ function $f_sc_IterableOnceOps__find__F1__s_Option($thiz, p) {
   };
   return $m_s_None$()
 }
+function $f_sc_IterableOnceOps__foldLeft__O__F2__O($thiz, z, op) {
+  if ($is_sc_IndexedSeq($thiz)) {
+    var x2 = $as_sc_IndexedSeq($thiz);
+    return $p_sc_IterableOnceOps__loop$1__I__I__O__F2__sc_IndexedSeq__O($thiz, 0, $n(x2).length__I(), z, op, x2)
+  } else {
+    var result = z;
+    var it = $n($as_sc_IterableOnce($thiz)).iterator__sc_Iterator();
+    while ($n(it).hasNext__Z()) {
+      result = $n(op).apply__O__O__O(result, $n(it).next__O())
+    };
+    return result
+  }
+}
 function $f_sc_IterableOnceOps__isEmpty__Z($thiz) {
   var x1 = $n($as_sc_IterableOnce($thiz)).knownSize__I();
   switch (x1) {
@@ -12866,6 +13184,18 @@ function $f_sc_IterableOnceOps__reversed__sc_Iterable($thiz) {
     xs = new $c_sci_$colon$colon(rassoc$1, this$1)
   };
   return xs
+}
+function $p_sc_IterableOnceOps__loop$1__I__I__O__F2__sc_IndexedSeq__O($thiz, at, end, acc, op$1, seq$1) {
+  while (true) {
+    if ((at === end)) {
+      return acc
+    } else {
+      var temp$at = ((1 + at) | 0);
+      var temp$acc = $n(op$1).apply__O__O__O(acc, $n(seq$1).apply__I__O(at));
+      at = temp$at;
+      acc = temp$acc
+    }
+  }
 }
 function $is_sc_IterableOnceOps(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.sc_IterableOnceOps)))
@@ -17601,60 +17931,6 @@ function $p_Lateams_backend_Semantics$__updateOptSt__Lateams_syntax_Program$Act_
     return this$4.from__sc_IterableOnce__sci_Set(elems$1)
   }
 }
-function $p_Lateams_backend_Semantics$__getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc($thiz, act, snd, rcv, st) {
-  var x285 = $thiz.stype__T__Lateams_backend_Semantics$St__Lateams_syntax_Program$SyncType(act, st);
-  var x = $s_Lateams_syntax_Program$SyncType$__Sync__Lateams_syntax_Program$SyncType();
-  if (((x === null) ? (x285 === null) : $n(x).equals__O__Z(x285))) {
-    $m_s_sys_package$().error__T__E((("Cannot get buffers of sync message \"" + act) + "\""))
-  };
-  if ((x285 instanceof $c_Lateams_syntax_Program$SyncType$Async)) {
-    var x$1 = $as_Lateams_syntax_Program$SyncType$Async(x285);
-    var this$2 = $n(x$1);
-    var x288 = this$2.Lateams_syntax_Program$SyncType$Async__f_where;
-    var this$3 = $n(x$1);
-    return $p_Lateams_backend_Semantics$__getLocInfo__Lateams_syntax_Program$LocInfo__T__s_Option__s_Option__Lateams_backend_Semantics$Loc($thiz, x288, act, snd, rcv)
-  };
-  var x$3 = $s_Lateams_syntax_Program$SyncType$__Internal__Lateams_syntax_Program$SyncType();
-  if (((x$3 === null) ? (x285 === null) : $n(x$3).equals__O__Z(x285))) {
-    $m_s_sys_package$().error__T__E("Cannot get buffers of internal messages")
-  };
-  throw new $c_s_MatchError(x285)
-}
-function $p_Lateams_backend_Semantics$__getLocInfo__Lateams_syntax_Program$LocInfo__T__s_Option__s_Option__Lateams_backend_Semantics$Loc($thiz, linfo, act, snd, rcv) {
-  if ((linfo !== null)) {
-    var this$3 = $n(linfo);
-    var x321 = this$3.Lateams_syntax_Program$LocInfo__f_snd;
-    var this$4 = $n(linfo);
-    var x322 = this$4.Lateams_syntax_Program$LocInfo__f_rcv;
-    if ((x321 === true)) {
-      if (((x322 === true) && (snd instanceof $c_s_Some))) {
-        $as_T($n($as_s_Some(snd)).s_Some__f_value);
-        if ((rcv instanceof $c_s_Some)) {
-          $as_T($n($as_s_Some(rcv)).s_Some__f_value);
-          return new $c_Lateams_backend_Semantics$Loc(snd, rcv)
-        }
-      };
-      if (((x322 === false) && (snd instanceof $c_s_Some))) {
-        $as_T($n($as_s_Some(snd)).s_Some__f_value);
-        var rcv$1 = $m_s_None$();
-        return new $c_Lateams_backend_Semantics$Loc(snd, rcv$1)
-      }
-    };
-    if ((x321 === false)) {
-      if (((x322 === true) && (rcv instanceof $c_s_Some))) {
-        $as_T($n($as_s_Some(rcv)).s_Some__f_value);
-        var snd$1 = $m_s_None$();
-        return new $c_Lateams_backend_Semantics$Loc(snd$1, rcv)
-      };
-      if ((x322 === false)) {
-        var snd$2 = $m_s_None$();
-        var rcv$2 = $m_s_None$();
-        return new $c_Lateams_backend_Semantics$Loc(snd$2, rcv$2)
-      }
-    }
-  };
-  $m_s_sys_package$().error__T__E((((((((("Missing information for channel \"" + act) + "\": type ") + $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$LocInfo__T(linfo)) + ", got ") + snd) + "->") + rcv) + "."))
-}
 function $p_Lateams_backend_Semantics$__checkBuffType__Lateams_syntax_Program$Buffer__Lateams_syntax_Program$Buffer__T__V($thiz, b1, b2, msg) {
   var this$1 = $n(b1);
   var x = $objectGetClass(this$1);
@@ -18273,7 +18549,7 @@ $c_Lateams_backend_Semantics$.prototype.nextSend__sci_Set__Lateams_backend_Seman
                   if ((!$n($as_s_Option($n($as_T2($n(_2)._2__O()))._2__O())).contains__O__Z($n($as_T2($n(_2)._2__O()))._1__O()))) {
                     $m_s_sys_package$().error__T__E((((((("Trying to send '" + $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(x162)) + "' to {") + $m_Lateams_syntax_Show$().showIntrv__T2__T($as_T2($n(_2)._2__O()))) + "} without having a single number of destinations (") + $m_Lateams_syntax_Show$().showIntrv__T2__T($as_T2($n(_2)._2__O()))) + ")."))
                   };
-                  var loc = $p_Lateams_backend_Semantics$__getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(this, x164, (x155 ? new $c_s_Some(n$2) : $m_s_None$()), $m_s_None$(), st);
+                  var loc = this.getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(x164, (x155 ? new $c_s_Some(n$2) : $m_s_None$()), $m_s_None$(), st);
                   var elem = $as_Lateams_syntax_Program$Buffer($n($n(st).Lateams_backend_Semantics$St__f_buffers).getOrElse__O__F0__O(loc, new $c_sjsr_AnonFunction0((() => x153))));
                   var elem$1 = null;
                   elem$1 = elem;
@@ -18332,7 +18608,7 @@ $c_Lateams_backend_Semantics$.prototype.nextSend__sci_Set__Lateams_backend_Seman
                   };
                   var newBuffers = $as_sci_Set($n(x165).map__F1__O(new $c_sjsr_AnonFunction1(((ag) => {
                     var ag$1 = $as_T(ag);
-                    var loc$1 = $p_Lateams_backend_Semantics$__getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(this, x164, (x155 ? new $c_s_Some(n$2) : $m_s_None$()), new $c_s_Some(ag$1), st);
+                    var loc$1 = this.getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(x164, (x155 ? new $c_s_Some(n$2) : $m_s_None$()), new $c_s_Some(ag$1), st);
                     var buffer = $n($as_Lateams_syntax_Program$Buffer($n($n(st).Lateams_backend_Semantics$St__f_buffers).getOrElse__O__F0__O(loc$1, new $c_sjsr_AnonFunction0((() => x153))))).$plus__T__Lateams_syntax_Program$Buffer(x164);
                     $p_Lateams_backend_Semantics$__checkBuffType__Lateams_syntax_Program$Buffer__Lateams_syntax_Program$Buffer__T__V(this, buffer, x153, ("sending " + $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(x162)));
                     return new $c_T2(loc$1, buffer)
@@ -18427,7 +18703,7 @@ $c_Lateams_backend_Semantics$.prototype.nextRcv__sci_Set__Lateams_backend_Semant
                   if ((!$n($as_s_Option($n($as_T2($n(_2)._1__O()))._2__O())).contains__O__Z($n($as_T2($n(_2)._1__O()))._1__O()))) {
                     $m_s_sys_package$().error__T__E((((((("Trying to get '" + $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(x239)) + "' from {") + $m_Lateams_syntax_Show$().showIntrv__T2__T($as_T2($n(_2)._1__O()))) + "} without having a single number of sources (") + $m_Lateams_syntax_Show$().showIntrv__T2__T($as_T2($n(_2)._1__O()))) + ")."))
                   };
-                  var loc = $p_Lateams_backend_Semantics$__getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(this, x241, $m_s_None$(), (x233 ? new $c_s_Some(n$2) : $m_s_None$()), st);
+                  var loc = this.getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(x241, $m_s_None$(), (x233 ? new $c_s_Some(n$2) : $m_s_None$()), st);
                   var value = $n($n(st).Lateams_backend_Semantics$St__f_buffers).getOrElse__O__F0__O(loc, new $c_sjsr_AnonFunction0((() => x230)));
                   var elem = new $c_s_Some(value);
                   var elem$1 = null;
@@ -18502,7 +18778,7 @@ $c_Lateams_backend_Semantics$.prototype.nextRcv__sci_Set__Lateams_backend_Semant
                   };
                   var newBuffers = $as_sci_Set($n(x242).map__F1__O(new $c_sjsr_AnonFunction1(((ag) => {
                     var ag$1 = $as_T(ag);
-                    var loc$1 = $p_Lateams_backend_Semantics$__getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(this, x241, new $c_s_Some(ag$1), (x233 ? new $c_s_Some(n$2) : $m_s_None$()), st);
+                    var loc$1 = this.getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc(x241, new $c_s_Some(ag$1), (x233 ? new $c_s_Some(n$2) : $m_s_None$()), st);
                     var value$1 = $n($n(st).Lateams_backend_Semantics$St__f_buffers).getOrElse__O__F0__O(loc$1, new $c_sjsr_AnonFunction0((() => x230)));
                     var this$46 = new $c_s_Some(value$1);
                     if (this$46.isEmpty__Z()) {
@@ -18642,6 +18918,60 @@ $c_Lateams_backend_Semantics$.prototype.getActName__Lateams_syntax_Program$Act__
   };
   throw new $c_s_MatchError(a)
 });
+$c_Lateams_backend_Semantics$.prototype.getLoc__T__s_Option__s_Option__Lateams_backend_Semantics$St__Lateams_backend_Semantics$Loc = (function(act, snd, rcv, st) {
+  var x285 = this.stype__T__Lateams_backend_Semantics$St__Lateams_syntax_Program$SyncType(act, st);
+  var x = $s_Lateams_syntax_Program$SyncType$__Sync__Lateams_syntax_Program$SyncType();
+  if (((x === null) ? (x285 === null) : $n(x).equals__O__Z(x285))) {
+    $m_s_sys_package$().error__T__E((("Cannot get buffers of sync message \"" + act) + "\""))
+  };
+  if ((x285 instanceof $c_Lateams_syntax_Program$SyncType$Async)) {
+    var x$1 = $as_Lateams_syntax_Program$SyncType$Async(x285);
+    var this$2 = $n(x$1);
+    var x288 = this$2.Lateams_syntax_Program$SyncType$Async__f_where;
+    var this$3 = $n(x$1);
+    return this.getLoc__Lateams_syntax_Program$LocInfo__T__s_Option__s_Option__Lateams_backend_Semantics$Loc(x288, act, snd, rcv)
+  };
+  var x$3 = $s_Lateams_syntax_Program$SyncType$__Internal__Lateams_syntax_Program$SyncType();
+  if (((x$3 === null) ? (x285 === null) : $n(x$3).equals__O__Z(x285))) {
+    $m_s_sys_package$().error__T__E("Cannot get buffers of internal messages")
+  };
+  throw new $c_s_MatchError(x285)
+});
+$c_Lateams_backend_Semantics$.prototype.getLoc__Lateams_syntax_Program$LocInfo__T__s_Option__s_Option__Lateams_backend_Semantics$Loc = (function(linfo, act, snd, rcv) {
+  if ((linfo !== null)) {
+    var this$3 = $n(linfo);
+    var x321 = this$3.Lateams_syntax_Program$LocInfo__f_snd;
+    var this$4 = $n(linfo);
+    var x322 = this$4.Lateams_syntax_Program$LocInfo__f_rcv;
+    if ((x321 === true)) {
+      if (((x322 === true) && (snd instanceof $c_s_Some))) {
+        $as_T($n($as_s_Some(snd)).s_Some__f_value);
+        if ((rcv instanceof $c_s_Some)) {
+          $as_T($n($as_s_Some(rcv)).s_Some__f_value);
+          return new $c_Lateams_backend_Semantics$Loc(snd, rcv)
+        }
+      };
+      if (((x322 === false) && (snd instanceof $c_s_Some))) {
+        $as_T($n($as_s_Some(snd)).s_Some__f_value);
+        var rcv$1 = $m_s_None$();
+        return new $c_Lateams_backend_Semantics$Loc(snd, rcv$1)
+      }
+    };
+    if ((x321 === false)) {
+      if (((x322 === true) && (rcv instanceof $c_s_Some))) {
+        $as_T($n($as_s_Some(rcv)).s_Some__f_value);
+        var snd$1 = $m_s_None$();
+        return new $c_Lateams_backend_Semantics$Loc(snd$1, rcv)
+      };
+      if ((x322 === false)) {
+        var snd$2 = $m_s_None$();
+        var rcv$2 = $m_s_None$();
+        return new $c_Lateams_backend_Semantics$Loc(snd$2, rcv$2)
+      }
+    }
+  };
+  $m_s_sys_package$().error__T__E((((((((("Missing information for channel \"" + act) + "\": type ") + $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$LocInfo__T(linfo)) + ", got ") + snd) + "->") + rcv) + "."))
+});
 $c_Lateams_backend_Semantics$.prototype.aritSys__T__Lateams_syntax_Program$ASystem__T2 = (function(act, s) {
   var this$1 = $n($n($n(s).Lateams_syntax_Program$ASystem__f_msgs).get__O__s_Option(act));
   if (this$1.isEmpty__Z()) {
@@ -18722,40 +19052,44 @@ function $c_Lateams_frontend_CaosConfig$() {
   }));
   this.Lateams_frontend_CaosConfig$__f_parser = $f_F1__andThen__F1__F1(this$3, g);
   $n($m_s_package$().s_package$__f_List);
-  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_Lcaos_frontend_Configurator$Example.getArrayOf().constr)([new $c_Lcaos_frontend_Configurator$Example("acts\n  default: sync, 1->1;\n  coin; coffee;\n  pub: 1->0;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n CM = coin!.tau.coffee?.CM\n CS = pub!.coin?.coffee!.CS\ninit\n CM||CS", "coffee-sync", "Simple coffee with synchronous channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo, 1->1;\n  coin; coffee;\n  pub: 1->0;\n\nproc\n CM = coin!cs.coffee?.CM\n CS = pub!.coin?.coffee!cm.CS\ninit\n cm:CM||cs:CS", "coffee-async", "Asynchronous version of the coffee machine with FIFO channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@rcv, 1->1;\n  coin; coffee;\n\nproc\n // Coffee machine may turn off\n CM = coin!cs.coffee?.(off+CM)\n CS = coin?.coffee!cm.CS\n // start with a coin\n CM2 = coin!cs.CM\ninit\n cm:CM2||cs:CS", "coffee-async-off", "Variation of the asynchronous coffee machine with an extra coin and a terminating option, to create orphan messages."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  finish: 1->1, sync;\nproc\n Ctr = start!.finish?.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R", "race-sync", "Synchronous runner example, without internal actions"), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!r1,r2.finish?.Ctr\n R = start?.finish!c.R\ninit\n c:Ctr || r1:R || r2:R", "race@rcv", "Race async - both actions send asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@snd", "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@global", "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R", "race@unbounded", "Variation of the race example with an unbounded fifo growing forever."), new $c_Lcaos_frontend_Configurator$Example("acts start:  1->2, sync;\n     finish: 2->1, fifo@snd;\nproc Ctr = start!.finish?r1.Ctr\n\t\t R = start?.finish!c.R\ninit c:Ctr || r1:R || r2:R", "race@errors", "Race variation with type errors (ill-formed)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@snd-rcv;\n  fndCor; assRes; perFunc; mkPropRHS; gvCrite; proAcc; chkAut; rptAut; chkPol; confChkPol; proCriteEV; confCriteEV; seekAcc; forAcc; perInvs; rptInvs; decAcc; grntAcc; manVer; chkAutAcc; tecAss; rptTec; tcAss; rtTec; rprTec; sndPro; takAct; rptMon;\n\nproc\n  GDH =   fndCor!rC. \n          assRes!rCOO. \n          perFunc!rCOO. \n          Loop1GDH  | Loop3GDH | Loop5GDH\n  Loop1GDH = proAcc?rCOO. Loop1GDH\n  Loop3GDH = chkPol?rCOO. confChkPol!rCOO. Loop3GDH\n  Loop5GDH = seekAcc?lHA. forAcc!rCOO.  \n          (Loop5GDH\n           +\n           Loop51GDH)\n  Loop51GDH= (sndPro?rCOO.\n              takAct!lHA.\n              Loop5GDH\n              +\n              rptMon?rCOO.\n              takAct!lHA.\n              Loop5GDH)\n\n  RC =  fndCor?gDH. \n        mkPropRHS?rCOO. \n        gvCrite!rHS.\n        Loop4RC\n  Loop4RC = proCriteEV?oTAM. confCriteEV!oTAM. Loop4RC\n\n\n  RCOO = assRes?gDH. \n         perFunc?gDH. \n         mkPropRHS!rC. \n         Loop1RCOO | Loop2RCOO | Loop3RCOO | Loop5RCOO\n  Loop1RCOO = proAcc!gDH. Loop1RCOO\n  Loop2RCOO = chkAut!aC. rptAut?aC. Loop2RCOO\n  Loop3RCOO = chkPol!gDH. confChkPol?gDH. Loop3RCOO\n  Loop5RCOO = forAcc?gDH. perInvs!hAS. rptInvs?hAS.\n          ((decAcc!lHA. Loop5RCOO)\n           +\n           (grntAcc!lHA. manVer!oTA. Loop51RCOO +\n            manVer!oTA. grntAcc!lHA. Loop51RCOO))\n  Loop51RCOO = rprTec?oTAM.\n          ( sndPro!gDH. Loop5RCOO\n            +\n            rptMon!gDH. Loop5RCOO)\n\n  RHS = gvCrite?rC\n\n  AC = chkAut?rCOO. rptAut!rCOO. AC\n\n  OTAM = Loop4OTAM | Loop5OTAM\n  Loop4OTAM = proCriteEV!rC. confCriteEV?rC. Loop4OTAM\n  Loop5OTAM = chkAutAcc?oTA.\n     tecAss!eV. rptTec?eV.\n     tcAss!eT.  rtTec?eT.\n     rprTec!rCOO. Loop5OTAM\n\n  LHA = seekAcc!gDH.      \n          ((decAcc?rCOO. LHA)\n           +\n           (grntAcc?rCOO. takAct?gDH. LHA))\n\n  OTA = manVer?rCOO. chkAutAcc?oTAM. OTA\n\n  ET = tcAss?oTAM. rtTec!oTAM. ET\n\n  EV =  tecAss?oTAM. rptTec!oTAM. ET\n\n  HAS = perInvs?rCOO. rptInvs!rCOO. HAS\n\ninit\n  rC:RC || gDH:GDH || rCOO:RCOO || rHS:RHS ||\n  aC:AC || lHA:LHA || oTAM:OTAM || oTA:OTA ||\n  eT:ET || eV:EV   || hAS:HAS", "healthcare-sync", "Healthcare example (realisable version), from Pal et al. in an ICTAC'25 publication using pomsets to analyse realisability. Our version uses synchronous communication, also described by Pal et al. When using instead asynchronous communication, an unbounded buffer is found.")]));
+  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_Lcaos_frontend_Configurator$Example.getArrayOf().constr)([new $c_Lcaos_frontend_Configurator$Example("acts\n  default: sync, 1->1;\n  coin; coffee;\n  pub: 1->0;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n CM = coin!.tau.coffee?.CM\n CS = pub!.coin?.coffee!.CS\ninit\n CM||CS", "coffee-sync", "Simple coffee with synchronous channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo, 1->1;\n  coin; coffee;\n  pub: 1->0;\n\nproc\n CM = coin!cs.coffee?.CM\n CS = pub!.coin?.coffee!cm.CS\ninit\n cm:CM||cs:CS", "coffee-async", "Asynchronous version of the coffee machine with FIFO channels"), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@rcv, 1->1;\n  coin; coffee;\n\nproc\n // Coffee machine may turn off\n CM = coin!cs.coffee?.(off+CM)\n CS = coin?.coffee!cm.CS\n // start with a coin\n CM2 = coin!cs.CM\ninit\n cm:CM2||cs:CS", "coffee-async-off", "Variation of the asynchronous coffee machine with an extra coin and a terminating option, to create orphan messages."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  finish: 1->1, sync;\nproc\n Ctr = start!.finish?.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R", "race-sync", "Synchronous runner example, without internal actions"), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!r1,r2.finish?.Ctr\n R = start?.finish!c.R\ninit\n c:Ctr || r1:R || r2:R", "race@rcv", "Race async - both actions send asynchronously, with a buffer for each receiver. This results in more states (10) than the synchronous version (2)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@snd", "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@global", "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R", "race@unbounded", "Variation of the race example with an unbounded fifo growing forever."), new $c_Lcaos_frontend_Configurator$Example("acts start:  1->2, sync;\n     finish: 2->1, fifo@snd;\nproc Ctr = start!.finish?r1.Ctr\n\t\t R = start?.finish!c.R\ninit c:Ctr || r1:R || r2:R", "race@errors", "Race variation with type errors (ill-formed)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  start:  1->2, fifo@global;\n  finish: 2->1, unsorted@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R", "race@bt-error", "Race variation with buffer-type errors (ill-formed)."), new $c_Lcaos_frontend_Configurator$Example("acts\n  default: fifo@snd-rcv;\n  fndCor; assRes; perFunc; mkPropRHS; gvCrite; proAcc; chkAut; rptAut; chkPol; confChkPol; proCriteEV; confCriteEV; seekAcc; forAcc; perInvs; rptInvs; decAcc; grntAcc; manVer; chkAutAcc; tecAss; rptTec; tcAss; rtTec; rprTec; sndPro; takAct; rptMon;\n\nproc\n  GDH =   fndCor!rC. \n          assRes!rCOO. \n          perFunc!rCOO. \n          Loop1GDH  | Loop3GDH | Loop5GDH\n  Loop1GDH = proAcc?rCOO. Loop1GDH\n  Loop3GDH = chkPol?rCOO. confChkPol!rCOO. Loop3GDH\n  Loop5GDH = seekAcc?lHA. forAcc!rCOO.  \n          (Loop5GDH\n           +\n           Loop51GDH)\n  Loop51GDH= (sndPro?rCOO.\n              takAct!lHA.\n              Loop5GDH\n              +\n              rptMon?rCOO.\n              takAct!lHA.\n              Loop5GDH)\n\n  RC =  fndCor?gDH. \n        mkPropRHS?rCOO. \n        gvCrite!rHS.\n        Loop4RC\n  Loop4RC = proCriteEV?oTAM. confCriteEV!oTAM. Loop4RC\n\n\n  RCOO = assRes?gDH. \n         perFunc?gDH. \n         mkPropRHS!rC. \n         Loop1RCOO | Loop2RCOO | Loop3RCOO | Loop5RCOO\n  Loop1RCOO = proAcc!gDH. Loop1RCOO\n  Loop2RCOO = chkAut!aC. rptAut?aC. Loop2RCOO\n  Loop3RCOO = chkPol!gDH. confChkPol?gDH. Loop3RCOO\n  Loop5RCOO = forAcc?gDH. perInvs!hAS. rptInvs?hAS.\n          ((decAcc!lHA. Loop5RCOO)\n           +\n           (grntAcc!lHA. manVer!oTA. Loop51RCOO +\n            manVer!oTA. grntAcc!lHA. Loop51RCOO))\n  Loop51RCOO = rprTec?oTAM.\n          ( sndPro!gDH. Loop5RCOO\n            +\n            rptMon!gDH. Loop5RCOO)\n\n  RHS = gvCrite?rC\n\n  AC = chkAut?rCOO. rptAut!rCOO. AC\n\n  OTAM = Loop4OTAM | Loop5OTAM\n  Loop4OTAM = proCriteEV!rC. confCriteEV?rC. Loop4OTAM\n  Loop5OTAM = chkAutAcc?oTA.\n     tecAss!eV. rptTec?eV.\n     tcAss!eT.  rtTec?eT.\n     rprTec!rCOO. Loop5OTAM\n\n  LHA = seekAcc!gDH.      \n          ((decAcc?rCOO. LHA)\n           +\n           (grntAcc?rCOO. takAct?gDH. LHA))\n\n  OTA = manVer?rCOO. chkAutAcc?oTAM. OTA\n\n  ET = tcAss?oTAM. rtTec!oTAM. ET\n\n  EV =  tecAss?oTAM. rptTec!oTAM. ET\n\n  HAS = perInvs?rCOO. rptInvs!rCOO. HAS\n\ninit\n  rC:RC || gDH:GDH || rCOO:RCOO || rHS:RHS ||\n  aC:AC || lHA:LHA || oTAM:OTAM || oTA:OTA ||\n  eT:ET || eV:EV   || hAS:HAS", "healthcare-sync", "Healthcare example (realisable version), from Pal et al. in an ICTAC'25 publication using pomsets to analyse realisability. Our version uses synchronous communication, also described by Pal et al. When using instead asynchronous communication, an unbounded buffer is found.")]));
   this.Lateams_frontend_CaosConfig$__f_examples = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems);
   $n($m_s_package$().s_package$__f_List);
-  var $$x10 = $m_sr_ScalaRunTime$();
+  var $$x11 = $m_sr_ScalaRunTime$();
   var a = new $c_sjsr_AnonFunction1(((x) => {
     var x$1 = $as_Lateams_syntax_Program$ASystem(x);
-    var this$66 = $n($m_Lateams_backend_TypeCheck$().check__Lateams_syntax_Program$ASystem__sci_Set(x$1));
-    return $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$66)
+    var $$x9 = $m_Lateams_backend_TypeCheck$();
+    var this$72 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+    var buffers = this$72.from__sc_IterableOnce__sci_Map(elems$1);
+    var this$74 = $n($n($$x9).check__Lateams_backend_Semantics$St__sci_Set(new $c_Lateams_backend_Semantics$St(x$1, buffers)));
+    return $m_sci_Seq$().from__sc_IterableOnce__sci_Seq(this$74)
   }));
   var y = new $c_Lcaos_frontend_widgets_WidgetInfo$Analyse(a);
-  var $$x9 = new $c_T2("check well-formed", y);
-  var this$72 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((s) => {
+  var $$x10 = new $c_T2("check well-formed", y);
+  var this$80 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((s) => {
     var s$1 = $as_Lateams_syntax_Program$ASystem(s);
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$ASystem__T(s$1)
   })), new $c_Lcaos_view_Code("haskell")));
-  var y$1 = $f_Lcaos_frontend_widgets_WidgetInfo__moveTo__I__Lcaos_frontend_widgets_WidgetInfo(this$72, 1);
+  var y$1 = $f_Lcaos_frontend_widgets_WidgetInfo__moveTo__I__Lcaos_frontend_widgets_WidgetInfo(this$80, 1);
   var $$x8 = new $c_T2("View pretty data", y$1);
-  var this$78 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((x$2) => {
+  var this$86 = $n($m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((x$2) => {
     var x$3 = $as_Lateams_syntax_Program$ASystem(x$2);
     var $$x6 = $m_Lateams_backend_BehaviourCheck$();
-    var this$75 = $n($m_s_Predef$().s_Predef$__f_Map);
-    var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers = this$75.from__sc_IterableOnce__sci_Map(elems$1);
-    var this$77 = $n($as_sc_IterableOnceOps($n($n($$x6).randomWalk__Lateams_backend_Semantics$St__I__T3(new $c_Lateams_backend_Semantics$St(x$3, buffers), 2000)).T3__f__3));
-    return $f_sc_IterableOnceOps__mkString__T__T__T__T(this$77, "", "\n", "")
-  })), $m_Lcaos_view_Text$()));
-  var y$2 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$78);
-  var $$x7 = new $c_T2("Well-behaved?", y$2);
-  var this$83 = $n($m_Lcaos_frontend_Configurator$().steps__F1__Lcaos_sos_SOS__F1__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e) => {
-    var e$1 = $as_Lateams_syntax_Program$ASystem(e);
-    var this$81 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var this$83 = $n($m_s_Predef$().s_Predef$__f_Map);
     var elems$2 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers$1 = this$81.from__sc_IterableOnce__sci_Map(elems$2);
-    return new $c_Lateams_backend_Semantics$St(e$1, buffers$1)
+    var buffers$1 = this$83.from__sc_IterableOnce__sci_Map(elems$2);
+    var this$85 = $n($as_sc_IterableOnceOps($n($n($$x6).randomWalk__Lateams_backend_Semantics$St__I__T3(new $c_Lateams_backend_Semantics$St(x$3, buffers$1), 2000)).T3__f__3));
+    return $f_sc_IterableOnceOps__mkString__T__T__T__T(this$85, "", "\n", "")
+  })), $m_Lcaos_view_Text$()));
+  var y$2 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$86);
+  var $$x7 = new $c_T2("Well-behaved?", y$2);
+  var this$91 = $n($m_Lcaos_frontend_Configurator$().steps__F1__Lcaos_sos_SOS__F1__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e) => {
+    var e$1 = $as_Lateams_syntax_Program$ASystem(e);
+    var this$89 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var elems$3 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+    var buffers$2 = this$89.from__sc_IterableOnce__sci_Map(elems$3);
+    return new $c_Lateams_backend_Semantics$St(e$1, buffers$2)
   })), $m_Lateams_backend_Semantics$(), new $c_sjsr_AnonFunction1(((x$3$1) => {
     var x$4 = $as_Lateams_backend_Semantics$St(x$3$1);
     return $m_Lateams_syntax_Show$().apply__Lateams_backend_Semantics$St__T(x$4)
@@ -18763,14 +19097,14 @@ function $c_Lateams_frontend_CaosConfig$() {
     var _$1$1 = $as_Lateams_syntax_Program$Act(_$1);
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(_$1$1)
   })), $m_Lcaos_view_Text$()));
-  var y$3 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$83);
+  var y$3 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$91);
   var $$x5 = new $c_T2("Run semantics", y$3);
   var y$4 = $m_Lcaos_frontend_Configurator$().lts__F1__Lcaos_sos_SOS__F1__F1__I__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((e$2) => {
     var e$3 = $as_Lateams_syntax_Program$ASystem(e$2);
-    var this$86 = $n($m_s_Predef$().s_Predef$__f_Map);
-    var elems$3 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-    var buffers$2 = this$86.from__sc_IterableOnce__sci_Map(elems$3);
-    return new $c_Lateams_backend_Semantics$St(e$3, buffers$2)
+    var this$94 = $n($m_s_Predef$().s_Predef$__f_Map);
+    var elems$4 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+    var buffers$3 = this$94.from__sc_IterableOnce__sci_Map(elems$4);
+    return new $c_Lateams_backend_Semantics$St(e$3, buffers$3)
   })), $m_Lateams_backend_Semantics$(), new $c_sjsr_AnonFunction1(((st) => {
     var st$1 = $as_Lateams_backend_Semantics$St(st);
     return $m_Lateams_syntax_Show$().showBuffers__Lateams_backend_Semantics$St__T(st$1)
@@ -18779,16 +19113,16 @@ function $c_Lateams_frontend_CaosConfig$() {
     return $m_Lateams_syntax_Show$().apply__Lateams_syntax_Program$Act__T(_$2$1)
   })), 80);
   var $$x4 = new $c_T2("Build LTS", y$4);
-  var this$95 = $n($m_Lcaos_frontend_Configurator$().viewMerms__F1__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy) => {
+  var this$103 = $n($m_Lcaos_frontend_Configurator$().viewMerms__F1__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy) => {
     var sy$1 = $as_Lateams_syntax_Program$ASystem(sy);
-    var this$90 = $n($n(sy$1).Lateams_syntax_Program$ASystem__f_main);
+    var this$98 = $n($n(sy$1).Lateams_syntax_Program$ASystem__f_main);
     $m_sci_List$();
-    var this$92 = $n($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$90));
+    var this$100 = $n($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(this$98));
     var p = new $c_sjsr_AnonFunction1(((x$1$1) => {
       var x$1$2 = $as_T2(x$1$1);
       return ((x$1$2 !== null) && ($as_T($n(x$1$2)._1__O()), $as_Lateams_syntax_Program$Proc($n(x$1$2)._2__O()), true))
     }));
-    return $as_sci_List($ct_sc_IterableOps$WithFilter__sc_IterableOps__F1__(new $c_sc_IterableOps$WithFilter(), this$92, p).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2$1) => {
+    return $as_sci_List($ct_sc_IterableOps$WithFilter__sc_IterableOps__F1__(new $c_sc_IterableOps$WithFilter(), this$100, p).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2$1) => {
       var x$1$3 = $as_T2(x$1$2$1);
       if ((x$1$3 !== null)) {
         var nm$1 = $as_T($n(x$1$3)._1__O());
@@ -18806,7 +19140,7 @@ function $c_Lateams_frontend_CaosConfig$() {
       throw new $c_s_MatchError(x$1$3)
     }))))
   }))));
-  var y$6 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$95);
+  var y$6 = $f_Lcaos_frontend_widgets_WidgetInfo__expand__Lcaos_frontend_widgets_WidgetInfo(this$103);
   var $$x3 = new $c_T2("Local components", y$6);
   var y$7 = $m_Lcaos_frontend_Configurator$().view__F1__Lcaos_view_ViewType__Lcaos_frontend_widgets_WidgetInfo(new $c_sjsr_AnonFunction1(((sy$2) => {
     var sy$3 = $as_Lateams_syntax_Program$ASystem(sy$2);
@@ -18816,10 +19150,10 @@ function $c_Lateams_frontend_CaosConfig$() {
       var \u03b41$___3;
       var $$x2 = $m_Lcaos_sos_SOS$();
       var $$x1 = $m_Lateams_backend_Semantics$();
-      var this$98 = $n($m_s_Predef$().s_Predef$__f_Map);
-      var elems$4 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
-      var buffers$3 = this$98.from__sc_IterableOnce__sci_Map(elems$4);
-      var x7 = $n($$x2).traverse__Lcaos_sos_SOS__O__I__T3($$x1, new $c_Lateams_backend_Semantics$St(sy$3, buffers$3), 2000);
+      var this$106 = $n($m_s_Predef$().s_Predef$__f_Map);
+      var elems$5 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([]));
+      var buffers$4 = this$106.from__sc_IterableOnce__sci_Map(elems$5);
+      var x7 = $n($$x2).traverse__Lcaos_sos_SOS__O__I__T3($$x1, new $c_Lateams_backend_Semantics$St(sy$3, buffers$4), 2000);
       if ((x7 !== null)) {
         var st$2 = $as_sci_Set($n(x7).T3__f__1);
         var eds = $uI($n(x7).T3__f__2);
@@ -18836,16 +19170,16 @@ function $c_Lateams_frontend_CaosConfig$() {
     var done$2 = $uZ(\u03b41$___3);
     return ((!done$2) ? "(Stopped after traversing 2000 states)" : ((("States: " + $n(st$2$1).size__I()) + "\nEdges: ") + eds$2))
   })), $m_Lcaos_view_Text$());
-  var elems$5 = $n($$x10).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x9, $$x8, $$x7, $$x5, $$x4, $$x3, new $c_T2("Number of states and edges", y$7)]));
-  this.Lateams_frontend_CaosConfig$__f_widgets = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems$5);
+  var elems$6 = $n($$x11).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x10, $$x8, $$x7, $$x5, $$x4, $$x3, new $c_T2("Number of states and edges", y$7)]));
+  this.Lateams_frontend_CaosConfig$__f_widgets = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems$6);
   this.Lateams_frontend_CaosConfig$__f_footer = ($m_sc_StringOps$(), $m_sc_StringOps$().stripMargin$extension__T__C__T("Simple animator of A-Teams, using the\n      | CAOS libraries. Source code available online:\n      | <a target=\"_blank\" href=\"https://github.com/FM-DCC/a-teams\">\n      | https://github.com/FM-DCC/a-team</a>.", 124));
-  var $$x12 = $m_Lcaos_frontend_Configurator$();
+  var $$x13 = $m_Lcaos_frontend_Configurator$();
   $n($m_s_package$().s_package$__f_List);
-  var $$x11 = $m_sr_ScalaRunTime$();
+  var $$x12 = $m_sr_ScalaRunTime$();
   var self$1 = this.Lateams_frontend_CaosConfig$__f_languageName;
   var self$2 = new $c_T2(self$1, "More information on the syntax of A-Team");
-  var elems$6 = $n($$x11).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([new $c_T2(self$2, "A program in A-Team consists of <ul><li> [acts] a set of action declarations with their associated synchronisation types,</li><li> [proc] a set of process definitions, and</li><li> [init] a set of processes in parallel.</li></ul>The grammar for processes is given by:\n<pre>P := K |0 |\u03b1.P |P + P\n\u03b1:= a! |a? |a!n |a?n</pre>\n Possible syncronisation types are \"sync\", \"fifo\", or \"unsorted\", and can also have a bound on the numberof receiving and sending agents, and a location type for the buffers (@snd, @rcv, @snd-rcv, or @global).")]));
-  this.Lateams_frontend_CaosConfig$__f_documentation = $n($$x12).toDocumentation__sci_List__Lcaos_frontend_Documentation($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems$6))
+  var elems$7 = $n($$x12).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([new $c_T2(self$2, "A program in A-Team consists of <ul><li> [acts] a set of action declarations with their associated synchronisation types,</li><li> [proc] a set of process definitions, and</li><li> [init] a set of processes in parallel.</li></ul>The grammar for processes is given by:\n<pre>P := K |0 |\u03b1.P |P + P\n\u03b1:= a! |a? |a!n |a?n</pre>\n Possible syncronisation types are \"sync\", \"fifo\", or \"unsorted\", and can also have a bound on the numberof receiving and sending agents, and a location type for the buffers (@snd, @rcv, @snd-rcv, or @global).")]));
+  this.Lateams_frontend_CaosConfig$__f_documentation = $n($$x13).toDocumentation__sci_List__Lcaos_frontend_Documentation($m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems$7))
 }
 $c_Lateams_frontend_CaosConfig$.prototype = new $h_O();
 $c_Lateams_frontend_CaosConfig$.prototype.constructor = $c_Lateams_frontend_CaosConfig$;
@@ -33284,6 +33618,9 @@ function $h_sc_MapOps$WithFilter() {
   /*<skip>*/
 }
 $h_sc_MapOps$WithFilter.prototype = $c_sc_MapOps$WithFilter.prototype;
+$c_sc_MapOps$WithFilter.prototype.map__F1__sc_IterableOps = (function(f) {
+  return $as_sc_IterableOps($n($n(this.sc_MapOps$WithFilter__f_self).mapFactory__sc_MapFactory()).from__sc_IterableOnce__O($ct_sc_View$Map__sc_IterableOps__F1__(new $c_sc_View$Map(), this.filtered__sc_Iterable(), f)))
+});
 $c_sc_MapOps$WithFilter.prototype.flatMap__F1__sc_IterableOps = (function(f) {
   return $as_sc_IterableOps($n($n(this.sc_MapOps$WithFilter__f_self).mapFactory__sc_MapFactory()).from__sc_IterableOnce__O(new $c_sc_View$FlatMap(this.filtered__sc_Iterable(), f)))
 });
@@ -34212,6 +34549,17 @@ function $isArrayOf_Lateams_syntax_Program$Act(obj, depth) {
 function $asArrayOf_Lateams_syntax_Program$Act(obj, depth) {
   return (($isArrayOf_Lateams_syntax_Program$Act(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lateams.syntax.Program$Act;", depth))
 }
+var $d_Lateams_syntax_Program$Act = new $TypeData().initClass({
+  Lateams_syntax_Program$Act: 0
+}, false, "ateams.syntax.Program$Act", {
+  Lateams_syntax_Program$Act: 1,
+  O: 1,
+  s_Equals: 1,
+  s_Product: 1,
+  Ljava_io_Serializable: 1,
+  s_reflect_Enum: 1
+});
+$c_Lateams_syntax_Program$Act.prototype.$classData = $d_Lateams_syntax_Program$Act;
 /** @constructor */
 function $c_Lateams_syntax_Program$Fifo(q) {
   this.Lateams_syntax_Program$Fifo__f_q = null;
@@ -39871,6 +40219,15 @@ function $f_sc_LinearSeqOps__find__F1__s_Option($thiz, p) {
     these = $as_sc_LinearSeq($n(these).tail__O())
   };
   return $m_s_None$()
+}
+function $f_sc_LinearSeqOps__foldLeft__O__F2__O($thiz, z, op) {
+  var acc = z;
+  var these = $as_sc_LinearSeq($thiz);
+  while ((!$n(these).isEmpty__Z())) {
+    acc = $n(op).apply__O__O__O(acc, $n(these).head__O());
+    these = $as_sc_LinearSeq($n(these).tail__O())
+  };
+  return acc
 }
 function $f_sc_LinearSeqOps__sameElements__sc_IterableOnce__Z($thiz, that) {
   if ($is_sc_LinearSeq(that)) {
@@ -47368,6 +47725,9 @@ $c_sc_AbstractIterable.prototype.exists__F1__Z = (function(p) {
 });
 $c_sc_AbstractIterable.prototype.find__F1__s_Option = (function(p) {
   return $f_sc_IterableOnceOps__find__F1__s_Option(this, p)
+});
+$c_sc_AbstractIterable.prototype.foldLeft__O__F2__O = (function(z, op) {
+  return $f_sc_IterableOnceOps__foldLeft__O__F2__O(this, z, op)
 });
 $c_sc_AbstractIterable.prototype.isEmpty__Z = (function() {
   return $f_sc_IterableOnceOps__isEmpty__Z(this)
@@ -60024,6 +60384,23 @@ $c_sci_LazyList.prototype.foreach__F1__V = (function(f) {
     _$this = $n(this$2.scala$collection$immutable$LazyList$$state__sci_LazyList$State()).tail__sci_LazyList()
   }
 });
+$c_sci_LazyList.prototype.foldLeft__O__F2__O = (function(z, op) {
+  var _$this = this;
+  while (true) {
+    if ($n(_$this).isEmpty__Z()) {
+      return z
+    } else {
+      var this$1 = $n(_$this);
+      var temp$_$this = $n(this$1.scala$collection$immutable$LazyList$$state__sci_LazyList$State()).tail__sci_LazyList();
+      var $$x2 = $n(op);
+      var $$x1 = z;
+      var this$2 = $n(_$this);
+      var temp$z = $n($$x2).apply__O__O__O($$x1, $n(this$2.scala$collection$immutable$LazyList$$state__sci_LazyList$State()).head__O());
+      _$this = temp$_$this;
+      z = temp$z
+    }
+  }
+});
 $c_sci_LazyList.prototype.className__T = (function() {
   return "LazyList"
 });
@@ -60494,6 +60871,9 @@ $c_sjsr_WrappedVarArgs.prototype.exists__F1__Z = (function(p) {
 });
 $c_sjsr_WrappedVarArgs.prototype.find__F1__s_Option = (function(p) {
   return $f_sc_IterableOnceOps__find__F1__s_Option(this, p)
+});
+$c_sjsr_WrappedVarArgs.prototype.foldLeft__O__F2__O = (function(z, op) {
+  return $f_sc_IterableOnceOps__foldLeft__O__F2__O(this, z, op)
 });
 $c_sjsr_WrappedVarArgs.prototype.copyToArray__O__I__I__I = (function(xs, start, len) {
   return $f_sc_IterableOnceOps__copyToArray__O__I__I__I(this, xs, start, len)
@@ -61684,6 +62064,17 @@ $c_sci_ArraySeq.prototype.appendedAll__sc_IterableOnce__sci_ArraySeq = (function
 });
 $c_sci_ArraySeq.prototype.dropRight__I__sci_ArraySeq = (function(n) {
   return ((n <= 0) ? this : $m_sci_ArraySeq$().unsafeWrapArray__O__sci_ArraySeq($m_sc_ArrayOps$().dropRight$extension__O__I__O(this.unsafeArray__O(), n)))
+});
+$c_sci_ArraySeq.prototype.foldLeft__O__F2__O = (function(z, f) {
+  var array = this.unsafeArray__O();
+  var b = z;
+  var i = 0;
+  while ((i < $m_jl_reflect_Array$().getLength__O__I(array))) {
+    var a = $m_sr_ScalaRunTime$().array_apply__O__I__O(array, i);
+    b = $n(f).apply__O__O__O(b, a);
+    i = ((1 + i) | 0)
+  };
+  return b
 });
 $c_sci_ArraySeq.prototype.className__T = (function() {
   return "ArraySeq"
@@ -63434,6 +63825,9 @@ $c_sci_List.prototype.isDefinedAt__I__Z = (function(x) {
 $c_sci_List.prototype.apply__I__O = (function(n) {
   return $f_sc_LinearSeqOps__apply__I__O(this, n)
 });
+$c_sci_List.prototype.foldLeft__O__F2__O = (function(z, op) {
+  return $f_sc_LinearSeqOps__foldLeft__O__F2__O(this, z, op)
+});
 $c_sci_List.prototype.sameElements__sc_IterableOnce__Z = (function(that) {
   return $f_sc_LinearSeqOps__sameElements__sc_IterableOnce__Z(this, that)
 });
@@ -63719,6 +64113,9 @@ $c_sci_Queue.prototype.foreach__F1__V = (function(f) {
 });
 $c_sci_Queue.prototype.find__F1__s_Option = (function(p) {
   return $f_sc_LinearSeqOps__find__F1__s_Option(this, p)
+});
+$c_sci_Queue.prototype.foldLeft__O__F2__O = (function(z, op) {
+  return $f_sc_LinearSeqOps__foldLeft__O__F2__O(this, z, op)
 });
 $c_sci_Queue.prototype.sameElements__sc_IterableOnce__Z = (function(that) {
   return $f_sc_LinearSeqOps__sameElements__sc_IterableOnce__Z(this, that)

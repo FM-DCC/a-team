@@ -299,15 +299,15 @@ object Semantics extends SOS[Act,St]:
     case Act.Out(s,_) => s
     case Act.IO(s,_,_) => s
 
-  private def getLoc(act: String, snd:Option[String], rcv: Option[String])(using st:St): Loc =
+  def getLoc(act: String, snd:Option[String], rcv: Option[String])(using st:St): Loc =
     stype(act) match
       case Sync => sys.error(s"Cannot get buffers of sync message \"$act\"")
-      case Async(locInfo,_)     => getLocInfo(locInfo,act,snd,rcv)
+      case Async(locInfo,_)     => getLoc(locInfo,act,snd,rcv)
       case Internal => sys.error(s"Cannot get buffers of internal messages")
 
-  private def getLocInfo(linfo: LocInfo, act:String,
-                         snd: Option[String],
-                         rcv: Option[String]): Loc = (linfo,snd,rcv) match
+  def getLoc(linfo: LocInfo, act:String,
+                     snd: Option[String],
+                     rcv: Option[String]): Loc = (linfo,snd,rcv) match
     case (LocInfo(true,true),Some(s),Some(r)) => Loc(snd,rcv)
     case (LocInfo(true,false),Some(s),_) => Loc(snd,None)
     case (LocInfo(false,true),_,Some(r)) => Loc(None,rcv)

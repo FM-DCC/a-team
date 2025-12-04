@@ -7,12 +7,13 @@ import ateams.syntax.Program.{ASystem, Act, ActName, Agent, LocInfo, MsgInfo, Pr
 object TypeCheck:
   type Errors = Set[String]
 
-  def pp(sy:ASystem) =
-    val err = check(sy)
+  def pp(st:St) =
+    val err = check(st)
     if err.isEmpty then "Well-formed"
     else "Not well-formed:\n"+err.map(x => s" - $x").mkString("\n")
-  def check(st:St): Errors = check(st.sys)
-  def check(sy:ASystem): Errors =
+  def check(st:St): Errors =
+    check(st.sys) ++ checkBTypes(st)
+  private def check(sy:ASystem): Errors =
     sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten
   def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
     p match {
@@ -69,3 +70,64 @@ object TypeCheck:
     (for an <- (anames) if !sy.main.contains(an) yield
       s"[$pname] Unknown agent $an used by action $a.")
 
+
+
+  /////////////////////////////////////
+  // check buffer-type compatibility //
+  /////////////////////////////////////
+  import Semantics.{getActName,Loc}
+
+  def getAllLocs(st:St): Map[Loc,Set[Act]] =
+    val res = for (ag,p)<- st.sys.main yield getLocs(p,Set())(using ag,st)
+    res.foldLeft(Map[Loc,Set[Act]]())(mjoin)
+
+  def checkBTypes(st:St): Set[String] = // Map[Loc, Set[Class[? <: Program.Buffer]]] =
+    val locs = getAllLocs(st)
+    val bts = for (loc,acts) <- locs yield
+      (loc,acts.flatMap(act => Semantics.stype(act)(using st) match {
+        case SyncType.Sync => Set()
+        case SyncType.Async(where, buf) => Set(buf.getClass.getName)
+        case SyncType.Internal => Set()
+      }))
+    for (loc,buffs)<-bts.toSet if buffs.size>1 yield
+      s"[Buffer-type] incompatible buffer types @ ${Show(loc)} (${
+        buffs.map(_.toString.split('$')(1)).mkString(",")}), by messages ${
+        locs(loc).map(Show.apply).mkString(", ")}."
+
+  def getLocs(p:Proc, done:Set[ProcName])
+             (using self:Agent, st:St): Map[Semantics.Loc,Set[Act]] =
+    p match
+      case Proc.End => Map()
+      case Proc.ProcCall(p) if done(p) => Map()
+      case Proc.ProcCall(p) => getLocs(st.sys.defs(p),done+p)
+      case Proc.Choice(p1, p2) =>
+        mjoin( getLocs(p1,done), getLocs(p2,done)) // could enrich one of the "done"s
+      case Proc.Par(p1, p2) =>
+        mjoin( getLocs(p1,done), getLocs(p2,done)) // could enrich one of the "done"s
+      case Proc.Prefix(act, p) =>
+        val rest = getLocs(p,done)
+        Semantics.stype(act) match
+          case SyncType.Sync => rest
+          case SyncType.Internal => rest
+          case SyncType.Async(where, buf) =>
+            val sndrcvs = getSndRcv(self,act,where)
+            val locs = for (Loc(snd,rcv),a)<-sndrcvs yield
+                       Semantics.getLoc(where,a,snd,rcv) -> Set(a)
+            mjoin(rest,locs.toMap)
+
+  private def getSndRcv(self: Agent, act: Act, li:LocInfo)
+      : Set[(Loc,Act)] =
+    (act,li) match
+      case (Act.In(_, from),LocInfo(true, hasRcv)) =>
+        for f<-from yield Loc(Some(f), Option.when(hasRcv)(self)) -> act
+      case (Act.In(_, _),LocInfo(false, hasRcv)) =>
+        Set(Loc(None, Option.when(hasRcv)(self)) -> act)
+      case (Act.Out(_, to),LocInfo(hasSnd, true)) =>
+        for t<-to yield Loc(Option.when(hasSnd)(self), Some(t)) -> act
+      case (Act.Out(_, _),LocInfo(hasSnd, false)) =>
+        Set(Loc(Option.when(hasSnd)(self), None) -> act)
+      case (Act.IO(a, from, to),_) => Set()
+
+
+  def mjoin[A,B](m1:Map[A,Set[B]], m2:Map[A,Set[B]]) =
+    m1 ++ (for (k,v)<-m2 yield k -> (m1.getOrElse(k,Set()) ++ v))
