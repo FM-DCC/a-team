@@ -330,4 +330,6 @@ object Semantics extends SOS[Act,St]:
 
   private def checkBuffType(b1: Buffer, b2: Buffer, msg: String): Unit =
     if b1.getClass != b2.getClass then
-      sys.error(s"Conflicting buffer types when $msg: had ${b1.getClass} and now has ${b2.getClass}.")
+      sys.error(s"Conflicting buffer types when $msg: had type ${
+        b1.getClass.toString.split('$')(1)} and now has type ${
+        b2.getClass.toString.split('$')(1)}.")

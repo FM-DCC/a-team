@@ -17937,10 +17937,15 @@ function $p_Lateams_backend_Semantics$__checkBuffType__Lateams_syntax_Program$Bu
   var this$2 = $n(b2);
   var x$2 = $objectGetClass(this$2);
   if ((!(x === x$2))) {
-    var $$x1 = $m_s_sys_package$();
+    var $$x4 = $m_s_sys_package$();
+    var $$x3 = $m_sc_StringOps$();
     var this$3 = $n(b1);
-    var this$4 = $n(b2);
-    $n($$x1).error__T__E((((((("Conflicting buffer types when " + msg) + ": had ") + $objectGetClass(this$3)) + " and now has ") + $objectGetClass(this$4)) + "."))
+    var x$1 = $objectGetClass(this$3).toString__T();
+    var $$x2 = $n($n($$x3).split$extension__T__C__AT(x$1, 36)).get(1);
+    var $$x1 = $m_sc_StringOps$();
+    var this$5 = $n(b2);
+    var x$3 = $objectGetClass(this$5).toString__T();
+    $n($$x4).error__T__E((((((("Conflicting buffer types when " + msg) + ": had type ") + $$x2) + " and now has type ") + $n($n($$x1).split$extension__T__C__AT(x$3, 36)).get(1)) + "."))
   }
 }
 /** @constructor */
