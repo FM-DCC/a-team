@@ -88,7 +88,7 @@ object CaosConfig extends Configurator[ASystem]:
       -> view((sy:ASystem) => {
           val (st,eds,done) = SOS.traverse(Semantics,St(sy,Map()),2000)
           //s"== Full state space ==" +
-          (if !done then s"(Stopped after traversing 2000 states)"
+          (if !done then s"(Stopped after traversing ${st.size} states and $eds transitions.)"
            else s"States: ${st.size}\nEdges: $eds")
         },
         Text),

@@ -4751,7 +4751,7 @@ function $p_Lcaos_sos_SOS$__aux$2__Lcaos_sos_SOS__sci_Set__sci_Set__I__I__T3($th
       var this$8 = $n(done$tailLocal1);
       var done$tailLocal1$tmp1 = $as_sci_Set(this$8.incl__O__sci_SetOps(x57));
       var edges$tailLocal1$tmp1 = ((edges$tailLocal1 + $n(more).size__I()) | 0);
-      var limit$tailLocal1$tmp1 = (((-1) + limit$tailLocal1) | 0);
+      var limit$tailLocal1$tmp1 = ((limit$tailLocal1 - $n(more).size__I()) | 0);
       next$tailLocal2 = next$tailLocal2$tmp1;
       done$tailLocal1 = done$tailLocal1$tmp1;
       edges$tailLocal1 = edges$tailLocal1$tmp1;
@@ -19173,7 +19173,7 @@ function $c_Lateams_frontend_CaosConfig$() {
     var st$2$1 = $as_sci_Set(\u03b41$___1);
     var eds$2 = $uI(\u03b41$___2);
     var done$2 = $uZ(\u03b41$___3);
-    return ((!done$2) ? "(Stopped after traversing 2000 states)" : ((("States: " + $n(st$2$1).size__I()) + "\nEdges: ") + eds$2))
+    return ((!done$2) ? (((("(Stopped after traversing " + $n(st$2$1).size__I()) + " states and ") + eds$2) + " transitions.)") : ((("States: " + $n(st$2$1).size__I()) + "\nEdges: ") + eds$2))
   })), $m_Lcaos_view_Text$());
   var elems$6 = $n($$x11).wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x10, $$x8, $$x7, $$x5, $$x4, $$x3, new $c_T2("Number of states and edges", y$7)]));
   this.Lateams_frontend_CaosConfig$__f_widgets = $m_sci_Nil$().prependedAll__sc_IterableOnce__sci_List(elems$6);
