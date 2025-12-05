@@ -400,6 +400,11 @@ button {
 
 /* FOR SMALLER SCREENS */
 @media (max-width: 750px) {
+  .navbar-brand {
+    max-width: calc(100% - 60px);
+    height: auto;
+  }
+
   .rightside{
       float: none;
       min-width: 100%;
