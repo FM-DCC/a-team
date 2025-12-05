@@ -1,6 +1,6 @@
-# Animator of A-Teams
+# Animator of Asynchronous Team Automata
 
-Animator of an experimental semantics for asynchronous Team Automata, using the Caos framework.
+Animator of a recent semantics for Asynchronous Team Automata, using the Caos framework.
 This project contains all the source code, and a pre-compiled version can be executed from the static web-page stored in the `docs` folder, by accessing the link:
 
  - https://fm-dcc.github.io/a-team/
