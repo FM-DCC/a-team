@@ -12,7 +12,8 @@ object TypeCheck:
     if err.isEmpty then "Well-formed"
     else "Not well-formed:\n"+err.map(x => s" - $x").mkString("\n")
   def check(sy:ASystem): Errors =
-    sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten
+    sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten ++
+      checkBTypes(sy)
   def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
     p match {
       case Proc.End => Set()
