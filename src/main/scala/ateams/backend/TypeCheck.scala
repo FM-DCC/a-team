@@ -7,13 +7,11 @@ import ateams.syntax.Program.{ASystem, Act, ActName, Agent, LocInfo, MsgInfo, Pr
 object TypeCheck:
   type Errors = Set[String]
 
-  def pp(st:St) =
-    val err = check(st)
+  def pp(sy:ASystem) =
+    val err = check(sy)
     if err.isEmpty then "Well-formed"
     else "Not well-formed:\n"+err.map(x => s" - $x").mkString("\n")
-  def check(st:St): Errors =
-    check(st.sys) ++ checkBTypes(st)
-  private def check(sy:ASystem): Errors =
+  def check(sy:ASystem): Errors =
     sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten
   def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
     p match {
@@ -83,10 +81,10 @@ object TypeCheck:
    * @param st State of the system with the context
    * @return (Possibly empty) set of error messages from incompatible buffer types
    */
-  def checkBTypes(st:St): Set[String] =
-    val locs = getAllLocs(st.sys)
+  def checkBTypes(sy:ASystem): Set[String] =
+    val locs = getAllLocs(sy)
     val bts = for (loc,acts) <- locs yield
-      (loc,acts.flatMap(act => Semantics.stype(act)(using st) match {
+      (loc,acts.flatMap(act => Semantics.stype(act)(using Ctx(sy.msgs,sy.defs)) match {
         case SyncType.Sync => Set()
         case SyncType.Async(where, buf) => Set(buf.getClass.getName)
         case SyncType.Internal => Set()

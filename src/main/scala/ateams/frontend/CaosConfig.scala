@@ -61,7 +61,7 @@ object CaosConfig extends Configurator[ASystem]:
 
   /** Description of the widgets that appear in the dashboard. */
   val widgets = List(
-     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(St(x,Map())).toSeq),
+     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
      "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
 //    "View structure" -> view(Show.mermaid, Mermaid),
 //     "Well-formed?" -> view[ASystem](x => ateams.backend.TypeCheck.pp(x), Text).expand,
