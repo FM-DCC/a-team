@@ -23,6 +23,8 @@ object Semantics extends SOS[Act,St]:
    */
   case class St(sys: ASystem,
                 buffers: Map[Loc,Buffer])
+  case class Ctx(msgs: Map[ActName,MsgInfo], // message declarations
+                 defs: Map[ProcName,Proc]) // definitions of processes)
 
   case class Loc(snd: Option[String], rcv: Option[String])
   type Defs = Map[String,Proc]
@@ -67,6 +69,7 @@ object Semantics extends SOS[Act,St]:
 
   /** How to evolve a state using syncrhonous actions. */
   def nextSync(canGo: Set[(Act,(String,Proc))])(using st:St): Set[(Act,Procs)] = {
+    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     // compile map "action-name" -> ([("snd-agent","nextProc","rcv-agt?"), ...] , [("rcv-agent","nextProc","snd-agt?"), ...])
     var syncsMap = Map[String,(List[(String,Proc,Set[String])],List[(String,Proc,Set[String])])]()
     for (a,(n,p)) <- canGo if stype(a) == SyncType.Sync
@@ -115,7 +118,8 @@ object Semantics extends SOS[Act,St]:
   //////////////////////////////////////////
 
   /** How to evolve a state using asyncrhonous sending actions. */
-  def nextSend(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] =
+  def nextSend(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] = {
+    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     //println(s"## can send? ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (a@Act.Out(s,to), (n, p)) <- canGo
         if isAsync(stype(s)) //  List(SyncType.Fifo,SyncType.Unsorted) contains stype(a)
@@ -175,6 +179,7 @@ object Semantics extends SOS[Act,St]:
          // any other case (fifo or sync)
          case _ => sys.error(s"case not supported for sending ${Show(a)}")
      })
+  }
 
   /** Checks if a number `n` is in the bounds of an interval `intrv`. */
   def inInterval(n: Int, intr: Intrv): Boolean =
@@ -191,6 +196,7 @@ object Semantics extends SOS[Act,St]:
 
   /** How to evolve a state using asyncrhonous receiving actions. */
   def nextRcv(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] =
+    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     //println(s"## can receive?") // ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (a@Act.In(s,from), (n, p)) <- canGo
         if isAsync(stype(s))
@@ -298,8 +304,10 @@ object Semantics extends SOS[Act,St]:
     case Act.In(s,_) => s
     case Act.Out(s,_) => s
     case Act.IO(s,_,_) => s
+  implicit def getCtx(st:St): Ctx =
+    Ctx(st.sys.msgs,st.sys.defs)
 
-  def getLoc(act: String, snd:Option[String], rcv: Option[String])(using st:St): Loc =
+  def getLoc(act: String, snd:Option[String], rcv: Option[String])(using ctx:Ctx): Loc =
     stype(act) match
       case Sync => sys.error(s"Cannot get buffers of sync message \"$act\"")
       case Async(locInfo,_)     => getLoc(locInfo,act,snd,rcv)
@@ -315,13 +323,13 @@ object Semantics extends SOS[Act,St]:
     case _ => sys.error(s"Missing information for channel \"$act\": type ${Show(linfo)}, got $snd->$rcv.")
 
 
-  def arit(act: String)(using st:St): (Intrv, Intrv) =
-    aritSys(act)(using st.sys)
-  def aritSys(act: String)(using s:ASystem): (Intrv, Intrv) =
-    s.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action $act."))
+  def arit(act: String)(using ctx:Ctx): (Intrv, Intrv) =
+    aritSys(act)
+  def aritSys(act: String)(using ctx:Ctx): (Intrv, Intrv) =
+    ctx.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action $act."))
 
-  def stype(act: String)(using st:St): SyncType =
-    st.sys.msgs.get(act).flatMap(_.st).getOrElse(Internal)//sys.error(s"[st] Unknown action $act."))
+  def stype(act: String)(using ctx:Ctx): SyncType =
+    ctx.msgs.get(act).flatMap(_.st).getOrElse(Internal)//sys.error(s"[st] Unknown action $act."))
 
   def isAsync(syncType: Program.SyncType): Boolean =
     syncType match

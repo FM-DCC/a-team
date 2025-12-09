@@ -1,6 +1,6 @@
 package ateams.backend
 
-import Semantics.{St, aritSys}
+import Semantics.{St, aritSys, Ctx}
 import ateams.syntax.{Program, Show}
 import ateams.syntax.Program.{ASystem, Act, ActName, Agent, LocInfo, MsgInfo, Proc, ProcName, SyncType}
 
@@ -75,14 +75,16 @@ object TypeCheck:
   /////////////////////////////////////
   // check buffer-type compatibility //
   /////////////////////////////////////
-  import Semantics.{getActName,Loc}
+  import Semantics.{getActName,getCtx,Loc}
 
-  def getAllLocs(st:St): Map[Loc,Set[Act]] =
-    val res = for (ag,p)<- st.sys.main yield getLocs(p,Set())(using ag,st)
-    res.foldLeft(Map[Loc,Set[Act]]())(mjoin)
-
-  def checkBTypes(st:St): Set[String] = // Map[Loc, Set[Class[? <: Program.Buffer]]] =
-    val locs = getAllLocs(st)
+  /** Searches for locations that can be used by actions that require
+   * different buffer types (e.g., FIFO or Unsorted), which result in
+   * ill-formed programs.
+   * @param st State of the system with the context
+   * @return (Possibly empty) set of error messages from incompatible buffer types
+   */
+  def checkBTypes(st:St): Set[String] =
+    val locs = getAllLocs(st.sys)
     val bts = for (loc,acts) <- locs yield
       (loc,acts.flatMap(act => Semantics.stype(act)(using st) match {
         case SyncType.Sync => Set()
@@ -94,12 +96,25 @@ object TypeCheck:
         buffs.map(_.toString.split('$')(1)).mkString(",")}), by messages ${
         locs(loc).map(Show.apply).mkString(", ")}."
 
+  def getAllLocs(sy: ASystem): Map[Loc, Set[Act]] =
+    val res = for (ag, p) <- sy.main yield getLocs(p, Set())(using ag, Ctx(sy.msgs,sy.defs))
+    res.foldLeft(Map[Loc, Set[Act]]())(mjoin)
+
+  /**
+   * Compiles the locations and corresponding sets of actions used by a given
+   * process `p` from agent `self`.
+   * @param p process definition
+   * @param done process names already expanded
+   * @param self current agent name
+   * @param ctx Context with message types and process definitions
+   * @return mapping from used locations to actions that use them
+   */
   def getLocs(p:Proc, done:Set[ProcName])
-             (using self:Agent, st:St): Map[Semantics.Loc,Set[Act]] =
+             (using self:Agent, ctx:Ctx): Map[Loc,Set[Act]] =
     p match
       case Proc.End => Map()
       case Proc.ProcCall(p) if done(p) => Map()
-      case Proc.ProcCall(p) => getLocs(st.sys.defs(p),done+p)
+      case Proc.ProcCall(p) => getLocs(ctx.defs(p),done+p)
       case Proc.Choice(p1, p2) =>
         mjoin( getLocs(p1,done), getLocs(p2,done)) // could enrich one of the "done"s
       case Proc.Par(p1, p2) =>
@@ -128,6 +143,6 @@ object TypeCheck:
         Set(Loc(Option.when(hasSnd)(self), None) -> act)
       case (Act.IO(a, from, to),_) => Set()
 
-
+  /** Join of two relations AxB defined as a mapping A->Set[B]. */
   def mjoin[A,B](m1:Map[A,Set[B]], m2:Map[A,Set[B]]) =
     m1 ++ (for (k,v)<-m2 yield k -> (m1.getOrElse(k,Set()) ++ v))
