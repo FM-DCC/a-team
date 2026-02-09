@@ -29,6 +29,19 @@
     display: block;
 }*/
 
+.close-btn {
+    position: absolute; /* Position the button absolutely within the div */
+    top: -22px; /* Distance from the top */
+    right: -18px; /* Distance from the right */
+    background: none; /* No background */
+    border: none; /* No border */
+    font-size: 20px; /* Increase font size */
+    cursor: pointer; /* Change cursor to pointer */
+}
+.mydiv{
+    position: relative;
+}
+
 .row {
     /*padding-left: 15px;*/
     /*padding-right: 15px;*/
@@ -161,6 +174,17 @@
 .dropdown>a:focus {
     border-color: black;
 }
+/* optional: hidden state */
+.hidden {
+  display: none;
+}
+.offBt {
+    background-color: #ff000040 !important;
+}
+.tgBtn {
+    background-color: #00ff0040;
+    margin-left: 5px;
+}
 .overlay { 
     position: fixed;
     display: none;
@@ -231,6 +255,7 @@
  */
     border: 0px solid transparent;
     border-radius: 4px;
+    display: none; /* hidden since CAOS is not using navigation items for now. */
 }
 .noscroll {
     overflow: hidden;
@@ -397,6 +422,12 @@ button {
     background-color: rgb(230, 230, 230);
 }
 
+.mermaidFix {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
 
 /* FOR SMALLER SCREENS */
 @media (max-width: 750px) {
@@ -423,6 +454,10 @@ button {
     cursor: auto;
   }
 
+  .navbar-brand {
+    max-width: calc(100% - 0px); /* adjust based on other navbar items */
+    height: auto;
+  }
   .popup {
       position: absolute;
       width: 92%;

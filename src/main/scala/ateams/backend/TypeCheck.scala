@@ -7,14 +7,28 @@ import ateams.syntax.Program.{ASystem, Act, ActName, Agent, LocInfo, MsgInfo, Pr
 object TypeCheck:
   type Errors = Set[String]
 
+  /** Type checking of A-Team programs, which includes:
+   * 1. Checking that all used actions and agents are declared, and that the number of senders/receivers in each action matches the synchronisation type declared for that action.
+   * 2. Checking that the same location is not used by actions with incompatible buffer types (e.g., FIFO and Unsorted).
+   * @param sy system to check
+   * @return the string "Well-formed" if the system is well-formed, or a string with the list of errors otherwise.
+   */
   def pp(sy:ASystem) =
     val err = check(sy)
     if err.isEmpty then "Well-formed"
     else "Not well-formed:\n"+err.map(x => s" - $x").mkString("\n")
+  
+  /** Type checking of A-Team programs, which includes:
+   * 1. Checking that all used actions and agents are declared, and that the number of senders/receivers in each action matches the synchronisation type declared for that action.
+   * 2. Checking that the same location is not used by actions with incompatible buffer types (e.g., FIFO and Unsorted).
+   * @param sy system to check
+   * @return the (possibly empty) set of errors found in the system.
+   */
   def check(sy:ASystem): Errors =
     sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten ++
       checkBTypes(sy)
-  def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
+
+  private def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
     p match {
       case Proc.End => Set()
       case Proc.ProcCall(p) => if sy.defs.contains(p) then Set() else
@@ -62,7 +76,7 @@ object TypeCheck:
       case Proc.Prefix(Act.IO(a,from,to),p) => check(p) // ++ checkAct(a,from++to) // IO actions do not need to be declared
     }
 
-  def checkAct(a:ActName, anames:Set[Agent])
+  private def checkAct(a:ActName, anames:Set[Agent])
               (using sy:ASystem, pname:ProcName): Errors =
     (if !sy.msgs.contains(a) then
       Set(s"[$pname] Unknown action $a.") else Set()) ++
@@ -95,6 +109,8 @@ object TypeCheck:
         buffs.map(_.toString.split('$')(1)).mkString(",")}), by messages ${
         locs(loc).map(Show.apply).mkString(", ")}."
 
+  /** Auxiliary functions to compile the locations used by the system,
+   * which are needed to check buffer-type compatibility. */
   def getAllLocs(sy: ASystem): Map[Loc, Set[Act]] =
     val res = for (ag, p) <- sy.main yield getLocs(p, Set())(using ag, Ctx(sy.msgs,sy.defs))
     res.foldLeft(Map[Loc, Set[Act]]())(mjoin)

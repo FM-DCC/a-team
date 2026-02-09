@@ -61,30 +61,37 @@ object CaosConfig extends Configurator[ASystem]:
 
   /** Description of the widgets that appear in the dashboard. */
   val widgets = List(
-     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
-     "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
-//    "View structure" -> view(Show.mermaid, Mermaid),
-//     "Well-formed?" -> view[ASystem](x => ateams.backend.TypeCheck.pp(x), Text).expand,
-//     "getLocs" -> view[ASystem](x => TypeCheck.getAllLocs(x).mkString("\n"), Text).expand,
-//     "getLocsBT" -> view[ASystem](x => TypeCheck.checkBTypes(x).mkString("\n"), Text).expand,
-     "Well-behaved?" -> view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
-     "Run semantics" -> steps(e=>St(e,Map()), Semantics, x=>Show/*.short*/(x), Show(_), Text).expand,
-     "Build LTS" -> lts((e:ASystem)=>St(e,Map ()), Semantics, Show.showBuffers, Show(_)), //.moveTo(1),
-     "Local components" ->
-       viewMerms((sy: ASystem) =>
-          for (nm,proc) <- sy.main.toList yield
-              s"$nm:${Show(proc)}" -> SOS.toMermaid[Program.Act,Program.Proc](
-                // SOS semantics
-                new SOS[Program.Act,Program.Proc] {
-                  override def next[A >: Program.Act](p: Program.Proc): Set[(A, Program.Proc)] =
-                    Semantics.nextProc(p)(using St(sy,Map())).asInstanceOf[Set[(A,Program.Proc)]]
-                }  ,
-                proc, // initial state
-                x=>"", // displaying states
-                Show(_), // displaying labels
-                80 // max size
-              )).expand,
-     "Number of states and edges"
+    htmlLeft[ASystem]("""
+            |<button class="tgBtn" id="Hide comm-props">Hide comm-props</button>
+            |""".stripMargin),
+            // |<button class="tgBtn" id="Hide semantics">Hide semantics</button>
+            // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
+    // "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
+    "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
+    "Well-behaved?" ->
+       view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
+     "Well-behaved? (without responsiveness/receptiveness)" ->
+       view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))
+                            ._3.filterNot(_.startsWith("[strong-")) mkString("\n"), Text).hide,
+    "Run semantics" -> steps(e=>St(e,Map()), Semantics, x=>Show/*.short*/(x), Show(_), Text).expand,
+    "Build LTS" -> lts((e:ASystem)=>St(e,Map ()), Semantics, Show.showBuffers, Show(_)), //.moveTo(1),
+    "Local components" ->
+      viewMerms((sy: ASystem) =>
+        for (nm,proc) <- sy.main.toList yield
+            s"$nm:${Show(proc)}" -> SOS.toMermaid[Program.Act,Program.Proc](
+              // SOS semantics for processes, which is needed to compute the local components of each agent.
+              // We use the same semantics as for the global system, but only looking at the transitions
+              // of the process of that agent.
+              new SOS[Program.Act,Program.Proc] {
+                override def next[A >: Program.Act](p: Program.Proc): Set[(A, Program.Proc)] =
+                  Semantics.nextProc(p)(using St(sy,Map())).asInstanceOf[Set[(A,Program.Proc)]]
+              }  ,
+              proc, // initial state
+              x=>"", // displaying states
+              Show(_), // displaying labels
+              80 // max size
+            )).expand,
+    "Number of states and edges"
       -> view((sy:ASystem) => {
           val (st,eds,done) = SOS.traverse(Semantics,St(sy,Map()),2000)
           //s"== Full state space ==" +
@@ -93,16 +100,28 @@ object CaosConfig extends Configurator[ASystem]:
         },
         Text),
 
-//     "Build LTS (explore)" -> ltsExplore(e=>e, Semantics, x=>Show(x.main), _.toString),
-//    "Find strong bisimulation (given a program \"A ~ B\")" ->
-//      compareStrongBisim(Semantics, Semantics,
-//        (e: CCSSystem) => CCSSystem(e.defs, e.main, None),
-//        (e: CCSSystem) => CCSSystem(e.defs, e.toCompare.getOrElse(Program.Term.End), None),
-//        Show.justTerm, Show.justTerm, _.toString),
+    //// Other possible widgets to add:
+    // "View structure" -> view(Show.mermaid, Mermaid),
+    // "Well-formed?" -> view[ASystem](x => ateams.backend.TypeCheck.pp(x), Text).expand,
+    // "getLocs" -> view[ASystem](x => TypeCheck.getAllLocs(x).mkString("\n"), Text).expand,
+    // "getLocsBT" -> view[ASystem](x => TypeCheck.checkBTypes(x).mkString("\n"), Text).expand,
+    // "Build LTS (explore)" -> ltsExplore(e=>e, Semantics, x=>Show(x.main), _.toString),
+    // "Find strong bisimulation (given a program \"A ~ B\")" ->
+    //   compareStrongBisim(Semantics, Semantics,
+    //     (e: CCSSystem) => CCSSystem(e.defs, e.main, None),
+    //     (e: CCSSystem) => CCSSystem(e.defs, e.toCompare.getOrElse(Program.Term.End), None),
+    //     Show.justTerm, Show.justTerm, _.toString),
+  )
+
+  override val toggles: Map[String, Set[String]] = Map(
+    "Hide comm-props" -> Set("Well-behaved?", "Well-behaved? (without responsiveness/receptiveness)"),
+     "Hide semantics" -> Set("Run semantics", "Build LTS", "Local components"),
+     "Hide state space info" -> Set("Number of states and edges")
   )
 
   //// Documentation below
 
+  /** Information that appears in the footer of the UI */
   override val footer: String =
     """Animator of Asynchronous Team Automata, using the
       | CAOS libraries, as a companion to a paper submitted to FM 2025. Source code available online:
@@ -120,6 +139,12 @@ object CaosConfig extends Configurator[ASystem]:
       |    <img src="img/rcv.jpg" style="width: 100%;" alt="Rules for asynchronnous receiving actions"/>.
       |""".stripMargin
 
+  /**
+    * Help information that appears when clicking on the "?" next to the name of each widget.
+    * The first string is the title of the section,
+    * the second is a short description, and
+    * the third is the content that appears when clicking on it.
+    */
   override val documentation: Documentation = List(
     languageName -> "More information on the syntax of A-Team" ->
       ("A program in A-Team consists of <ul><li> [acts] a set of action declarations with their associated synchronisation types," +
