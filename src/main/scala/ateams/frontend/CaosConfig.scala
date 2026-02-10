@@ -66,7 +66,7 @@ object CaosConfig extends Configurator[ASystem]:
             |""".stripMargin),
             // |<button class="tgBtn" id="Hide semantics">Hide semantics</button>
             // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
-    // "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
+    "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
     "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
     "Well-behaved?" ->
        view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
@@ -124,7 +124,7 @@ object CaosConfig extends Configurator[ASystem]:
   /** Information that appears in the footer of the UI */
   override val footer: String =
     """Animator of Asynchronous Team Automata, using the
-      | CAOS libraries, as a companion to a paper submitted to FM 2025. Source code available online:
+      | CAOS libraries, as a companion to a paper submitted to FM 2026. Source code available online:
       | <a target="_blank" href="https://github.com/FM-DCC/a-team">
       | https://github.com/FM-DCC/a-team</a>.""".stripMargin
 
