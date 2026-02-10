@@ -288,8 +288,8 @@ object Semantics extends SOS[Act,St]:
   /** How to evolve an individual process, as in CCS. */
   def nextProc(p:Proc)(using st:St): Set[(Act,Proc)] = p match
     case End => Set()
-    case ProcCall(p) => nextProc(st.sys.defs.getOrElse(p,End))
-    case Prefix(act,p) => Set(act -> p)
+    case ProcCall(p2) => nextProc(st.sys.defs.getOrElse(p2,End))
+    case Prefix(act,p2) => Set(act -> p2)
     case Choice(p1,p2) =>
       nextProc(p1) ++ nextProc(p2)
     case Par(p1, p2) =>
