@@ -134,13 +134,15 @@ object Semantics extends SOS[Act,St]:
        (stype(s),arit(s),to.isEmpty) match
          // case 1: do not care to who, "to" exists, arity must match
          case (Async(LocInfo(locSnd,false), buff), art, false)  =>
-//           println("-- case 1")
-//           if !inInterval(to.size,art._2) then
-//             sys.error(s"Trying to send '${Show(a)}' to {${to.mkString}} but expected # in interval {${Show.showIntrv(art._2)}}.")
-//           val loc = getLoc(s, if locSnd then Some(n) else None, None)
-//           var buffer = st.buffers.getOrElse[Buffer](loc, buff)
-//           for _ <- to  do buffer = buffer + s
-//           updateSt(a,loc,buffer,n,p)
+          // // OLD case 1: do not care to who (if "to" exists), and arity must match 
+          // println("-- case 1")
+          // if !inInterval(to.size,art._2) then
+          //   sys.error(s"Trying to send '${Show(a)}' to {${to.mkString}} but expected # in interval {${Show.showIntrv(art._2)}}.")
+          // val loc = getLoc(s, if locSnd then Some(n) else None, None)
+          // var buffer = st.buffers.getOrElse[Buffer](loc, buff)
+          // for _ <- to  do buffer = buffer + s
+          // updateSt(a,loc,buffer,n,p)
+
            // UPDATED case 1: "to" should not exist
            sys.error(s"Trying to send '${Show(a)}' to {${to.mkString}} but there is no guarantees that the receivers are the correct ones. You should either remove the explicit set of senders, or change the synchronisation type.")
 
@@ -168,7 +170,6 @@ object Semantics extends SOS[Act,St]:
            //println("-- case 4")
            if !inInterval(to.size,art._2) then
              sys.error(s"Trying to send '${Show(a)}' to {${to.mkString(",")}} but expected #{${to.mkString(",")}} ∈ {${Show.showIntrv(art._2)}}.")
-           //var queues: List[(Loc,Queue[ActName])] = Nil
            val newBuffers = for ag <- to yield
              val loc = getLoc(s, if locSnd then Some(n) else None, Some(ag))
              val buffer = st.buffers.getOrElse(loc, buf) + s
@@ -210,14 +211,16 @@ object Semantics extends SOS[Act,St]:
        (stype(s),arit(s),from.isEmpty) match {
          // case 1: do not care from who, "from" exists, arity must match
          case (Async(LocInfo(false,locRcv), buf), art, false)  =>
-//           //println("-- case 1")
-//           if !inInterval(from.size,art._1) then
-//             sys.error(s"Trying to get '${Show(a)}' from {${from.mkString}} but expected #{${from.mkString}} ∈ {${Show.showIntrv(art._1)}}.")
-//           val loc = getLoc(s, None, if locRcv then Some(n) else None)
-//           var buffer: Option[Buffer] = Some(st.buffers.getOrElse[Buffer](loc, buf))
-//           for _ <- from  do buffer = buffer.flatMap(_-s)
-////           getFromBuffers(a,n,p,Map(loc->buffer))
-//           updateOptSt(a,loc,buffer,n,p)
+          // // OLD case 1: do not care from who (if "from" exists), and arity must match
+          // //println("-- case 1")
+          // if !inInterval(from.size,art._1) then
+          //   sys.error(s"Trying to get '${Show(a)}' from {${from.mkString}} but expected #{${from.mkString}} ∈ {${Show.showIntrv(art._1)}}.")
+          // val loc = getLoc(s, None, if locRcv then Some(n) else None)
+          // var buffer: Option[Buffer] = Some(st.buffers.getOrElse[Buffer](loc, buf))
+          // for _ <- from  do buffer = buffer.flatMap(_-s)
+          // // getFromBuffers(a,n,p,Map(loc->buffer))
+          // updateOptSt(a,loc,buffer,n,p)
+          
            // UPDATED case 1: "from" should not exist
            sys.error(s"Trying to get '${Show(a)}' from {${from.mkString}} but there is no guarantees that the senders are the correct ones. You should either remove the explicit set of receivers, or change the synchronisation type.")
 
