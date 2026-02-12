@@ -94,7 +94,7 @@ To (re)compile the tool, there are two approaches:
 
 ## Changing the tool
 
-To get a better feeling of how to modify the source code, we will explain how to make a simple change to the source code below. The explanations refer to lines in the source code from the commit [7226c72](https://github.com/FM-DCC/a-team/tree/7226c723c689576dbe5753850b284791027db765), and more recent versions may not be fully aligned.
+To get a better feeling of how to modify the source code, we will explain how to make a simple change to the source code below. The explanations refer to lines in the source code from the commit [421d978](https://github.com/FM-DCC/a-team/tree/421d978a51746edb2b3cb8d8f25b47f1b7f2e829), and more recent versions may not be fully aligned.
 
 The semantics of a system in A-Team is specified in the file `src/main/scala/ateam/backend/Semantics.scala`. We will explain how to edit this file to customise the semantics of A-Team. More concretely, we will modify the semantics of local components to add an extra rule: `a.P --(a*)--> a.P`. I.e., a process that can perform an action "a" and continue to behave like "P", will now also be able to perform a new (internal) action "a*" and return to the same state. The motivation is to make visible the local actions from each component, even if they are not ready to communicate.
 
