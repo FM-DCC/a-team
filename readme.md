@@ -18,7 +18,7 @@ A more permanent version with the source code and a snapshot of the tool can be 
 This readme describes two ways to run/recompile/change the tool:
 
 - Running the precompiled version
-- Compiling
+- Compiling the source code
 
 
 ------------------------
