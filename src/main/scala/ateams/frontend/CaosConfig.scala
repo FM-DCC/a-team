@@ -70,10 +70,16 @@ object CaosConfig extends Configurator[ASystem]:
     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
     "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
     "Well-behaved?" ->
-       view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
-     "Well-behaved? (without responsiveness/receptiveness)" ->
-       view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))
-                            ._3.filterNot(_.startsWith("[strong-")) mkString("\n"), Text).hide,
+      view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
+    "Well-behaved? (without responsiveness/receptiveness)" ->
+      view[ASystem](x => 
+          try 
+            val strs = ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))
+                            ._3.filterNot(_.startsWith("[strong-"))
+            if strs.isEmpty then "No problems found (except possible responsiveness/receptiveness issues, which are hidden)."
+            else strs.mkString("\n")
+          catch case e: Throwable => s"Error while checking behaviour:\n${e.getMessage}"
+        , Text).hide,
     "Run semantics" -> steps(e=>St(e,Map()), Semantics, x=>Show/*.short*/(x), Show(_), Text).expand,
     "Build LTS" -> lts((e:ASystem)=>St(e,Map ()), Semantics, Show.showBuffers, Show(_)), //.moveTo(1),
     "Local components" ->
