@@ -19278,7 +19278,7 @@ function $c_Lateams_frontend_CaosConfig$() {
       }
     } catch (e) {
       var e$2 = ((e instanceof $c_jl_Throwable) ? e : new $c_sjs_js_JavaScriptException(e));
-      return ("Error while checking behaviour:\n" + e$2.getMessage__T())
+      return ("Well-formedness error while checking behaviour:\n" + e$2.getMessage__T())
     }
   })), $m_Lcaos_view_Text$()));
   var y$3 = $f_Lcaos_frontend_widgets_WidgetInfo__hide__Lcaos_frontend_widgets_WidgetInfo(this$72);

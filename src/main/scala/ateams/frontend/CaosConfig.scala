@@ -76,9 +76,11 @@ object CaosConfig extends Configurator[ASystem]:
           try 
             val strs = ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))
                             ._3.filterNot(_.startsWith("[strong-"))
-            if strs.isEmpty then "No problems found (except possible responsiveness/receptiveness issues, which are hidden)."
+            if strs.isEmpty then
+              "No problems found (except possible responsiveness/receptiveness issues, which are hidden)."
             else strs.mkString("\n")
-          catch case e: Throwable => s"Error while checking behaviour:\n${e.getMessage}"
+          catch case e: Throwable =>
+            s"Well-formedness error while checking behaviour:\n${e.getMessage}"
         , Text).hide,
     "Run semantics" -> steps(e=>St(e,Map()), Semantics, x=>Show/*.short*/(x), Show(_), Text).expand,
     "Build LTS" -> lts((e:ASystem)=>St(e,Map ()), Semantics, Show.showBuffers, Show(_)), //.moveTo(1),
