@@ -8,6 +8,7 @@ import ateams.syntax.Program.{ASystem, preProcess}
 import ateams.syntax.{Program, Show}
 import ateams.backend.Semantics.St
 import caos.sos.SOS
+import ateams.backend.Semantics.Loc
 
 /** Object used to configure which analysis appear in the browser */
 object CaosConfig extends Configurator[ASystem]:
@@ -64,6 +65,7 @@ object CaosConfig extends Configurator[ASystem]:
   val widgets = List(
     htmlLeft[ASystem]("""
             |<button class="tgBtn" id="Hide comm-props">Hide comm-props</button>
+            |<button class="tgBtn" id="Max buffers' sizes">Max buffers' sizes</button>
             |""".stripMargin),
             // |<button class="tgBtn" id="Hide semantics">Hide semantics</button>
             // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
@@ -108,6 +110,16 @@ object CaosConfig extends Configurator[ASystem]:
            else s"States: ${st.size}\nEdges: $eds")
         },
         Text),
+    "Maximum buffers' sizes" -> view((sy:ASystem) => 
+      var done=false
+      (for max <- List(250,500,1000,2000,4000) if !done yield {
+          val (maxSizes,edges,done2) = BufferSizes(sy,max)
+          done = done || done2
+          s"== Traversed $edges edges (max: ${maxSizes.values.maxOption.getOrElse(0)}; ${if done2 then "done" else "still more to go"}) ==\n" +
+            (if maxSizes.isEmpty then "No buffers found."
+            else maxSizes.map(b => s"- Buffer ${Show(b._1)}: max size ${b._2}").mkString("\n"))
+        }).mkString("\n"),
+        Text).hide,
 
     //// Other possible widgets to add:
     // "View structure" -> view(Show.mermaid, Mermaid),
@@ -121,11 +133,11 @@ object CaosConfig extends Configurator[ASystem]:
     //     (e: CCSSystem) => CCSSystem(e.defs, e.toCompare.getOrElse(Program.Term.End), None),
     //     Show.justTerm, Show.justTerm, _.toString),
   )
-
   override val toggles: Map[String, Set[String]] = Map(
     "Hide comm-props" -> Set("Well-behaved?", "Well-behaved? (without responsiveness/receptiveness)"),
      "Hide semantics" -> Set("Run semantics", "Build LTS", "Local components"),
-     "Hide state space info" -> Set("Number of states and edges")
+     "Hide state space info" -> Set("Number of states and edges"),
+     "Max buffers' sizes" -> Set("Maximum buffers' sizes")
   )
 
   //// Documentation below
