@@ -145,7 +145,7 @@ object CaosConfig extends Configurator[ASystem]:
   /** Information that appears in the footer of the UI */
   override val footer: String =
     """Animator of Asynchronous Team Automata, using the
-      | CAOS libraries, as a companion to a paper submitted to FM 2026. Source code available online:
+      | CAOS libraries, as a companion to an FM 2026 paper. Source code available online:
       | <a target="_blank" href="https://github.com/FM-DCC/a-team">
       | https://github.com/FM-DCC/a-team</a>.""".stripMargin
 
