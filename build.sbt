@@ -4,7 +4,7 @@ lazy val caos = project.in(file("lib/caos"))
   .enablePlugins(ScalaJSPlugin)
   .settings(scalaVersion := scala3Version)
 
-lazy val ateams = project.in(file("."))
+lazy val ateam = project.in(file("."))
    .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "A-Teams",
