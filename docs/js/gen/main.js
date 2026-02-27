@@ -3826,13 +3826,10 @@ $c_Lcaos_frontend_Site$.prototype.initSite__Lcaos_frontend_Configurator__V = (fu
                 var x$4 = (("Warning: toggle target with id 'id" + $f_T__hashCode__I($n(tg$1))) + "' not found in the document.");
                 var this$26 = $m_s_Console$();
                 var this$27 = $n(this$26.out__Ljava_io_PrintStream());
-                this$27.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$4 + "\n"))
-              } else {
-                if ($uZ(div.classList.contains("panel-default"))) {
-                  div.parentNode.classList.toggle("hidden")
-                } else {
-                  div.classList.toggle("hidden")
-                };
+                this$27.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$4 + "\n"));
+                return (void 0)
+              } else if ($uZ(div.classList.contains("panel-default"))) {
+                div.parentNode.classList.toggle("hidden");
                 var widgetCont = div.firstChild.firstChild.firstChild;
                 if ((widgetCont !== null)) {
                   widgetCont.classList.add("collapsed");
@@ -3842,11 +3839,16 @@ $c_Lcaos_frontend_Site$.prototype.initSite__Lcaos_frontend_Configurator__V = (fu
                 if ((widgetBody !== null)) {
                   widgetBody.classList.remove("in");
                   widgetBody.style = "height: 0px";
-                  widgetBody.setAttribute("aria-expanded", "false")
+                  widgetBody.setAttribute("aria-expanded", "false");
+                  return (void 0)
+                } else {
+                  return (void 0)
                 }
+              } else {
+                return $uZ(div.classList.toggle("hidden"))
               }
             })));
-            return $uZ(button.classList.toggle("offBt"))
+            return $uZ(button.classList.toggle("onBt"))
           }))
         };
         break matchResult6
@@ -19399,7 +19401,7 @@ function $c_Lateams_frontend_CaosConfig$() {
   var self$5 = new $c_T2("race@snd", "acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R");
   var $$x10 = $n($$x11).toExampleDesc__T2__Lcaos_frontend_Configurator$Example(new $c_T2(self$5, "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock)."));
   var $$x9 = $m_Lcaos_frontend_Configurator$();
-  var self$6 = new $c_T2("race@global", "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R");
+  var self$6 = new $c_T2("race@global", "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R");
   var $$x8 = $n($$x9).toExampleDesc__T2__Lcaos_frontend_Configurator$Example(new $c_T2(self$6, "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts."));
   var $$x7 = $m_Lcaos_frontend_Configurator$();
   var self$7 = new $c_T2("race@unbounded", "acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R");
@@ -21519,6 +21521,8 @@ $c_Lcaos_frontend_widgets_VisualiseText.prototype.update__V = (function() {
 });
 $c_Lcaos_frontend_widgets_VisualiseText.prototype.showText__V = (function() {
   try {
+    $n(this.Lcaos_frontend_widgets_VisualiseText__f_box).text__T__Lcaos_frontend_widgets_DomNode("Processing...");
+    $uD($n(this.Lcaos_frontend_widgets_VisualiseText__f_box).Lcaos_frontend_widgets_DomElem__f_elem.offsetTop);
     var toShow = $n($as_Lcaos_view_View($n(this.Lcaos_frontend_widgets_VisualiseText__f_text).apply__O())).Lcaos_view_View__f_code;
     $n(this.Lcaos_frontend_widgets_VisualiseText__f_box).text__T__Lcaos_frontend_widgets_DomNode(toShow)
   } catch (e) {

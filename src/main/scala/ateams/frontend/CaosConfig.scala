@@ -13,7 +13,7 @@ import ateams.backend.Semantics.Loc
 /** Object used to configure which analysis appear in the browser */
 object CaosConfig extends Configurator[ASystem]:
   val name = "<span class=\"ateam\">A-Team</span> – Animator of Team Automata with asynchronous communication"
-  override val shortName = Some("A-Team")
+  override val shortName = Some("A-Team") // used in the title of the browser tab
   override val languageName: String = "Input program"
 
   /** Parser, converting a string into a System in A-Teams */
@@ -45,7 +45,7 @@ object CaosConfig extends Configurator[ASystem]:
       -> "acts\n  start:  1->2, fifo@snd;\n  finish: 2->1, fifo@snd;\nproc\n Ctr = start!.finish?r1,r2.Ctr\n R = start?c.finish!.R\ninit\n c:Ctr || r1:R || r2:R"
       -> "Race async - both actions send asynchronously, with a buffer for each sender. This is problematic because a runner can start, finish, and start again, consuming a start message that was meant to the other runner (causing a deadlock).",
     "race@global"
-      -> "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R"
+      -> "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R"
       -> "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts.",
     "race@unbounded"
       -> "acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R"
