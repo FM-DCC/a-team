@@ -45,6 +45,7 @@ object Show:
       case Program.SyncType.Sync => "sync"
       case Program.SyncType.Async(where,buf:Fifo) => s"Fifo @ ${apply(where)}"
       case Program.SyncType.Async(where,_:Unsorted) => s"Unsorted @ ${apply(where)}"
+      case Program.SyncType.Async(where,_:PrioQueue) => s"PrioQueue @ ${apply(where)}"
       case Program.SyncType.Internal => "internal"
     }
   }
@@ -96,6 +97,7 @@ object Show:
   def showBuf(b:Buffer): String = b match
     case Fifo(q) => s"[${q.mkString(",")}]"
     case Unsorted(m) => s"{$m}"
+    case PrioQueue(q) => s"[${q.toList.sorted.mkString(",")}]"
 
 
 //  def showFifos(st: St): String =

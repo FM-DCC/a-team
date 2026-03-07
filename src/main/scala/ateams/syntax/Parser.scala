@@ -111,7 +111,10 @@ object Parser :
         mi.copy(st = Some(SyncType.Async(l.getOrElse(LocInfo(false,true)),Fifo())))) |
     (string("unsorted") *> sps *> optLoc.?)
       .map(l=> (mi:MsgInfo) =>
-        mi.copy(st = Some(SyncType.Async(l.getOrElse(LocInfo(false,true)),Unsorted())))) //|
+        mi.copy(st = Some(SyncType.Async(l.getOrElse(LocInfo(false,true)),Unsorted())))) |
+    (string("prioqueue") *> sps *> optLoc.?)
+      .map(l=> (mi:MsgInfo) =>
+        mi.copy(st = Some(SyncType.Async(l.getOrElse(LocInfo(false,true)),PrioQueue()))))
 
   lazy val optLoc: P[LocInfo] =
     char('@') *> sps *> (
