@@ -2,8 +2,9 @@ package ateams.backend
 
 import Semantics.{Loc, St, getActName, nextProc, stype}
 import ateams.syntax.Program.SyncType.Async
-import ateams.syntax.Program.{Act, Buffer, MsgInfo, SyncType}
+import ateams.syntax.Program.{Act, MsgInfo, SyncType}
 import ateams.syntax.Show
+import ateams.syntax.Buffer
 
 object BehaviourCheck:
 

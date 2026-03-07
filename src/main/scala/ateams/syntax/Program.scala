@@ -1,12 +1,11 @@
 package ateams.syntax
 
-import scala.collection.immutable.Queue
-import caos.common.Multiset as MSet
-import scala.collection.mutable.PriorityQueue
+import Buffer.*
+
+
 /**
  * Internal structure to represent terms in A-Teams.
  */
-
 object Program:
 
   type Agent = String // helper
@@ -51,56 +50,6 @@ object Program:
     // case Unsorted(where: LocInfo)
 
   case class LocInfo(snd:Boolean, rcv:Boolean)
-
-  sealed trait Buffer:
-    def +(el:ActName): Buffer
-    def -(el:ActName): Option[Buffer]
-    def isEmpty: Boolean
-    // def contains(el:ActName): Boolean
-    def size: Int
-
-  case class Fifo(q:Queue[ActName]) extends Buffer:
-    def +(el:ActName) = Fifo(q.enqueue(el))
-    def -(el:ActName): Option[Buffer] = q.dequeueOption match
-      case Some((a,q2)) if a==el => Some(Fifo(q2))
-      case _ => None
-    def isEmpty = q.isEmpty
-    def contains(el:ActName) = q.contains(el)
-    def size = q.size
-  object Fifo:
-    def apply():Fifo = Fifo(Queue[ActName]())
-
-  case class Unsorted(m:MSet[ActName]) extends Buffer:
-    def +(el:ActName) = Unsorted(m+el)
-    def -(el:ActName): Option[Buffer] =
-      if m.contains(el) then Some(Unsorted(m-el)) else None
-    def isEmpty = m.isEmpty
-    def contains(el: ActName) = m.contains(el)
-    def size = m.data.values.sum
-  object Unsorted:
-    def apply():Unsorted = Unsorted(MSet[ActName]())
-
-  case class PrioQueue(q:PriorityQueue[ActName]) extends Buffer:
-    def +(el:ActName) =
-      val q2 = q.clone()
-      q2.enqueue(el)
-      PrioQueue(q2) 
-      //{q.enqueue(el); this}
-    def -(el:ActName): Option[Buffer] =
-      q.headOption match
-        case Some(a) if a==el =>
-          val q2 = q.clone()
-          q2.dequeue
-          Some(PrioQueue(q2))
-          // q.dequeue; Some(this)
-        case _ => None
-    def isEmpty = q.isEmpty
-    // def contains(el: ActName) = q.exists(_==el)
-    def size = q.size
-  object PrioQueue:
-    def apply():PrioQueue =
-      PrioQueue(PriorityQueue[ActName]()(
-        Ordering.by((a:ActName) => a).reverse))
 
 
   //// Preprocess

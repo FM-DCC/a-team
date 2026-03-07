@@ -8,6 +8,7 @@ import Program.*
 import Proc.*
 import ateams.syntax.Program.Act.Out
 import ateams.syntax.Program.SyncType.{Async, Internal, Sync}
+import ateams.syntax.Buffer
 
 //import scala.collection.{immutable, mutable}
 import scala.collection.immutable.Queue

@@ -3,6 +3,7 @@ package ateams.syntax
 import cats.parse.Parser.*
 import cats.parse.{LocationMap, Numbers, Parser as P, Parser0 as P0}
 import ateams.syntax.Program.*
+import Buffer.*
 import cats.data.NonEmptyList
 
 import scala.sys.error

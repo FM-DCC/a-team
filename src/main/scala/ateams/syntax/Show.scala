@@ -2,6 +2,7 @@ package ateams.syntax
 
 import ateams.syntax.Program.*
 import ateams.backend.Semantics.*
+import Buffer.*
 
 /**
  * List of functions to produce textual representations of commands
