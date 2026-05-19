@@ -178,6 +178,16 @@
 .hidden {
   display: none;
 }
+.togglesPanel {
+    /* display: flex; */
+    align-items: center;
+    text-align: center;
+    /* padding: 3px; */
+    /* background-color: #f9f9f9; */
+    /* border-bottom: 1px solid #ddd; */
+    /* border-right: 1px solid #ddd; */
+    /* margin-right: 5px; */
+}
 .offBtOLD {
     background-color: #ff000040 !important;
 }
@@ -188,7 +198,7 @@
 
 .tgBtn {
     --bg-off: #f3e3e3;
-    --bg-on: #225935;
+    --bg-on: #464646;
     --text-off: #313a49;
     --text-on: #ffffff;
     padding: 5px 8px;

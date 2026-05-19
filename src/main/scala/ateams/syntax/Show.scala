@@ -98,7 +98,8 @@ object Show:
   def showBuf(b:Buffer): String = b match
     case Fifo(q) => s"[${q.mkString(",")}]"
     case Unsorted(m) => s"{$m}"
-    case PrioQueue(q) => s"[${q.toList.sorted.mkString(",")}]"
+    case PrioQueue(q) => s"[${q.mkString(",")}]"
+                        //s"[${q.toList.sorted.mkString(",")}]"
 
 
 //  def showFifos(st: St): String =

@@ -50,23 +50,37 @@ object Buffer:
    * queue, and the '-' operation removes a message if it is the 
    * one with the highest priority (the head of the queue).
    * */
-  case class PrioQueue(q:PriorityQueue[ActName]) extends Buffer:
+  case class PrioQueue(q:List[ActName]) extends Buffer:
     def +(el:ActName) =
-      val q2 = q.clone()
-      q2.enqueue(el)
-      PrioQueue(q2) 
-    def -(el:ActName): Option[Buffer] =
-      q.headOption match
-        case Some(a) if a==el =>
-          val q2 = q.clone()
-          q2.dequeue
-          Some(PrioQueue(q2))
-        case _ => None
+      def insSorted(l:List[ActName]): List[ActName] = l match
+        case (hd::tl) if el > hd => hd::insSorted(tl)
+        case _ => el::l
+      PrioQueue(insSorted(q))
+    def -(el:ActName): Option[Buffer] = q.headOption match
+      case Some(a) if a==el => Some(PrioQueue(q.tail))
+      case _ => None
     def isEmpty = q.isEmpty
     def size = q.size
   object PrioQueue:
-    def apply():PrioQueue =
-      PrioQueue(PriorityQueue[ActName]()(
-        Ordering.by((a:ActName) => a).reverse))
-  
+    def apply():PrioQueue = PrioQueue(List[ActName]())
+
+
+  // case class PrioQueue(q:PriorityQueue[ActName]) extends Buffer:
+  //   def +(el:ActName) =
+  //     val q2 = q.clone()
+  //     q2.enqueue(el)
+  //     PrioQueue(q2) 
+  //   def -(el:ActName): Option[Buffer] =
+  //     q.headOption match
+  //       case Some(a) if a==el =>
+  //         val q2 = q.clone()
+  //         q2.dequeue
+  //         Some(PrioQueue(q2))
+  //       case _ => None
+  //   def isEmpty = q.isEmpty
+  //   def size = q.size
+  // object PrioQueue:
+  //   def apply():PrioQueue =
+  //     PrioQueue(PriorityQueue[ActName]()(
+  //       Ordering.by((a:ActName) => a).reverse))
 

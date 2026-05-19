@@ -51,7 +51,37 @@ object Program:
 
   case class LocInfo(snd:Boolean, rcv:Boolean)
 
+  //// Protocol
+  enum Protocol:
+    case Action(act:Act)
+    case Seq(p1:Protocol, p2:Protocol)
+    case Choice(p1:Protocol, p2:Protocol)
+    case Par(p1:Protocol, p2:Protocol)
+    case Rec(p:Protocol)
 
+    def toASystem: ASystem =
+      def rec(p:Protocol): (ASystem, Proc) = p match
+        case Action(act) => (ASystem.default, Proc.Prefix(act, Proc.End))
+        case Seq(p1, p2) =>
+          val (sys1, proc1) = rec(p1)
+          val (sys2, proc2) = rec(p2)
+          ??? //(sys1 ++ sys2, Proc.Seq(proc1, proc2))
+        case Choice(p1, p2) =>
+          val (sys1, proc1) = rec(p1)
+          val (sys2, proc2) = rec(p2)
+          (sys1 ++ sys2, Proc.Choice(proc1, proc2))
+        case Par(p1, p2) =>
+          val (sys1, proc1) = rec(p1)
+          val (sys2, proc2) = rec(p2)
+          (sys1 ++ sys2, Proc.Par(proc1, proc2))
+        case Rec(p) =>
+          val (sys, proc) = rec(p)
+          // Here we should ideally generate a fresh name for the recursive call
+          // to avoid clashes with other definitions. For simplicity, we use a fixed name.
+          val recName = "rec"
+          (ASystem.default.copy(defs = Map(recName -> proc)) ++ sys, Proc.ProcCall(recName))
+
+      rec(this)._1
   //// Preprocess
 
   def preProcess(sys: ASystem): ASystem =

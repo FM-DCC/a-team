@@ -66,16 +66,20 @@ object CaosConfig extends Configurator[ASystem]:
 
   /** Description of the widgets that appear in the dashboard. */
   val widgets = List(
-    htmlLeft[ASystem]("""
-            |<button class="tgBtn" id="Hide comm-props">Hide comm-props</button>
-            |<button class="tgBtn" id="Max buffers' sizes">Max buffers' sizes</button>
-            |""".stripMargin),
-            // |<button class="tgBtn" id="Hide semantics">Hide semantics</button>
-            // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
+    // htmlLeft[ASystem]("""
+    //         |<button class="tgBtn" id="Hide comm-props">Hide comm-props</button>
+    //         |<button class="tgBtn" id="Max buffers' sizes">Max buffers' sizes</button>
+    //         |""".stripMargin),
+    //         // |<button class="tgBtn" id="Hide semantics">Hide semantics</button>
+    //         // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
     "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
+    "Find structure (WiP)" ->
+      view[ASystem](x => ateams.backend.FindStructure(x),Mermaid),
+    // "Find Structure (txt)" ->
+    //   view[ASystem](x => ateams.backend.FindStructure(x),Text).expand,
     "Well-behaved?" ->
-      view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text).expand,
+      view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text),
     "Well-behaved? (without responsiveness/receptiveness)" ->
       view[ASystem](x => 
           try 
@@ -86,7 +90,7 @@ object CaosConfig extends Configurator[ASystem]:
             else strs.mkString("\n")
           catch case e: Throwable =>
             s"Well-formedness error while checking behaviour:\n${e.getMessage}"
-        , Text).hide,
+        , Text).expand, //.hide,
     "Run semantics" -> steps(e=>St(e,Map()), Semantics, x=>Show/*.short*/(x), Show(_), Text).expand,
     "Build LTS" -> lts((e:ASystem)=>St(e,Map ()), Semantics, Show.showBuffers, Show(_)), //.moveTo(1),
     "Local components" ->
@@ -136,11 +140,14 @@ object CaosConfig extends Configurator[ASystem]:
     //     (e: CCSSystem) => CCSSystem(e.defs, e.toCompare.getOrElse(Program.Term.End), None),
     //     Show.justTerm, Show.justTerm, _.toString),
   )
-  override val toggles: Map[String, Set[String]] = Map(
-    "Hide comm-props" -> Set("Well-behaved?", "Well-behaved? (without responsiveness/receptiveness)"),
-     "Hide semantics" -> Set("Run semantics", "Build LTS", "Local components"),
-     "Hide state space info" -> Set("Number of states and edges"),
-     "Max buffers' sizes" -> Set("Maximum buffers' sizes")
+  override val toggles: List[Toggle] = List(
+    "Well-behaved" -> Set("Well-behaved?") -> false,
+    "Well-behaved (simpler)" -> Set("Well-behaved? (without responsiveness/receptiveness)"),
+    //  "Hide semantics" -> Set("Run semantics", "Build LTS", "Local components"),
+    //  "Hide state space info" -> Set("Number of states and edges"),
+    //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
+    //  "Structure" -> Set("Find structure (WiP)") -> false,
+     "More..." -> Set("Maximum buffers' sizes","Find structure (WiP)","priority-queue") -> false,
   )
 
   //// Documentation below
