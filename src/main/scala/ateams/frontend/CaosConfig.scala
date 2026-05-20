@@ -147,7 +147,7 @@ object CaosConfig extends Configurator[ASystem]:
     //  "Hide state space info" -> Set("Number of states and edges"),
     //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
     //  "Structure" -> Set("Find structure (WiP)") -> false,
-     "More..." -> Set("Maximum buffers' sizes","Find structure (WiP)","priority-queue") -> false,
+     "More..." -> Set("Maximum buffers' sizes","Find structure (WiP)","priority-queue","View pretty data") -> false,
   )
 
   //// Documentation below

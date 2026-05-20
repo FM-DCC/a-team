@@ -167,6 +167,92 @@ object Parser :
     char('?') *> anyName.repSep0(char(',')).map(lst => (a:String) => Act.In(a,lst.toList.toSet)) |
     char('!') *> anyName.repSep0(char(',')).map(lst => (a:String) => Act.Out(a,lst.toList.toSet))
 
+
+
+
+//// Protocol
+
+
+/* 
+  def program: Parser[Protocol] =
+    opt(choreography) ^^ {case c => c.getOrElse(End)}
+ 
+  def par[A](parser: Parser[A]): Parser[A] = "(" ~> parser <~ ")"
+  
+  def agent: Parser[Agent] = id ^^ Agent.apply
+  def agents: Parser[List[Agent]] = repsep(agent, ",")
+  
+  def message:Parser[ActName] = 
+    ":" ~> id //rep1sep(id,",") ^^ {case ms => Msg(ms)}
+  
+  /**
+   * A choreography expression
+   * - Left associativity: ;,+,||
+   * - Precedence: i,(c)>*>;>||>+
+   *
+   * @return
+   */
+  def choreography: Parser[Protocol] =
+    maybeParallel ~ opt(choice) ^^ {
+      case mb ~ Some(ch) => ch(mb)
+      case mb ~ _ => mb
+    }
+
+  def choice: Parser[Protocol => Protocol] =
+    "+" ~ maybeParallel ~ opt(choice) ^^ {
+      case _ ~ mc ~ Some(more) => (lhs:Protocol) => more(Choice(lhs,mc))
+      case _ ~ mc ~ _          => (lhs:Protocol) => Choice(lhs,mc)
+    } |
+    "[+]" ~ maybeParallel ~ opt(choice) ^^ {
+      case _ ~ mc ~ Some(more) => (lhs:Protocol) => more(DChoice(lhs,mc))
+      case _ ~ mc ~ _          => (lhs:Protocol) => DChoice(lhs,mc)
+    }
+
+  def maybeParallel: Parser[Protocol] =
+    maybeSequence ~ opt(parallel) ^^ {
+      case lhs ~ Some(pll) => pll(lhs)
+      case lhs ~ None => lhs
+    }
+
+  def parallel: Parser[Protocol => Protocol] =
+    "||" ~ maybeSequence ~ opt(parallel) ^^ {
+      case _ ~ ms ~ Some(more) => (lhs: Protocol) => more(Par(lhs, ms))
+      case _ ~ ms ~ _    => (lhs: Protocol) => Par(lhs, ms)
+    }
+
+  def maybeSequence: Parser[Protocol] =
+    atomChoreography ~ opt(sequence) ^^ {
+      case lhs ~ Some(seq) => seq(lhs)
+      case lhs ~ _ => lhs
+    }
+
+  def sequence: Parser[Protocol => Protocol] =
+    (";"|".") ~ atomChoreography ~ opt(sequence) ^^ {
+      case _ ~ seq ~ Some(more) => (lhs: Protocol) => more(Seq(lhs, seq))
+      case _ ~ seq ~ _          => (lhs: Protocol) => Seq(lhs, seq)
+    }
+
+  def atomChoreography: Parser[Protocol] =
+    literal ~ opt("*") ^^ {
+      case lit ~ l => if l.isDefined then Loop(lit) else lit
+    }
+
+  def literal: Parser[Protocol] =
+    "("~>choreography<~")" |
+    "1" ^^^ End |
+//    agent ~ ("\\?|!|(->)".r) ~ agent ~ opt(message) ^^ {
+//      case a ~ "?" ~ b ~ ms =>   In(  a, b, ms.getOrElse(Msg(List())))
+//      case a ~ "!" ~ b ~ ms =>   Out( a, b, ms.getOrElse(Msg(List())))
+//      case a ~ _   ~ b ~ ms =>   Send(List(a), List(b), ms.getOrElse(Msg(List())))
+    agents ~ opt(("\\?|!|(->)".r) ~ agents) ~ opt(message) ^^ {
+      case a ~ Some("?" ~ b) ~ ms => // sys.error("unsupported a?b") //In(a, b, ms.getOrElse(Msg(List())))
+        (for aa<-a; bb<-b yield In(aa,bb,ms.getOrElse(Msg(List())))).fold(End)(_||_)
+      case a ~ Some("!" ~ b) ~ ms => // sys.error("unsupported a!b") //Out(a, b, ms.getOrElse(Msg(List())))
+        (for aa<-a; bb<-b yield Out(aa,bb,ms.getOrElse(Msg(List())))).fold(End)(_||_)
+      case a ~ Some(_ ~ b) ~ ms => Send(a, b, ms.getOrElse(Msg(List())))
+      case a ~ None ~ ms => a.map(x=>IO(x,ms.getOrElse(Msg(List())))).fold(End)(_||_)
+    }
+
   //  private def system: P[CCSSystem] =
 //    string("let") *> sps *>
 //    ((defn.repSep0(sps)<*sps<*string("in")<*sps).with1 ~ term)
@@ -204,3 +290,4 @@ object Parser :
   object Examples:
     val ex1 =
       """x:=28; while(x>1) do x:=x-1"""
+*/

@@ -20120,7 +20120,7 @@ function $c_Lateams_frontend_CaosConfig$() {
   var $$x42 = new $c_Lcaos_frontend_Configurator$Toggle(name, trgs, true, false, "");
   var $$x41 = $m_Lcaos_frontend_Configurator$();
   var this$123 = $n($m_s_Predef$().s_Predef$__f_Set);
-  var elems$10 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)(["Maximum buffers' sizes", "Find structure (WiP)", "priority-queue"]));
+  var elems$10 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)(["Maximum buffers' sizes", "Find structure (WiP)", "priority-queue", "View pretty data"]));
   var y$13 = this$123.from__sc_IterableOnce__sci_Set(elems$10);
   var self$14 = new $c_T2("More...", y$13);
   this.Lateams_frontend_CaosConfig$__f_toggles = new $c_sci_$colon$colon($$x43, new $c_sci_$colon$colon($$x42, new $c_sci_$colon$colon($n($$x41).toToggle3__T2__Lcaos_frontend_Configurator$Toggle(new $c_T2(self$14, false)), $m_sci_Nil$())));
