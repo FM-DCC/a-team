@@ -1914,6 +1914,178 @@ function $p_Lateams_backend_FindStructure$__getAsync__Lateams_syntax_Program$Pro
     throw new $c_s_MatchError(x60)
   }
 }
+function $p_Lateams_backend_FindStructure$__readGlobal__Lateams_syntax_Program$ASystem__sci_Set($thiz, as) {
+  var this$1 = $n($m_s_Predef$().s_Predef$__f_Set);
+  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_T.getArrayOf().constr)([]));
+  return $as_sci_Set($n($p_Lateams_backend_FindStructure$__getGlobals__Lateams_syntax_Program$ASystem__sci_Set__sci_Set($thiz, as, this$1.from__sc_IterableOnce__sci_Set(elems))).map__F1__O(new $c_sjsr_AnonFunction1(((act) => {
+    var act$1 = $as_s_util_Either(act);
+    if ((act$1 instanceof $c_s_util_Left)) {
+      var x85 = $as_T2($n($as_s_util_Left(act$1)).s_util_Left__f_value);
+      if ((x85 !== null)) {
+        var a = $as_T($n(x85)._1__O());
+        var in$1 = $as_T($n(x85)._2__O());
+        return (((("  _global[[global]];\n" + ((("  " + in$1) + "([") + $p_Lateams_backend_FindStructure$__fix__T__T($m_Lateams_backend_FindStructure$(), in$1))) + "]);\n") + ((("  " + in$1) + " ==>|") + a)) + "| _global;")
+      }
+    };
+    if ((act$1 instanceof $c_s_util_Right)) {
+      var x81 = $as_T2($n($as_s_util_Right(act$1)).s_util_Right__f_value);
+      if ((x81 !== null)) {
+        var out = $as_T($n(x81)._1__O());
+        var a$2 = $as_T($n(x81)._2__O());
+        return (((("  _global[[global]];\n" + ((("  " + out) + "([") + $p_Lateams_backend_FindStructure$__fix__T__T($m_Lateams_backend_FindStructure$(), out))) + "]);\n") + ((("  _global ==>|" + a$2) + "| ") + out)) + ";")
+      }
+    };
+    throw new $c_s_MatchError(act$1)
+  }))))
+}
+function $p_Lateams_backend_FindStructure$__isGlobal__T__Lateams_backend_Semantics$Ctx__Z($thiz, a, ctx) {
+  var x88 = $n($n(ctx).Lateams_backend_Semantics$Ctx__f_msgs).get__O__s_Option(a);
+  if ((x88 instanceof $c_s_Some)) {
+    var x90 = $as_Lateams_syntax_Program$MsgInfo($n($as_s_Some(x88)).s_Some__f_value);
+    if ((x90 !== null)) {
+      $m_Lateams_syntax_Program$MsgInfo$();
+      var this$2 = $n(x90);
+      var this$3 = $n(x90);
+      var x93 = this$3.Lateams_syntax_Program$MsgInfo__f_st;
+      if ((x93 instanceof $c_s_Some)) {
+        var x95 = $as_Lateams_syntax_Program$SyncType($n($as_s_Some(x93)).s_Some__f_value);
+        if ((x95 instanceof $c_Lateams_syntax_Program$SyncType$Async)) {
+          var x$1 = $as_Lateams_syntax_Program$SyncType$Async(x95);
+          var this$5 = $n(x$1);
+          var x98 = this$5.Lateams_syntax_Program$SyncType$Async__f_where;
+          var this$6 = $n(x$1);
+          if ((x98 !== null)) {
+            var this$8 = $n(x98);
+            var x101 = this$8.Lateams_syntax_Program$LocInfo__f_snd;
+            var this$9 = $n(x98);
+            var x102 = this$9.Lateams_syntax_Program$LocInfo__f_rcv;
+            if (((x101 === false) && (x102 === false))) {
+              return true
+            }
+          }
+        }
+      }
+    }
+  };
+  return false
+}
+function $p_Lateams_backend_FindStructure$__getGlobals__Lateams_syntax_Program$ASystem__sci_Set__sci_Set($thiz, as, done) {
+  var res = $as_sci_Iterable($n($n($n(as).Lateams_syntax_Program$ASystem__f_main).withFilter__F1__sc_MapOps$WithFilter(new $c_sjsr_AnonFunction1(((x$1) => {
+    var x$1$1 = $as_T2(x$1);
+    return ((x$1$1 !== null) && ($as_T($n(x$1$1)._1__O()), $as_Lateams_syntax_Program$Proc($n(x$1$1)._2__O()), true))
+  })))).map__F1__O(new $c_sjsr_AnonFunction1(((x$1$2) => {
+    var x$1$3 = $as_T2(x$1$2);
+    if ((x$1$3 !== null)) {
+      var ag$1 = $as_T($n(x$1$3)._1__O());
+      var p$1 = $as_Lateams_syntax_Program$Proc($n(x$1$3)._2__O());
+      var $$x1 = $m_Lateams_backend_FindStructure$();
+      var msgs = $n(as).Lateams_syntax_Program$ASystem__f_msgs;
+      var defs = $n(as).Lateams_syntax_Program$ASystem__f_defs;
+      return $p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($n($$x1), p$1, done, ag$1, new $c_Lateams_backend_Semantics$Ctx(msgs, defs))
+    };
+    throw new $c_s_MatchError(x$1$3)
+  }))));
+  var this$2 = $n($m_s_Predef$().s_Predef$__f_Set);
+  var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([]));
+  return $as_sci_Set($n(res).foldLeft__O__F2__O(this$2.from__sc_IterableOnce__sci_Set(elems), new $c_sjsr_AnonFunction2(((_$3, _$4) => {
+    var _$3$1 = $as_sci_Set(_$3);
+    var _$4$1 = $as_sci_Set(_$4);
+    var this$3 = $n(_$3$1);
+    return $as_sci_Set(this$3.concat__sc_IterableOnce__sc_SetOps(_$4$1))
+  }))))
+}
+function $p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, p, done, self, ctx) {
+  var done$tailLocal2 = done;
+  var p$tailLocal2 = p;
+  while (true) {
+    var x127 = p$tailLocal2;
+    var x = $s_Lateams_syntax_Program$Proc$__End__Lateams_syntax_Program$Proc();
+    if (((x === null) ? (x127 === null) : $n(x).equals__O__Z(x127))) {
+      var this$1 = $n($m_s_Predef$().s_Predef$__f_Set);
+      var elems = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([]));
+      return this$1.from__sc_IterableOnce__sci_Set(elems)
+    };
+    if ((x127 instanceof $c_Lateams_syntax_Program$Proc$ProcCall)) {
+      var x$1 = $as_Lateams_syntax_Program$Proc$ProcCall(x127);
+      var this$3 = $n(x$1);
+      var x149 = this$3.Lateams_syntax_Program$Proc$ProcCall__f_p;
+      var this$4 = $n(done$tailLocal2);
+      if (this$4.contains__O__Z(x149)) {
+        var this$5 = $n($m_s_Predef$().s_Predef$__f_Set);
+        var elems$1 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([]));
+        return this$5.from__sc_IterableOnce__sci_Set(elems$1)
+      };
+      var p$tailLocal2$tmp1 = $as_Lateams_syntax_Program$Proc($n($n(ctx).Lateams_backend_Semantics$Ctx__f_defs).apply__O__O(x149));
+      var this$6 = $n(done$tailLocal2);
+      var done$tailLocal2$tmp1 = $as_sci_Set(this$6.incl__O__sci_SetOps(x149));
+      p$tailLocal2 = p$tailLocal2$tmp1;
+      done$tailLocal2 = done$tailLocal2$tmp1;
+      continue
+    };
+    if ((x127 instanceof $c_Lateams_syntax_Program$Proc$Prefix)) {
+      var x$1$1 = $as_Lateams_syntax_Program$Proc$Prefix(x127);
+      var this$8 = $n(x$1$1);
+      var x142 = this$8.Lateams_syntax_Program$Proc$Prefix__f_act;
+      var this$9 = $n(x$1$1);
+      var x143 = this$9.Lateams_syntax_Program$Proc$Prefix__f_p;
+      if ($p_Lateams_backend_FindStructure$__isGlobal__T__Lateams_backend_Semantics$Ctx__Z($thiz, $m_Lateams_backend_Semantics$().getActName__Lateams_syntax_Program$Act__T(x142), ctx)) {
+        var rest = $p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, x143, done$tailLocal2, self, ctx);
+        if ((x142 instanceof $c_Lateams_syntax_Program$Act$In)) {
+          var x$1$2 = $as_Lateams_syntax_Program$Act$In(x142);
+          var this$11 = $n(x$1$2);
+          var x125 = this$11.Lateams_syntax_Program$Act$In__f_a;
+          var this$12 = $n(x$1$2);
+          var this$15 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var $$x1 = $m_sr_ScalaRunTime$();
+          $n($m_s_package$().s_package$__f_Left);
+          var value = new $c_T2(x125, self);
+          var elems$2 = $n($$x1).wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([new $c_s_util_Left(value)]));
+          var now = this$15.from__sc_IterableOnce__sci_Set(elems$2)
+        } else if ((x142 instanceof $c_Lateams_syntax_Program$Act$Out)) {
+          var x$1$3 = $as_Lateams_syntax_Program$Act$Out(x142);
+          var this$17 = $n(x$1$3);
+          var x121 = this$17.Lateams_syntax_Program$Act$Out__f_a;
+          var this$18 = $n(x$1$3);
+          var this$21 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var $$x2 = $m_sr_ScalaRunTime$();
+          $n($m_s_package$().s_package$__f_Right);
+          var value$1 = new $c_T2(self, x121);
+          var elems$3 = $n($$x2).wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([new $c_s_util_Right(value$1)]));
+          var now = this$21.from__sc_IterableOnce__sci_Set(elems$3)
+        } else {
+          var this$22 = $n($m_s_Predef$().s_Predef$__f_Set);
+          var elems$4 = $m_sr_ScalaRunTime$().wrapRefArray__AO__sci_ArraySeq(new ($d_s_util_Either.getArrayOf().constr)([]));
+          var now = this$22.from__sc_IterableOnce__sci_Set(elems$4)
+        };
+        var this$23 = $n(now);
+        return $as_sci_Set(this$23.concat__sc_IterableOnce__sc_SetOps(rest))
+      };
+      p$tailLocal2 = x143;
+      continue
+    };
+    if ((x127 instanceof $c_Lateams_syntax_Program$Proc$Choice)) {
+      var x$1$4 = $as_Lateams_syntax_Program$Proc$Choice(x127);
+      var this$25 = $n(x$1$4);
+      var x134 = this$25.Lateams_syntax_Program$Proc$Choice__f_p1;
+      var this$26 = $n(x$1$4);
+      var x135 = this$26.Lateams_syntax_Program$Proc$Choice__f_p2;
+      var this$27 = $n($p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, x134, done$tailLocal2, self, ctx));
+      var that = $p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, x135, done$tailLocal2, self, ctx);
+      return $as_sci_Set(this$27.concat__sc_IterableOnce__sc_SetOps(that))
+    };
+    if ((x127 instanceof $c_Lateams_syntax_Program$Proc$Par)) {
+      var x$1$5 = $as_Lateams_syntax_Program$Proc$Par(x127);
+      var this$29 = $n(x$1$5);
+      var x130 = this$29.Lateams_syntax_Program$Proc$Par__f_p1;
+      var this$30 = $n(x$1$5);
+      var x131 = this$30.Lateams_syntax_Program$Proc$Par__f_p2;
+      var this$31 = $n($p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, x130, done$tailLocal2, self, ctx));
+      var that$1 = $p_Lateams_backend_FindStructure$__getGlobal__Lateams_syntax_Program$Proc__sci_Set__T__Lateams_backend_Semantics$Ctx__sci_Set($thiz, x131, done$tailLocal2, self, ctx);
+      return $as_sci_Set(this$31.concat__sc_IterableOnce__sc_SetOps(that$1))
+    };
+    throw new $c_s_MatchError(x127)
+  }
+}
 function $p_Lateams_backend_FindStructure$__fix__T__T($thiz, s) {
   var this$1 = $n(s);
   if (((this$1.length >= 0) && ($as_T(this$1.substring(0, 2)) === "$$"))) {
@@ -1935,9 +2107,11 @@ function $h_Lateams_backend_FindStructure$() {
 $h_Lateams_backend_FindStructure$.prototype = $c_Lateams_backend_FindStructure$.prototype;
 $c_Lateams_backend_FindStructure$.prototype.apply__Lateams_syntax_Program$ASystem__T = (function(as) {
   var this$1 = $n(this.readSyncs__Lateams_syntax_Program$ASystem__sci_Set(as));
-  var $$x1 = $f_sc_IterableOnceOps__mkString__T__T__T__T(this$1, "", "\n", "");
+  var $$x2 = $f_sc_IterableOnceOps__mkString__T__T__T__T(this$1, "", "\n", "");
   var this$2 = $n($p_Lateams_backend_FindStructure$__readAsync__Lateams_syntax_Program$ASystem__sci_Set(this, as));
-  return ((("graph TD\n" + $$x1) + "\n") + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$2, "", "\n", ""))
+  var $$x1 = $f_sc_IterableOnceOps__mkString__T__T__T__T(this$2, "", "\n", "");
+  var this$3 = $n($p_Lateams_backend_FindStructure$__readGlobal__Lateams_syntax_Program$ASystem__sci_Set(this, as));
+  return ((((("graph TD\n" + $$x2) + "\n") + $$x1) + "\n") + $f_sc_IterableOnceOps__mkString__T__T__T__T(this$3, "", "\n", ""))
 });
 $c_Lateams_backend_FindStructure$.prototype.readSyncs__Lateams_syntax_Program$ASystem__sci_Set = (function(as) {
   matchResult1: {
@@ -35724,6 +35898,16 @@ function $isArrayOf_s_util_Either(obj, depth) {
 function $asArrayOf_s_util_Either(obj, depth) {
   return (($isArrayOf_s_util_Either(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.Either;", depth))
 }
+var $d_s_util_Either = new $TypeData().initClass({
+  s_util_Either: 0
+}, false, "scala.util.Either", {
+  s_util_Either: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  Ljava_io_Serializable: 1
+});
+$c_s_util_Either.prototype.$classData = $d_s_util_Either;
 /** @constructor */
 function $c_Lateams_syntax_Buffer$Fifo(q) {
   this.Lateams_syntax_Buffer$Fifo__f_q = null;
