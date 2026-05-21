@@ -74,9 +74,9 @@ object CaosConfig extends Configurator[ASystem]:
     //         // |<button class="tgBtn" id="Hide state space info">Hide state space info</button>
     "check well-formed" -> check(x => ateams.backend.TypeCheck.check(x).toSeq),
     "View pretty data" -> view[ASystem](Show.apply, Code("haskell")).moveTo(1),
-    "Find structure (WiP)" ->
+    "Architectural view (WiP)" ->
       view[ASystem](x => ateams.backend.FindStructure(x),Mermaid),
-    // "Find Structure (txt)" ->
+    // "Architectural view (txt)" ->
     //   view[ASystem](x => ateams.backend.FindStructure(x),Text).expand,
     "Well-behaved?" ->
       view[ASystem](x => ateams.backend.BehaviourCheck.randomWalk(St(x,Map()))._3.mkString("\n"), Text),
@@ -147,7 +147,7 @@ object CaosConfig extends Configurator[ASystem]:
     //  "Hide state space info" -> Set("Number of states and edges"),
     //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
     //  "Structure" -> Set("Find structure (WiP)") -> false,
-     "More..." -> Set("Maximum buffers' sizes","Find structure (WiP)","priority-queue","View pretty data") -> false,
+     "More..." -> Set("Maximum buffers' sizes","Architectural view (WiP)","priority-queue","View pretty data") -> false,
   )
 
   //// Documentation below
