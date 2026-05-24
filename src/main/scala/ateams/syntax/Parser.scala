@@ -126,46 +126,46 @@ object Parser :
     )
 
   // Processes
-  lazy val proc: P[Proc] = P.recursive(more =>
+  lazy val proc: P[LProc] = P.recursive(more =>
     procSum(more).repSep(sps *> char('|') <* sps)
       .map(l => l.toList.tail.foldLeft(l.head)((t1, t2) => Proc.Par(t1, t2)))
   )
-  lazy val namedProc:P[(Option[String],Proc)] =
+  lazy val namedProc:P[(Option[String],LProc)] =
     ((varName <* sps) ~ namedProcCont).map((v,cont) => cont(v)) |
     procName.map(p => (None,Proc.ProcCall(p)))
 
-  lazy val namedProcCont:P[String => (Option[String],Proc)] =
+  lazy val namedProcCont:P[String => (Option[String],LProc)] =
     char(':') *> sps *> proc.map(p => (str:String) => (Some(str),p))
 
-  private def procSum(more:P[Proc]): P[Proc] =
+  private def procSum(more:P[LProc]): P[LProc] =
     (procSeq(more)<*sps).repSep(char('+') <* sps)
       .map(l=>l.toList.tail.foldLeft(l.head)((t1,t2)=>Proc.Choice(t1,t2)))
 
-  private def procSeq(more:P[Proc]): P[Proc] = P.recursive(t2 =>
+  private def procSeq(more:P[LProc]): P[LProc] = P.recursive(t2 =>
     end | procCall | pref(t2) | char('(')*>more.surroundedBy(sps)<*char(')')
   )
 
-  private def end: P[Proc] =
-    char('0').as(Proc.End)
+  private def end: P[LProc] =
+    char('0').as(Proc.End())
 
-  private def procCall: P[Proc] =
+  private def procCall: P[LProc] =
     procName.map(Proc.ProcCall.apply)
 
-  private def pref(t2:P[Proc]): P[Proc] =
+  private def pref(t2:P[LProc]): P[LProc] =
     ((action <* sps) ~ ((char('.') *> sps *> t2)?))
-      .map(x => Proc.Prefix(x._1,x._2.getOrElse(Proc.End)))
+      .map(x => Proc.Prefix(x._1,x._2.getOrElse(Proc.End())))
 
-  private def action: P[Act] =
+  private def action: P[LAct] =
     ((varName <* sps) ~ inOut.?).map {
       case (v, Some(io)) => io(v)
-      case (v, None) => Act.IO(v,Set(),Set())
+      case (v, None) => LAct.Internal(v)
     }
 //    string("tau").as(Act.IO("tau",Set(),Set())) |
 //    ((varName <* sps) ~ inOut).map(vi => vi._2(vi._1))
 
-  private def inOut: P[String => Act] =
-    char('?') *> anyName.repSep0(char(',')).map(lst => (a:String) => Act.In(a,lst.toList.toSet)) |
-    char('!') *> anyName.repSep0(char(',')).map(lst => (a:String) => Act.Out(a,lst.toList.toSet))
+  private def inOut: P[String => LAct] =
+    char('?') *> anyName.repSep0(char(',')).map(lst => (a:String) => LAct.In(a,lst.toList.toSet)) |
+    char('!') *> anyName.repSep0(char(',')).map(lst => (a:String) => LAct.Out(a,lst.toList.toSet))
 
 
 

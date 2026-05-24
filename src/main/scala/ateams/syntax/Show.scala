@@ -51,10 +51,10 @@ object Show:
     }
   }
 
-  def showDefs(ds: Map[String,Proc]): String =
+  def showDefs(ds: Map[String,LProc]): String =
     (for (nm,p) <- ds yield s"  $nm := ${apply(p)}")
       .mkString("\n")
-  def showMain(m: Map[String,Proc]): String =
+  def showMain(m: Map[String,LProc]): String =
     (for (nm,p) <- m yield s"$nm: ${apply(p)}")
       .mkString(" || ")
   def showIntrv(intr: Intrv): String = intr._2 match
@@ -62,24 +62,29 @@ object Show:
     case Some(n) => s"${intr._1}..$n"
     case None => s"${intr._1}..∞"
 
-  def apply(p: Proc): String = p match
-    case Proc.End => "skip"
+  def apply(p: LProc): String = p match
+    case Proc.End() => "skip"
     case Proc.ProcCall(p) => p
-    case Proc.Prefix(act, Proc.End) => apply(act)
+    case Proc.Prefix(act, Proc.End()) => apply(act)
     case Proc.Prefix(act, t) => s"${apply(act)}.${applyP(t)}"
     case Proc.Choice(t1, t2) => s"${applyP(t1)}+${applyP(t2)}"
     case Proc.Par(t1, t2) => s"${applyP(t1)} | ${applyP(t2)}"
 
-  private def applyP(p: Proc): String = p match
-    case _:(Proc.End.type|Proc.ProcCall|Proc.Prefix) => apply(p)
+  private def applyP(p: LProc): String = p match
+    case _:(Proc.End[LAct] | Proc.ProcCall[LAct] | Proc.Prefix[LAct]) => apply(p)
     case _ => s"(${apply(p)})"
 
-  def apply(a:Act): String = a match
-    case Act.In(s,from) => s"$s?${from.mkString(",")}"
-    case Act.Out(s,to) => s"$s!${to.mkString(",")}"
-    case Act.IO("tau",_,_) => s"τ"
-    case Act.IO(s,from,to) if from.isEmpty && to.isEmpty => s
-    case Act.IO(s,from,to) => s"${agSet(from)}→${agSet(to)}:$s"
+  def apply(a:LAct): String = a match
+    case LAct.In(s,from) => s"$s?${from.mkString(",")}"
+    case LAct.Out(s,to) => s"$s!${to.mkString(",")}"
+    case LAct.Internal("tau") => s"τ"
+    case LAct.Internal(s) => s"[$s]"
+  def apply(a:GAct): String = a match
+    case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-${to.mkString(",")}"
+    case GAct.Out(s, from, to) => s"$s!${from.mkString(",")}-${to.mkString(",")}"
+    case GAct.IO("tau",_,_) => s"τ"
+    case GAct.IO(s,from,to) if from.isEmpty && to.isEmpty => s"[$s]"
+    case GAct.IO(s,from,to) => s"${agSet(from)}→${agSet(to)}:$s"
   private def agSet(s:Set[_]): String =
     if s.isEmpty then "∅" else s.mkString(",")
 

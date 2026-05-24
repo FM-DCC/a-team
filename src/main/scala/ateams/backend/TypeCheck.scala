@@ -2,7 +2,7 @@ package ateams.backend
 
 import Semantics.{St, aritSys, Ctx}
 import ateams.syntax.{Program, Show}
-import ateams.syntax.Program.{ASystem, Act, ActName, Agent, LocInfo, MsgInfo, Proc, ProcName, SyncType}
+import ateams.syntax.Program.{ASystem, LAct, ActName, Agent, LocInfo, MsgInfo, Proc, LProc, ProcName, SyncType}
 
 object TypeCheck:
   type Errors = Set[String]
@@ -28,14 +28,14 @@ object TypeCheck:
     sy.defs.toSet.map(x => check(x._2)(using sy, x._1)).flatten ++
       checkBTypes(sy)
 
-  private def check(p:Proc)(using sy:ASystem, pname:ProcName): Errors =
+  private def check(p:LProc)(using sy:ASystem, pname:ProcName): Errors =
     p match {
-      case Proc.End => Set()
+      case Proc.End() => Set()
       case Proc.ProcCall(p) => if sy.defs.contains(p) then Set() else
         Set(s"[$pname] Unknown process call to $p.")
       case Proc.Choice(p1, p2) => check(p1)++check(p2)
       case Proc.Par(p1, p2) => check(p1)++check(p2)
-      case Proc.Prefix(Act.In(act,from), p) => check(p) ++ checkAct(act,from) ++
+      case Proc.Prefix(LAct.In(act,from), p) => check(p) ++ checkAct(act,from) ++
         (sy.msgs.get(act) match
           case None => Set()//Set(s"[$pname] action $act not found.") // already checked by checkAct
           case Some(mi:MsgInfo) => mi match
@@ -53,7 +53,7 @@ object TypeCheck:
               else Set()
             case _ => Set(s"Unexpected message info: ${Show(mi)}")
           )
-      case Proc.Prefix(a@Act.Out(act,to), p) => check(p) ++ checkAct(act,to) ++
+      case Proc.Prefix(a@LAct.Out(act,to), p) => check(p) ++ checkAct(act,to) ++
         (sy.msgs.get(act) match
           case None => Set() // Set(s"[$pname] action $act not found.") // already checked by checkAct
           case Some(mi:MsgInfo) => mi match
@@ -73,7 +73,12 @@ object TypeCheck:
               else Set()
             case _ => Set(s"Unexpected message info: ${Show(mi)}")
           )
-      case Proc.Prefix(Act.IO(a,from,to),p) => check(p) // ++ checkAct(a,from++to) // IO actions do not need to be declared
+      case Proc.Prefix(LAct.Internal(act),p) => check(p) ++ // ++ checkAct(a,from++to) // IO actions do not need to be declared
+        (sy.msgs.get(act) match
+          case Some(MsgInfo(_,Some(typ))) =>
+            Set(s"Internal action \"$act\" should not be internal; maybe you forgot the \"!\" or \"?\"")
+          case _ => Set()
+        )
     }
 
   private def checkAct(a:ActName, anames:Set[Agent])
@@ -111,9 +116,9 @@ object TypeCheck:
 
   /** Auxiliary functions to compile the locations used by the system,
    * which are needed to check buffer-type compatibility. */
-  def getAllLocs(sy: ASystem): Map[Loc, Set[Act]] =
+  def getAllLocs(sy: ASystem): Map[Loc, Set[LAct]] =
     val res = for (ag, p) <- sy.main yield getLocs(p, Set())(using ag, Ctx(sy.msgs,sy.defs))
-    res.foldLeft(Map[Loc, Set[Act]]())(mjoin)
+    res.foldLeft(Map[Loc, Set[LAct]]())(mjoin)
 
   /**
    * Compiles the locations and corresponding sets of actions used by a given
@@ -124,10 +129,10 @@ object TypeCheck:
    * @param ctx Context with message types and process definitions
    * @return mapping from used locations to actions that use them
    */
-  def getLocs(p:Proc, done:Set[ProcName])
-             (using self:Agent, ctx:Ctx): Map[Loc,Set[Act]] =
+  def getLocs(p:LProc, done:Set[ProcName])
+             (using self:Agent, ctx:Ctx): Map[Loc,Set[LAct]] =
     p match
-      case Proc.End => Map()
+      case Proc.End() => Map()
       case Proc.ProcCall(p) if done(p) => Map()
       case Proc.ProcCall(p) => getLocs(ctx.defs(p),done+p)
       case Proc.Choice(p1, p2) =>
@@ -145,18 +150,18 @@ object TypeCheck:
                        Semantics.getLoc(where,a,snd,rcv) -> Set(a)
             mjoin(rest,locs.toMap)
 
-  private def getSndRcv(self: Agent, act: Act, li:LocInfo)
-      : Set[(Loc,Act)] =
+  private def getSndRcv(self: Agent, act: LAct, li:LocInfo)
+      : Set[(Loc,LAct)] =
     (act,li) match
-      case (Act.In(_, from),LocInfo(true, hasRcv)) =>
+      case (LAct.In(_, from),LocInfo(true, hasRcv)) =>
         for f<-from yield Loc(Some(f), Option.when(hasRcv)(self)) -> act
-      case (Act.In(_, _),LocInfo(false, hasRcv)) =>
+      case (LAct.In(_, _),LocInfo(false, hasRcv)) =>
         Set(Loc(None, Option.when(hasRcv)(self)) -> act)
-      case (Act.Out(_, to),LocInfo(hasSnd, true)) =>
+      case (LAct.Out(_, to),LocInfo(hasSnd, true)) =>
         for t<-to yield Loc(Option.when(hasSnd)(self), Some(t)) -> act
-      case (Act.Out(_, _),LocInfo(hasSnd, false)) =>
+      case (LAct.Out(_, _),LocInfo(hasSnd, false)) =>
         Set(Loc(Option.when(hasSnd)(self), None) -> act)
-      case (Act.IO(a, from, to),_) => Set()
+      case (LAct.Internal(_),_) => Set()
 
   /** Join of two relations AxB defined as a mapping A->Set[B]. */
   def mjoin[A,B](m1:Map[A,Set[B]], m2:Map[A,Set[B]]) =

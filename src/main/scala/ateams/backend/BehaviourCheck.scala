@@ -1,10 +1,11 @@
 package ateams.backend
 
-import Semantics.{Loc, St, getActName, nextProc, stype}
+import Semantics.{Loc, St, getActName, getGActName, nextProc, stype}
 import ateams.syntax.Program.SyncType.Async
-import ateams.syntax.Program.{Act, MsgInfo, SyncType}
+import ateams.syntax.Program.{LAct, MsgInfo, SyncType}
 import ateams.syntax.Show
 import ateams.syntax.Buffer
+import ateams.syntax.Program.GAct
 
 object BehaviourCheck:
 
@@ -55,7 +56,7 @@ object BehaviourCheck:
   def checkBadSyncRecp(st:St, acts: Set[String]) : Iterable[String] =
     val canSend =
       for (agName, proc) <- st.sys.main
-          case (Act.Out(aName, _), _) <- nextProc(proc)(using st)
+          case (LAct.Out(aName, _), _) <- nextProc(proc)(using st)
           mi <- st.sys.msgs.get(aName).toSet
           case SyncType.Sync <- mi.st.toSet
       yield (agName, aName)
@@ -66,7 +67,7 @@ object BehaviourCheck:
   def checkBadSyncResp(st:St, acts: Set[String]) : Iterable[String] =
     val canRecv =
       for (agName,proc) <- st.sys.main
-          case (Act.In(aName,_),_) <- nextProc(proc)(using st)
+          case (LAct.In(aName,_),_) <- nextProc(proc)(using st)
           mi <- st.sys.msgs.get(aName).toSet
           case SyncType.Sync <- mi.st.toSet        yield (agName,aName)
     for (agName,aName) <- canRecv if !acts.contains(aName) yield
@@ -76,15 +77,15 @@ object BehaviourCheck:
   def checkBadAsyncResp(st: St, acts: Set[String]): Iterable[String] =
     val canARecv =
       for (agName,proc) <- st.sys.main
-          case (Act.In(aName,_),_) <- nextProc(proc)(using st)
+          case (LAct.In(aName,_),_) <- nextProc(proc)(using st)
           mi <- st.sys.msgs.get(aName).toSet
           case SyncType.Async(_,_) <- mi.st.toSet        yield (agName,aName)
     for (agName,aName) <- canARecv if !acts.contains(aName) yield
       s"[strong-responsiveness] $agName can receive $aName, but the system cannot (yet) send it: ${Show.oneLine(st)}."
 
   /** Check if the current `st` has a loop with an async send to the same state (ignoring buffers). */
-  def checkOnceUnboundedSends(st: St, next: Set[(Act,St)]): Iterable[String] =
-    for case (a@Act.Out(_,_),st2) <- next
+  def checkOnceUnboundedSends(st: St, next: Set[(GAct,St)]): Iterable[String] =
+    for case (a@GAct.Out(_,_,_),st2) <- next
         if st.sys.main == st2.sys.main &&
           stype(a)(using st).isInstanceOf[Async] yield
       s"[unbounded-loop] can send ${Show(a)} forever: ${Show.oneLine(st)}"
@@ -109,8 +110,8 @@ object BehaviourCheck:
    * @param next next actions and destination states
    * @return List of possible error messages
    */
-  def checkState(st:St, next: Set[(Act,St)]): List[String] = {
-    val acts = next.map(x => Semantics.getActName(x._1))
+  def checkState(st:St, next: Set[(GAct,St)]): List[String] = {
+    val acts = next.map(x => Semantics.getGActName(x._1))
     checkOrphansTerminated(st).toList ::: // loop of sends
     checkOnceUnboundedSends(st,next).toList ::: // loop of sends
     checkBadSyncRecp(st,acts).toList ::: // sync receptiveness

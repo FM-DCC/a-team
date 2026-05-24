@@ -1,19 +1,17 @@
 package ateams.backend
 
 import ateams.syntax.Program.ASystem
-import ateams.syntax.Program.Act
+import ateams.syntax.Program.LAct
 import caos.sos.SOS
 import ateams.backend.Semantics.St
 import ateams.syntax.Show
 import ateams.backend.TypeCheck.getAllLocs
 import ateams.backend.Semantics.Ctx
-import ateams.syntax.Program.Proc
-import ateams.syntax.Program.ProcName
-import ateams.syntax.Program.Agent
-import ateams.syntax.Program.SyncType
+import ateams.syntax.Program.{Proc,LProc,ProcName,Agent,SyncType}
 import ateams.syntax.Program
 import ateams.syntax.Program.SyncType.Async
 import ateams.backend.Semantics.getActName
+import ateams.syntax.Program.GAct
 
 object FindStructure:
 
@@ -30,11 +28,11 @@ object FindStructure:
     val (_,edges,_,done) = SOS.traverseEdges(Semantics,St(as,Map()),1000)
     edges.flatMap(e => readEdge(e._2,as))
 
-  private def readEdge(act:Act,as:ASystem): Set[String] =
+  private def readEdge(act:GAct,as:ASystem): Set[String] =
     (act match
-      case Act.In(a, from) =>  Set()
-      case Act.Out(a, to) => Set()
-      case Act.IO(a, from, to) => 
+      case GAct.In(a, from, to) =>  Set()
+      case GAct.Out(a, from, to) => Set()
+      case GAct.IO(a, from, to) => 
         for in <- from; out <- to yield
           // s"  ${ids(out)}([${fix(out)}]);\n" +
           // s"  ${ids(in)}([${fix(in)}]);\n" +
@@ -61,20 +59,20 @@ object FindStructure:
     val res = for (ag, p) <- as.main yield getAsync(p, Set())(using ag, Ctx(as.msgs,as.defs))
     res.foldLeft(Set[(String,String,String)]())(_++_)
 
-  private def getAsync(p:Proc, done:Set[ProcName])
+  private def getAsync(p:LProc, done:Set[ProcName])
              (using self:Agent, ctx:Ctx): Set[(String,String,String)] =
       // Set((p.toString,"-","-")) ++ 
       (
       p match
-        case Proc.End => Set()
+        case Proc.End() => Set()
         case Proc.ProcCall(p) if done(p) => Set()
         case Proc.ProcCall(p) => getAsync(ctx.defs(p),done+p)
         case Proc.Prefix(act, p) =>
           val rest = getAsync(p,done)
           val now = act match
-            case Act.In(a, from) => for f<-from yield (f,self,a)
-            case Act.Out(a, to) => for t<-to yield (self,t,a)
-            case Act.IO(a, from, to) => for f<-from; t<-to yield (f,t,a)
+            case LAct.In(a, from) => for f<-from yield (f,self,a)
+            case LAct.Out(a, to) => for t<-to yield (self,t,a)
+            case LAct.Internal(a) => Set((self,self,a))
           now++rest
         
         case Proc.Choice(p1, p2) =>
@@ -112,16 +110,16 @@ object FindStructure:
   private def getGlobals(as: ASystem, done:Set[ProcName]): Set[Either[(String,String),(String,String)]] =
     val res = for (ag, p) <- as.main yield getGlobal(p, done)(using ag, Ctx(as.msgs,as.defs))
     res.foldLeft(Set[Either[(String,String),(String,String)]]())(_++_)
-  private def getGlobal(p:Proc, done:Set[ProcName])(using self:Agent, ctx:Ctx): Set[Either[(String,String),(String,String)]] =
+  private def getGlobal(p:LProc, done:Set[ProcName])(using self:Agent, ctx:Ctx): Set[Either[(String,String),(String,String)]] =
     p match
-      case Proc.End => Set()
+      case Proc.End() => Set()
       case Proc.ProcCall(p) if done(p) => Set()
       case Proc.ProcCall(p) => getGlobal(ctx.defs(p), done+p)
       case Proc.Prefix(act, p) if isGlobal(getActName(act),ctx) => 
         val rest = getGlobal(p, done)
         val now = act match
-          case Act.In(a, _) => Set(Left((a,self)))
-          case Act.Out(a, _) => Set(Right((self,a)))
+          case LAct.In(a, _) => Set(Left((a,self)))
+          case LAct.Out(a, _) => Set(Right((self,a)))
           case _ => Set()
         now++rest
       case Proc.Prefix(act, p) => getGlobal(p, done)

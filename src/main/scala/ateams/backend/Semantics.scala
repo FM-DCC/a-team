@@ -6,7 +6,7 @@ import ateams.backend.Semantics.St
 import ateams.syntax.{Program, Show}
 import Program.*
 import Proc.*
-import ateams.syntax.Program.Act.Out
+import ateams.syntax.Program.LAct.Out
 import ateams.syntax.Program.SyncType.{Async, Internal, Sync}
 import ateams.syntax.Buffer
 
@@ -15,7 +15,7 @@ import scala.collection.immutable.Queue
 import scala.language.implicitConversions
 
 /** Small-step semantics for both commands and boolean+integer expressions.  */
-object Semantics extends SOS[Act,St]:
+object Semantics extends SOS[GAct,St]:
 
   /**
    * State of our operational semantics.
@@ -25,14 +25,14 @@ object Semantics extends SOS[Act,St]:
   case class St(sys: ASystem,
                 buffers: Map[Loc,Buffer])
   case class Ctx(msgs: Map[ActName,MsgInfo], // message declarations
-                 defs: Map[ProcName,Proc]) // definitions of processes)
+                 defs: Map[ProcName,LProc]) // definitions of processes)
 
   case class Loc(snd: Option[String], rcv: Option[String])
-  type Defs = Map[String,Proc]
-  type Procs = Map[String,Proc]
+  type Defs = Map[String,LProc]
+  type Procs = Map[String,LProc]
 
   /** What are the set of possible evolutions (label and new state) */
-  def next[A>:Act](st: St): Set[(A, St)] =
+  def next[A>:GAct](st: St): Set[(A, St)] =
     nextState(st).asInstanceOf[Set[(A,St)]]
 
   /**
@@ -40,17 +40,21 @@ object Semantics extends SOS[Act,St]:
    * @param st current state to evaluate
    * @return set of pairs (a',st') with the possible actions and next states
    */
-  def nextState(st:St): Set[(Act,St)] =
+  def nextState(st:St): Set[(GAct,St)] =
     implicit val state:St = st
     val canGo =
       for (n,p) <- st.sys.main.toSet; (a,p2) <- nextProc(p)
       yield a -> (n->p2)
-    updateSt(nextIO(canGo)) ++
+    updateSt(nextInternal(canGo)) ++
     updateSt(nextSync(canGo)) ++
     nextSend(canGo) ++
     nextRcv(canGo)
 
-  private def updateSt(aps: Set[(Act,Procs)])(using st:St): Set[(Act,St)] =
+  // type CanGo = Set[(Act,Procs)] // maps to each action that can be taken, which new processes should follow
+  type CanGo = Set[(LAct,(String,LProc))] // maps to each local action that can be taken,
+                                        // which agent did it and what is its new process def.
+
+  private def updateSt(aps: Set[(GAct,Procs)])(using st:St): Set[(GAct,St)] =
     for (a,ps) <- aps yield
       a -> st.copy( sys = st.sys.copy( main = st.sys.main ++ ps))
 
@@ -60,34 +64,35 @@ object Semantics extends SOS[Act,St]:
   ///////////////////////////////////
 
   /** How to evolve a state using internal actions. */
-  def nextIO(canGo: Set[(Act,(String,Proc))])(using st:St): Set[(Act,Procs)] =
-    for case (a@Act.IO(_,_,_),(n,p)) <- canGo
-      yield  a -> Map(n->p) // just the updates
+  def nextInternal(canGo: CanGo)(using st:St): Set[(GAct,Procs)] =
+    // for case (a@GAct.IO(_,_,_),(n,p)) <- canGo
+    for case (a@LAct.Internal(an),(n,p)) <- canGo
+      yield  GAct.IO(an,Set(),Set()) -> Map(n->p) // just the updates
 
   ///////////////////////////////////////
   // Semantics of synchronous messages //
   ///////////////////////////////////////
 
   /** How to evolve a state using syncrhonous actions. */
-  def nextSync(canGo: Set[(Act,(String,Proc))])(using st:St): Set[(Act,Procs)] = {
+  def nextSync(canGo: CanGo)(using st:St): Set[(GAct,Procs)] = {
     implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     // compile map "action-name" -> ([("snd-agent","nextProc","rcv-agt?"), ...] , [("rcv-agent","nextProc","snd-agt?"), ...])
-    var syncsMap = Map[String,(List[(String,Proc,Set[String])],List[(String,Proc,Set[String])])]()
+    var syncsMap = Map[String,(List[(String,LProc,Set[String])],List[(String,LProc,Set[String])])]()
     for (a,(n,p)) <- canGo if stype(a) == SyncType.Sync
         do {
       a match
-        case Act.In(s,from) if syncsMap.contains(s) =>
+        case LAct.In(s,from) if syncsMap.contains(s) =>
           syncsMap = syncsMap + (s -> (syncsMap(s)._1,(n,p,from)::syncsMap(s)._2))
-        case Act.In(s,from) =>
+        case LAct.In(s,from) =>
           syncsMap = syncsMap + (s -> (Nil,List((n,p,from))))
-        case Act.Out(s,to) if syncsMap.contains(s) =>
+        case LAct.Out(s,to) if syncsMap.contains(s) =>
           syncsMap = syncsMap + (s -> ((n,p,to)::syncsMap(s)._1,syncsMap(s)._2 ))
-        case Act.Out(s,to) =>
+        case LAct.Out(s,to) =>
           syncsMap = syncsMap + (s -> (List((n,p,to)),Nil))
         case _ =>
     }
 
-    val combs: Iterable[(String, List[(String,Proc,Set[String])], List[(String,Proc,Set[String])])] =
+    val combs: Iterable[(String, List[(String,LProc,Set[String])], List[(String,LProc,Set[String])])] =
       (for
         (a,(snds,rcvs)) <- syncsMap
       yield
@@ -109,7 +114,7 @@ object Semantics extends SOS[Act,St]:
 
     val combss = combs.toSet
     for (a,snds,rcvs) <- combs.toSet yield
-      Act.IO(a,snds.map(_._1).toSet++rcvs.flatMap(_._3).toSet,
+      GAct.IO(a,snds.map(_._1).toSet++rcvs.flatMap(_._3).toSet,
                rcvs.map(_._1).toSet++snds.flatMap(_._3).toSet)
         -> (snds.map((a,b,_)=>(a,b)) ++ rcvs.map((a,b,_)=>(a,b))).toMap // just the updates
   }
@@ -119,12 +124,13 @@ object Semantics extends SOS[Act,St]:
   //////////////////////////////////////////
 
   /** How to evolve a state using asyncrhonous sending actions. */
-  def nextSend(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] = {
+  def nextSend(canGo: CanGo)(using st:St): Set[(GAct,St)] = {
     implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     //println(s"## can send? ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
-    (for case (a@Act.Out(s,to), (n, p)) <- canGo
+    (for case (LAct.Out(s,to), (n, p)) <- canGo
         if isAsync(stype(s)) //  List(SyncType.Fifo,SyncType.Unsorted) contains stype(a)
      yield {
+       val a = GAct.Out(s,n,to) 
         //checkType(a,stype(s)) // proper runtime error if not enough information in Act
        //println(s"SENDING $a...")
        // need to send one message for each destination. Options:
@@ -197,12 +203,13 @@ object Semantics extends SOS[Act,St]:
   //////////////////////////////////////////
 
   /** How to evolve a state using asyncrhonous receiving actions. */
-  def nextRcv(canGo: Set[(Act,(Agent,Proc))])(using st:St): Set[(Act,St)] =
+  def nextRcv(canGo: CanGo)(using st:St): Set[(GAct,St)] =
     implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
     //println(s"## can receive?") // ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
-    (for case (a@Act.In(s,from), (n, p)) <- canGo
+    (for case (LAct.In(s,from), (n, p)) <- canGo
         if isAsync(stype(s))
      yield {
+       val a = GAct.In(s,from,n)
        //println(s"RECEIVING $a...")
        // need to receive one message for each sender. Options:
        //  - we do not care from who - need to count receives (arity or to - error if not possible)
@@ -262,21 +269,21 @@ object Semantics extends SOS[Act,St]:
      }).flatten
 
 
-  private def updateSt(a:Act, loc:Loc, buffer: Buffer
-                       ,n:ActName, p:Proc)(using st:St): (Act,St) =
+  private def updateSt(a:GAct, loc:Loc, buffer: Buffer
+                       ,n:ActName, p:LProc)(using st:St): (GAct,St) =
     a -> st.copy(sys = st.sys.copy(main = st.sys.main + (n -> p)),
                  buffers = if buffer.isEmpty then st.buffers - loc
                            else st.buffers + (loc -> buffer))
-  private def updateOptSt(a:Act, loc:Loc, buffer: Option[Buffer]
-                      ,n:ActName, p:Proc)(using st:St): Option[(Act,St)] =
+  private def updateOptSt(a:GAct, loc:Loc, buffer: Option[Buffer]
+                      ,n:ActName, p:LProc)(using st:St): Option[(GAct,St)] =
     buffer.map(updateSt(a,loc,_,n,p))
 
-  private def updateSt(a:Act, buffers: Set[(Loc,Buffer)]
-                      ,n:ActName, p:Proc)(using st:St): (Act,St) =
+  private def updateSt(a:GAct, buffers: Set[(Loc,Buffer)]
+                      ,n:ActName, p:LProc)(using st:St): (GAct,St) =
     a -> st.copy( sys = st.sys.copy( main = st.sys.main + (n->p)),
                   buffers = (st.buffers ++ buffers) -- buffers.filter(_._2.isEmpty).map(_._1))
-  private def updateOptSt(a:Act, buffers: Set[Option[(Loc,Buffer)]]
-                      ,n:ActName, p:Proc)(using st:St): Set[(Act,St)] =
+  private def updateOptSt(a:GAct, buffers: Set[Option[(Loc,Buffer)]]
+                      ,n:ActName, p:LProc)(using st:St): Set[(GAct,St)] =
     if buffers.contains(None) then Set()
     else Set(updateSt(a,buffers.flatten,n,p))
       //Set(a -> st.copy( sys = st.sys.copy( main = st.sys.main + (n->p)),
@@ -287,9 +294,9 @@ object Semantics extends SOS[Act,St]:
   ////////////////////////////
 
   /** How to evolve an individual process, as in CCS. */
-  def nextProc(p:Proc)(using st:St): Set[(Act,Proc)] = p match
-    case End => Set()
-    case ProcCall(p2) => nextProc(st.sys.defs.getOrElse(p2,End))
+  def nextProc(p:LProc)(using st:St): Set[(LAct,LProc)] = p match
+    case End() => Set()
+    case ProcCall(p2) => nextProc(st.sys.defs.getOrElse(p2,Proc.End()))
     case Prefix(act,p2) => Set(act -> p2)
     case Choice(p1,p2) =>
       nextProc(p1) ++ nextProc(p2)
@@ -304,10 +311,14 @@ object Semantics extends SOS[Act,St]:
   // Auxiliarly functions //
   //////////////////////////
 
-  implicit def getActName(a:Act): String = a match
-    case Act.In(s,_) => s
-    case Act.Out(s,_) => s
-    case Act.IO(s,_,_) => s
+  implicit def getActName(a:LAct): String = a match
+    case LAct.In(s,_) => s
+    case LAct.Out(s,_) => s
+    case LAct.Internal(s) => s
+  implicit def getGActName(a:GAct): String = a match
+    case GAct.In(s,_,_) => s
+    case GAct.Out(s,_,_) => s
+    case GAct.IO(s,_,_) => s
   implicit def getCtx(st:St): Ctx =
     Ctx(st.sys.msgs,st.sys.defs)
 

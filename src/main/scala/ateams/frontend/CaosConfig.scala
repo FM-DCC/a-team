@@ -27,7 +27,7 @@ object CaosConfig extends Configurator[ASystem]:
 //      -> "acts\n  default: fifo, 1->1;\n  coin; coffee;\n\nproc\n CM = coin!cs.coffee?.CM\n CS = coin?.coffee!.CS\nin\n CM||cs:CS"
 //      -> "Experiment",
     "coffee-sync"
-      -> "acts\n  default: sync, 1->1;\n  coin; coffee;\n  pub: 1->0;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n Usr  = coin!.tau.coffee?.Usr\n Mach = pub!.coin?.coffee!.Mach\ninit\n Usr || Mach"
+      -> "acts\n  default: sync, 1->1;\n  coin; coffee;\n  // other supported examples:\n  // fifo\n  // unsorted\n  // fifo @ rcv,\n  // fifo @ snd\n  // fifo @ snd-rcv\n  // fifo @ global\n  // 1..3 -> 4...5\n  // 1 -> 0..*\n\nproc\n Usr  = coin!.tau.coffee?.Usr\n Mach = pub.coin?.coffee!.Mach\ninit\n Usr || Mach"
       -> "Simple coffee with synchronous channels",
     "coffee-async"
       -> "acts\n  default: fifo, 1->1;\n  coin; coffee;\n  pub: 1->0;\n\nproc\n Usr  = coin!m.coffee?.Usr\n Mach = pub!.coin?.coffee!u.Mach\ninit\n u:Usr||m:Mach"
@@ -96,13 +96,13 @@ object CaosConfig extends Configurator[ASystem]:
     "Local components" ->
       viewMerms((sy: ASystem) =>
         for (nm,proc) <- sy.main.toList yield
-            s"$nm:${Show(proc)}" -> SOS.toMermaid[Program.Act,Program.Proc](
+            s"$nm:${Show(proc)}" -> SOS.toMermaid[Program.LAct,Program.LProc](
               // SOS semantics for processes, which is needed to compute the local components of each agent.
               // We use the same semantics as for the global system, but only looking at the transitions
               // of the process of that agent.
-              new SOS[Program.Act,Program.Proc] {
-                override def next[A >: Program.Act](p: Program.Proc): Set[(A, Program.Proc)] =
-                  Semantics.nextProc(p)(using St(sy,Map())).asInstanceOf[Set[(A,Program.Proc)]]
+              new SOS[Program.LAct,Program.LProc] {
+                override def next[A >: Program.LAct](p: Program.LProc): Set[(A, Program.LProc)] =
+                  Semantics.nextProc(p)(using St(sy,Map())).asInstanceOf[Set[(A,Program.LProc)]]
               }  ,
               proc, // initial state
               x=>"", // displaying states
