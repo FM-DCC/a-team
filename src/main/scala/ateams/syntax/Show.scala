@@ -22,6 +22,7 @@ object Show:
   def apply(s: ASystem): String = {
     (if s.msgs.nonEmpty then s"msgs:\n${showMsgs(s.msgs)}\n" else "") +
     (if s.defs.nonEmpty then s"defs:\n${showDefs(s.defs)}\n" else "") +
+    (if s.prots.nonEmpty then s"protocols:\n${showProts(s.prots)}\n" else "") +
     s"main:\n  ${showMain(s.main)}"
   }
 
@@ -54,6 +55,9 @@ object Show:
   def showDefs(ds: Map[String,LProc]): String =
     (for (nm,p) <- ds yield s"  $nm := ${apply(p)}")
       .mkString("\n")
+  def showProts(ds: Map[String,GProc]): String =
+    (for (nm,p) <- ds yield s"  $nm := ${apply(p)}")
+      .mkString("\n")
   def showMain(m: Map[String,LProc]): String =
     (for (nm,p) <- m yield s"$nm: ${apply(p)}")
       .mkString(" || ")
@@ -62,26 +66,28 @@ object Show:
     case Some(n) => s"${intr._1}..$n"
     case None => s"${intr._1}..∞"
 
-  def apply(p: LProc): String = p match
+  def apply[A](p: Proc[A]): String = p match
     case Proc.End() => "skip"
     case Proc.ProcCall(p) => p
-    case Proc.Prefix(act, Proc.End()) => apply(act)
-    case Proc.Prefix(act, t) => s"${apply(act)}.${applyP(t)}"
-    case Proc.Choice(t1, t2) => s"${applyP(t1)}+${applyP(t2)}"
-    case Proc.Par(t1, t2) => s"${applyP(t1)} | ${applyP(t2)}"
+    case Proc.Prefix(act, Proc.End()) => apply[A](act)
+    case Proc.Prefix(act, t) => s"${apply[A](act)}.${applyP[A](t)}"
+    case Proc.Choice(t1, t2) => s"${applyP[A](t1)}+${applyP[A](t2)}"
+    case Proc.Par(t1, t2) => s"${applyP[A](t1)} | ${applyP[A](t2)}"
 
-  private def applyP(p: LProc): String = p match
-    case _:(Proc.End[LAct] | Proc.ProcCall[LAct] | Proc.Prefix[LAct]) => apply(p)
-    case _ => s"(${apply(p)})"
+  private def applyP[A](p: Proc[A]): String = p match
+    case _:(Proc.End[A] | Proc.ProcCall[A] | Proc.Prefix[A]) => apply[A](p)
+    case _ => s"(${apply[A](p)})"
 
-  def apply(a:LAct): String = a match
+  def apply[A](a:A): String = a match
     case LAct.In(s,from) => s"$s?${from.mkString(",")}"
     case LAct.Out(s,to) => s"$s!${to.mkString(",")}"
     case LAct.Internal("tau") => s"τ"
     case LAct.Internal(s) => s"[$s]"
-  def apply(a:GAct): String = a match
-    case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-${to.mkString(",")}"
-    case GAct.Out(s, from, to) => s"$s!${from.mkString(",")}-${to.mkString(",")}"
+  // def apply(a:GAct): String = a match
+    case GAct.In(s, from, to) if from.isEmpty => s"$s?$to"
+    case GAct.Out(s, from, to) if to.isEmpty => s"$s?$from"
+    case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-$to"
+    case GAct.Out(s, from, to) => s"$s!$from-${to.mkString(",")}"
     case GAct.IO("tau",_,_) => s"τ"
     case GAct.IO(s,from,to) if from.isEmpty && to.isEmpty => s"[$s]"
     case GAct.IO(s,from,to) => s"${agSet(from)}→${agSet(to)}:$s"
@@ -122,40 +128,3 @@ object Show:
     case (Some(x),Some(y)) => s"$x->$y"
 
 
-
-
-
-  /** Converts the main term into a mermaid diagram reflecting its structure. */
-//  def mermaid(s:CCSSystem): String = "graph TD\n" +
-//    s"  style ${s.main.hashCode()} fill:#ffe177,stroke:#6a6722,stroke-width:4px;\n" +
-//    (term2merm(s.defs) ++
-//      term2merm(s.main)).mkString("\n")
-//
-//      /** Builds nodes and arcs, using a set structure to avoid repetition. */
-//  private def term2merm(e: Term): Set[String] = e match
-//    case Term.End => Set(s"  ${e.hashCode()}([\"0\"])")
-//    case Term.ProcCall(p) => Set(s"  ${e.hashCode()}([\"$p\"])")
-//    case Term.Prefix(act, t) => term2merm(t) ++
-//      Set(s"  ${e.hashCode()} -->|action| ${act.hashCode()}",
-//          s"  ${e.hashCode()} -->|rest| ${t.hashCode()}",
-//          s"  ${e.hashCode()}([\"${apply(e)}\"])",
-//          s"  ${act.hashCode()}([\"$act\"])"
-//        )
-//    case Term.Choice(t1, t2) =>
-//      term2merm(t1) ++ term2merm(t2) ++
-//      Set(s"  ${e.hashCode()} -->|option 1| ${t1.hashCode()}",
-//          s"  ${e.hashCode()} -->|option 2| ${t2.hashCode()}",
-//          s"  ${e.hashCode()}([\"${apply(e)}\"])")
-//    case Term.Par(t1, t2) =>
-//      term2merm(t1) ++ term2merm(t2) ++
-//      Set(s"  ${e.hashCode()} -->|par 1| ${t1.hashCode()}",
-//          s"  ${e.hashCode()} -->|par 2| ${t2.hashCode()}",
-//          s"  ${e.hashCode()}([\"${apply(e)}\"])")
-//
-//  /** Builds the nodes and arcs of the diagram of the definitions */
-//  private def term2merm(defs: Map[String,Term]): Set[String] =
-//    defs.flatMap( (p,t) =>
-//      term2merm(t) +
-//      s"  ${ProcCall(p).hashCode()}([\"$p\"])" +
-//      s"  ${ProcCall(p).hashCode()} -->|definition| ${t.hashCode}"
-//    ).toSet

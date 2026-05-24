@@ -51,7 +51,7 @@ object TypeCheck:
               else if from.nonEmpty && snd && !Semantics.inInterval(from.size,i1) then
                 Set(s"[$pname] Trying to receive '$act' from {${from.mkString(",")}} but expected #{${from.mkString(",")}} ∈ {${Show.showIntrv(i1)}}.")
               else Set()
-            case _ => Set(s"Unexpected message info: ${Show(mi)}")
+            case _ => Set(s"Unexpected message info: ${Show(mi)} by ?${Show(act)}")
           )
       case Proc.Prefix(a@LAct.Out(act,to), p) => check(p) ++ checkAct(act,to) ++
         (sy.msgs.get(act) match
@@ -71,7 +71,7 @@ object TypeCheck:
               else if to.isEmpty && snd && !i2._2.contains(i2._1) then
                 Set(s"[$pname] Sending $act with no destination, but the *precise* number of receivers is not known (it is ${Show.showIntrv(i2)}).")
               else Set()
-            case _ => Set(s"Unexpected message info: ${Show(mi)}")
+            case _ => Set(s"Unexpected message info: ${Show(mi)} by !${Show(act)}")
           )
       case Proc.Prefix(LAct.Internal(act),p) => check(p) ++ // ++ checkAct(a,from++to) // IO actions do not need to be declared
         (sy.msgs.get(act) match
@@ -104,7 +104,7 @@ object TypeCheck:
   def checkBTypes(sy:ASystem): Set[String] =
     val locs = getAllLocs(sy)
     val bts = for (loc,acts) <- locs yield
-      (loc,acts.flatMap(act => Semantics.stype(act)(using Ctx(sy.msgs,sy.defs)) match {
+      (loc,acts.flatMap(act => Semantics.stype(act)(using getCtx(sy)) match {
         case SyncType.Sync => Set()
         case SyncType.Async(where, buf) => Set(buf.getClass.getName)
         case SyncType.Internal => Set()
@@ -117,7 +117,7 @@ object TypeCheck:
   /** Auxiliary functions to compile the locations used by the system,
    * which are needed to check buffer-type compatibility. */
   def getAllLocs(sy: ASystem): Map[Loc, Set[LAct]] =
-    val res = for (ag, p) <- sy.main yield getLocs(p, Set())(using ag, Ctx(sy.msgs,sy.defs))
+    val res = for (ag, p) <- sy.main yield getLocs(p, Set())(using ag, getCtx(sy))
     res.foldLeft(Map[Loc, Set[LAct]]())(mjoin)
 
   /**
@@ -134,7 +134,7 @@ object TypeCheck:
     p match
       case Proc.End() => Map()
       case Proc.ProcCall(p) if done(p) => Map()
-      case Proc.ProcCall(p) => getLocs(ctx.defs(p),done+p)
+      case Proc.ProcCall(p) => getLocs(ctx.defs.getOrElse(p,sys.error(s"Process $p not found in ${ctx.defs.keys.mkString(",")}")),done+p)
       case Proc.Choice(p1, p2) =>
         mjoin( getLocs(p1,done), getLocs(p2,done)) // could enrich one of the "done"s
       case Proc.Par(p1, p2) =>

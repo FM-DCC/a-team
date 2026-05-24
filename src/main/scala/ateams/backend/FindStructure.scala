@@ -12,6 +12,7 @@ import ateams.syntax.Program
 import ateams.syntax.Program.SyncType.Async
 import ateams.backend.Semantics.getActName
 import ateams.syntax.Program.GAct
+import ateams.backend.Semantics.getCtx
 
 object FindStructure:
 
@@ -56,7 +57,7 @@ object FindStructure:
     
 
   private def getAsyncs(as: ASystem): Set[(String,String,String)] =
-    val res = for (ag, p) <- as.main yield getAsync(p, Set())(using ag, Ctx(as.msgs,as.defs))
+    val res = for (ag, p) <- as.main yield getAsync(p, Set())(using ag, getCtx(as))
     res.foldLeft(Set[(String,String,String)]())(_++_)
 
   private def getAsync(p:LProc, done:Set[ProcName])
@@ -108,7 +109,7 @@ object FindStructure:
 
 
   private def getGlobals(as: ASystem, done:Set[ProcName]): Set[Either[(String,String),(String,String)]] =
-    val res = for (ag, p) <- as.main yield getGlobal(p, done)(using ag, Ctx(as.msgs,as.defs))
+    val res = for (ag, p) <- as.main yield getGlobal(p, done)(using ag, getCtx(as))
     res.foldLeft(Set[Either[(String,String),(String,String)]]())(_++_)
   private def getGlobal(p:LProc, done:Set[ProcName])(using self:Agent, ctx:Ctx): Set[Either[(String,String),(String,String)]] =
     p match

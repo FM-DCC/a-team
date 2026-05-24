@@ -14,12 +14,13 @@ object Program:
 
   case class ASystem(msgs: Map[ActName,MsgInfo], // message declarations
                      defs: Map[ProcName,LProc], // definitions of processes
+                     prots: Map[ProcName,GProc], // definitions of processes
                      main: Map[Agent,LProc]): // running (named) agents
     def ++(other:ASystem): ASystem =
-      ASystem(msgs++other.msgs, defs++other.defs, main++other.main)
+      ASystem(msgs++other.msgs, defs++other.defs, prots++other.prots, main++other.main)
 
   object ASystem:
-    val default: ASystem = ASystem(Map(),Map(),Map())
+    val default: ASystem = ASystem(Map(),Map(),Map(),Map())
 
   /** Basic process (with recursive calls) */
   enum Proc[A]:
@@ -92,18 +93,7 @@ object Program:
   //         (ASystem.default.copy(defs = Map(recName -> proc)) ++ sys, Proc.ProcCall(recName))
 
   //     rec(this)._1
-  // //// Preprocess
 
-  def preProcess(sys: ASystem): ASystem =
-    sys.msgs.get("default") match
-      case Some(mi) =>
-        sys.copy(msgs =
-          sys.msgs.map((k,v) => (k, v.copy(
-            arity = v.arity.orElse(mi.arity).orElse(Some(MsgInfo.defaultArity)),
-            st = v.st.orElse(mi.st).orElse(Some(MsgInfo.defaultST)),
-          ))) // + ("tau" -> MsgInfo(None,None))
-        )
-      case None => sys
 
 
 //////////////////////////////

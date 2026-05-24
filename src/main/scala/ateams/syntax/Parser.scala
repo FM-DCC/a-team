@@ -3,6 +3,7 @@ package ateams.syntax
 import cats.parse.Parser.*
 import cats.parse.{LocationMap, Numbers, Parser as P, Parser0 as P0}
 import ateams.syntax.Program.*
+import Proc.*
 import Buffer.*
 import cats.data.NonEmptyList
 
@@ -73,22 +74,26 @@ object Parser :
   private def oneProgram: P[ASystem] =
     string("acts") *> sps *> msg.repSep(sps).map(joinASystems) |
     string("proc") *> sps *> defs.repSep(sps).map(joinASystems) |
+    string("prot") *> sps *> prots.repSep(sps).map(joinASystems) |
     string("init") *> sps *> main
 
   lazy val notKw: P0[Unit] =
-    not(string("acts")|string("proc")|string("init"))
+    not(string("acts")|string("proc")|string("init")|string("prot"))
 
   lazy val msg: P[ASystem] =
     (((notKw.with1 *> varName) <* sps) ~
         ((char(':') *> sps *> msgInfo) |
           char(';').as[MsgInfo](MsgInfo(None,None)))
-    ).map((v,i) => ASystem(Map(v->i),Map(),Map()))
+    ).map((v,i) => ASystem(Map(v->i),Map(),Map(),Map()))
   lazy val defs: P[ASystem] =
     (notKw.with1 *> (procName <* sps <* char('=') <* sps) ~ proc)
-      .map((v, i) => ASystem(Map(),Map(v -> i), Map()))
+      .map((v, i) => ASystem(Map(),Map(v -> i),Map(), Map()))
+  lazy val prots: P[ASystem] =
+    (notKw.with1 *> (procName <* sps <* char('=') <* sps) ~ prot)
+      .map((v, i) => ASystem(Map(),Map(),Map(v -> i), Map()))
   lazy val main: P[ASystem] =
     namedProc.repSep(sps *> string("||") *> sps)
-      .map(l => ASystem(Map(),Map(),
+      .map(l => ASystem(Map(),Map(),Map(),
 //        l.toList.zipWithIndex.map((x,i)=>(Show(x)+"_"+i) -> x).toMap))
         l.toList.zipWithIndex.map((x,i)=> x._1.getOrElse(i.toString) -> x._2).toMap))
 
@@ -125,37 +130,40 @@ object Parser :
       string("global").as(LocInfo(false,false))
     )
 
+  lazy val procOrProt: P[LProc] =
+    proc.backtrack | prot.as(End[LAct]())
+
   // Processes
   lazy val proc: P[LProc] = P.recursive(more =>
     procSum(more).repSep(sps *> char('|') <* sps)
-      .map(l => l.toList.tail.foldLeft(l.head)((t1, t2) => Proc.Par(t1, t2)))
+      .map(l => l.toList.tail.foldLeft(l.head)((t1, t2) => Par(t1, t2)))
   )
   lazy val namedProc:P[(Option[String],LProc)] =
     ((varName <* sps) ~ namedProcCont).map((v,cont) => cont(v)) |
-    procName.map(p => (None,Proc.ProcCall(p)))
+    procName.map(p => (None,ProcCall(p)))
 
   lazy val namedProcCont:P[String => (Option[String],LProc)] =
     char(':') *> sps *> proc.map(p => (str:String) => (Some(str),p))
 
   private def procSum(more:P[LProc]): P[LProc] =
     (procSeq(more)<*sps).repSep(char('+') <* sps)
-      .map(l=>l.toList.tail.foldLeft(l.head)((t1,t2)=>Proc.Choice(t1,t2)))
+      .map(l=>l.toList.tail.foldLeft(l.head)((t1,t2)=>Choice(t1,t2)))
 
   private def procSeq(more:P[LProc]): P[LProc] = P.recursive(t2 =>
     end | procCall | pref(t2) | char('(')*>more.surroundedBy(sps)<*char(')')
   )
 
-  private def end: P[LProc] =
-    char('0').as(Proc.End())
+  private def end[A] =
+    char('0').as(End[A]())
 
-  private def procCall: P[LProc] =
-    procName.map(Proc.ProcCall.apply)
+  private def procCall[A]= // : P[LProc] =
+    procName.map(ProcCall[A].apply)
 
   private def pref(t2:P[LProc]): P[LProc] =
-    ((action <* sps) ~ ((char('.') *> sps *> t2)?))
-      .map(x => Proc.Prefix(x._1,x._2.getOrElse(Proc.End())))
+    ((laction <* sps) ~ ((char('.') *> sps *> t2)?))
+      .map(x => Prefix(x._1,x._2.getOrElse(End())))
 
-  private def action: P[LAct] =
+  private def laction: P[LAct] =
     ((varName <* sps) ~ inOut.?).map {
       case (v, Some(io)) => io(v)
       case (v, None) => LAct.Internal(v)
@@ -166,6 +174,68 @@ object Parser :
   private def inOut: P[String => LAct] =
     char('?') *> anyName.repSep0(char(',')).map(lst => (a:String) => LAct.In(a,lst.toList.toSet)) |
     char('!') *> anyName.repSep0(char(',')).map(lst => (a:String) => LAct.Out(a,lst.toList.toSet))
+
+  // Protocols (too much copy paste, but difficult to reuse)
+  lazy val prot: P[GProc] = P.recursive(more =>
+    protSum(more).repSep(sps *> char('|') <* sps)
+      .map(l => l.toList.tail.foldLeft(l.head)((t1, t2) => Par(t1, t2)))
+  )
+  lazy val namedProt:P[(Option[String],GProc)] =
+    ((varName <* sps) ~ namedProtCont).map((v,cont) => cont(v)) |
+    procName.map(p => (None,ProcCall(p)))
+
+  lazy val namedProtCont:P[String => (Option[String],GProc)] =
+    char(':') *> sps *> prot.map(p => (str:String) => (Some(str),p))
+
+  private def protSum(more:P[GProc]): P[GProc] =
+    (protSeq(more)<*sps).repSep(char('+') <* sps)
+      .map(l=>l.toList.tail.foldLeft(l.head)((t1,t2)=>Choice(t1,t2)))
+
+  private def protSeq(more:P[GProc]): P[GProc] = P.recursive(t2 =>
+    end | procCall | gpref(t2) | char('(')*>more.surroundedBy(sps)<*char(')')
+  )
+
+  private def gpref(t2:P[GProc]): P[GProc] =
+    ((gaction <* sps) ~ ((char('.') *> sps *> t2)?))
+      .map(x => Prefix(x._1,x._2.getOrElse(End())))
+
+  // e.g.: act!fr1,fr2-to1,to2
+  // BEFORE: act!to1,to2
+  private def gaction: P[GAct] =
+    ((varName <* sps) ~ ginOut.?).map {
+      case (v, Some(io)) => io(v)
+      case (v, None) => GAct.IO(v,Set(),Set()) // to check
+    }
+
+  private def ginOut: P[String => GAct] =
+    (char('?') *> sps *> fromTo)
+      .map(lst => (a:String) => 
+        if lst._2.size>1
+        then sys.error(s"Input can only have one target in \"$a?${lst._1.mkString(",")}-${lst._2.mkString(",")}\"")
+        if lst._2.isEmpty && lst._1.size != 1
+        then sys.error(s"Input can only have one target in \"$a?${lst._1.mkString(",")}\"")
+        if lst._2.isEmpty
+        then GAct.In(a,Set(),lst._1.head)
+        else GAct.In(a,lst._1,lst._2.head)
+        ) |
+    (char('!') *> sps *> fromTo)
+      .map(lst => (a:String) =>
+        if lst._1.size>1
+        then sys.error(s"Output can only have one target in \"$a?${lst._1.mkString(",")}-${lst._2.mkString(",")}\"")
+        else GAct.Out(a,lst._1.head,lst._2)) |
+    (char(',') *> sps *> (anyName.repSep(char(',')) ~
+        (sps *> string("->") *> sps *> intercCont)))
+      .map(rest => (fr:String) => GAct.IO(rest._2._2,rest._1.toList.toSet+fr,rest._2._1)) |
+    (string("->") *> sps *> intercCont)
+      .map(intrc => (fr:String) => GAct.IO(intrc._2,Set(fr),intrc._1)) 
+
+  private def fromTo: P[(Set[String],Set[String])] =
+    (anyName.repSep(char(',')) ~ (char('-') *> anyName.repSep(char(','))).?)
+      .map((x,y) => (x.toList.toSet,y.toList.map(_.toList).flatten.toSet))
+
+  private def intercCont: P[(Set[String],String)] = 
+    (anyName.repSep(char(',')) ~ (sps *> char(':') *> sps *> anyName))
+      .map((l1,n) => (l1.toList.toSet,n))
 
 
 

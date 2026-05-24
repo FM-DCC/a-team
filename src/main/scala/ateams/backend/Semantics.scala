@@ -25,7 +25,8 @@ object Semantics extends SOS[GAct,St]:
   case class St(sys: ASystem,
                 buffers: Map[Loc,Buffer])
   case class Ctx(msgs: Map[ActName,MsgInfo], // message declarations
-                 defs: Map[ProcName,LProc]) // definitions of processes)
+                 defs: Map[ProcName,LProc], // definitions of processes
+                 prots: Map[ProcName,GProc]) // definitions of protocols
 
   case class Loc(snd: Option[String], rcv: Option[String])
   type Defs = Map[String,LProc]
@@ -75,7 +76,7 @@ object Semantics extends SOS[GAct,St]:
 
   /** How to evolve a state using syncrhonous actions. */
   def nextSync(canGo: CanGo)(using st:St): Set[(GAct,Procs)] = {
-    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
+    implicit val ctx = getCtx(st)
     // compile map "action-name" -> ([("snd-agent","nextProc","rcv-agt?"), ...] , [("rcv-agent","nextProc","snd-agt?"), ...])
     var syncsMap = Map[String,(List[(String,LProc,Set[String])],List[(String,LProc,Set[String])])]()
     for (a,(n,p)) <- canGo if stype(a) == SyncType.Sync
@@ -125,7 +126,7 @@ object Semantics extends SOS[GAct,St]:
 
   /** How to evolve a state using asyncrhonous sending actions. */
   def nextSend(canGo: CanGo)(using st:St): Set[(GAct,St)] = {
-    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
+    implicit val ctx = getCtx(st)
     //println(s"## can send? ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (LAct.Out(s,to), (n, p)) <- canGo
         if isAsync(stype(s)) //  List(SyncType.Fifo,SyncType.Unsorted) contains stype(a)
@@ -204,7 +205,7 @@ object Semantics extends SOS[GAct,St]:
 
   /** How to evolve a state using asyncrhonous receiving actions. */
   def nextRcv(canGo: CanGo)(using st:St): Set[(GAct,St)] =
-    implicit val ctx = Ctx(st.sys.msgs,st.sys.defs)
+    implicit val ctx = getCtx(st)
     //println(s"## can receive?") // ${canGo.map((a,ag)=>s"\n  - ${Show(a)} @ ${ag._1}").mkString}") //\nstype(${canGo.tail.head._1}) = ${stype(canGo.tail.head._1)}")
     (for case (LAct.In(s,from), (n, p)) <- canGo
         if isAsync(stype(s))
@@ -319,8 +320,9 @@ object Semantics extends SOS[GAct,St]:
     case GAct.In(s,_,_) => s
     case GAct.Out(s,_,_) => s
     case GAct.IO(s,_,_) => s
-  implicit def getCtx(st:St): Ctx =
-    Ctx(st.sys.msgs,st.sys.defs)
+  implicit def getCtx(st:St): Ctx = getCtx(st.sys)
+  def getCtx(as:ASystem): Ctx =
+    Ctx(as.msgs,as.defs,as.prots)
 
   def getLoc(act: String, snd:Option[String], rcv: Option[String])(using ctx:Ctx): Loc =
     stype(act) match
@@ -341,7 +343,7 @@ object Semantics extends SOS[GAct,St]:
   def arit(act: String)(using ctx:Ctx): (Intrv, Intrv) =
     aritSys(act)
   def aritSys(act: String)(using ctx:Ctx): (Intrv, Intrv) =
-    ctx.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action $act."))
+    ctx.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action '$act'. Only know ${ctx.msgs.keys.mkString(",")}"))
 
   def stype(act: String)(using ctx:Ctx): SyncType =
     ctx.msgs.get(act).flatMap(_.st).getOrElse(Internal)//sys.error(s"[st] Unknown action $act."))
