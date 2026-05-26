@@ -1555,13 +1555,9 @@ $c_Lateams_backend_BehaviourCheck$.prototype.hasIncomming__T__sc_Iterable__Z = (
     var x$1$1 = $as_Lateams_backend_Semantics$Loc(x$1);
     if ((x$1$1 !== null)) {
       var this$2 = $n(x$1$1);
-      var x147 = this$2.Lateams_backend_Semantics$Loc__f_snd;
       var this$3 = $n(x$1$1);
-      var x148 = this$3.Lateams_backend_Semantics$Loc__f_rcv;
-      if (((x147 instanceof $c_s_Some) && (ag === $n($as_s_Some(x147)).s_Some__f_value))) {
-        return true
-      };
-      if (((x148 instanceof $c_s_Some) && (ag === $n($as_s_Some(x148)).s_Some__f_value))) {
+      var x143 = this$3.Lateams_backend_Semantics$Loc__f_rcv;
+      if (((x143 instanceof $c_s_Some) && (ag === $n($as_s_Some(x143)).s_Some__f_value))) {
         return true
       }
     };
@@ -4978,7 +4974,7 @@ $c_Lateams_syntax_Show$.prototype.apply__O__T = (function(a) {
     var this$18 = $n(x$1$4);
     var x121 = this$18.Lateams_syntax_Program$GAct$Out__f_to;
     if ($n(x121).isEmpty__Z()) {
-      return ((x119 + "?") + x120)
+      return ((x119 + "!") + x120)
     }
   };
   if ((a instanceof $c_Lateams_syntax_Program$GAct$In)) {

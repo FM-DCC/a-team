@@ -85,7 +85,7 @@ object Show:
     case LAct.Internal(s) => s"[$s]"
   // def apply(a:GAct): String = a match
     case GAct.In(s, from, to) if from.isEmpty => s"$s?$to"
-    case GAct.Out(s, from, to) if to.isEmpty => s"$s?$from"
+    case GAct.Out(s, from, to) if to.isEmpty => s"$s!$from"
     case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-$to"
     case GAct.Out(s, from, to) => s"$s!$from-${to.mkString(",")}"
     case GAct.IO("tau",_,_) => s"τ"

@@ -99,7 +99,7 @@ object BehaviourCheck:
 
   def hasIncomming(ag: String, locs: Iterable[Loc]): Boolean =
     locs.exists {
-      case Loc(Some(`ag`),_) => true
+      //case Loc(Some(`ag`),_) => true
       case Loc(_,Some(`ag`)) => true
       case _ => false
     }
