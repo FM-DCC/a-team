@@ -58,8 +58,11 @@ object CaosConfig extends Configurator[ASystem]:
       -> "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, unsorted@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n c:Ctr || r1:R || r2:R"
       -> "Race variation with buffer-type errors (ill-formed).",
     "race-protocol"
-      -> "acts\n  start:  1->2, sync;\n  finish: 2->1, fifo@snd;\n  log; // default is 1->1, sync;\n\nproc\n	// receiving logs from the Race\n  Logger = log? . Logger\nprot\n  Race = ctr -> r1,r2:start.\n         r1,r2 -> ctr:finish.\n         log!ctr. // or \"log!ctr-srv.\"\n         Race\ninit\n  Race || srv:Logger"
+      -> "acts\n  start:  1->2, sync;\n  finish: 2->1, fifo@snd;\n\nprot\n  Race = ctr -> r1,r2:start.\n         r1,r2 -> ctr:finish.\n         Race\ninit\n  Race"
       -> "Race variation where the protocol is described in a new \"prot\" block, communicating with an existing process.",
+    "race-protocol-log"
+      -> "acts\n  start:  1->2, sync;\n  finish: 2->1, fifo@snd;\n  log; // default is 1->1, sync;\n\nproc\n	// receiving logs from the Race\n  Logger = log? . Logger\nprot\n  Race = ctr -> r1,r2:start.\n         r1,r2 -> ctr:finish.\n         log!ctr. // or \"log!ctr-srv.\"\n         Race\ninit\n  Race || srv:Logger"
+      -> "Race variation where the protocol is described in a new \"prot\" block, communicating with an existing process. The protocol also sends a log message to a logger process, which is defined in the \"proc\" block.",
     "priority-queue"
       -> "// Illustrating priority queues\nacts\n	default: prioqueue@rcv;\n           //fifo@rcv;\n  a:  1->1;\n  b: 1->1;\nproc\n A = a!c.a!c\n B = b!c\n C = a?.C + b?.C\n \ninit\n a:A || b:B || c:C"
       -> "Example of a system with a priority queue, where the order of messages is not FIFO but based on the lexicographic order of their names. In this example, the message 'a' has higher priority than 'b', so if both are sent, 'a' will be received first.",
@@ -151,7 +154,8 @@ object CaosConfig extends Configurator[ASystem]:
     //  "Hide state space info" -> Set("Number of states and edges"),
     //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
     //  "Structure" -> Set("Find structure (WiP)") -> false,
-     "More..." -> Set("Maximum buffers' sizes","Architectural view (WiP)","priority-queue","View pretty data") -> false,
+     "More..." -> Set("Maximum buffers' sizes","Architectural view (WiP)","priority-queue",
+        "race-protocol-log","race-protocol","View pretty data") -> false,
   )
 
   //// Documentation below

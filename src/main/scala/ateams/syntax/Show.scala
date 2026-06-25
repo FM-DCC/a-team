@@ -84,15 +84,17 @@ object Show:
     case LAct.Internal("tau") => s"τ"
     case LAct.Internal(s) => s"[$s]"
   // def apply(a:GAct): String = a match
-    case GAct.In(s, from, to) if from.isEmpty => s"$s?$to"
-    case GAct.Out(s, from, to) if to.isEmpty => s"$s!$from"
-    case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-$to"
-    case GAct.Out(s, from, to) => s"$s!$from-${to.mkString(",")}"
+    // case GAct.In(s, from, to) if from.isEmpty => s"$s?$to"
+    // case GAct.Out(s, from, to) if to.isEmpty => s"$s!$from"
+    // case GAct.In(s, from, to) => s"$s?${from.mkString(",")}-$to"
+    // case GAct.Out(s, from, to) => s"$s!$from-${to.mkString(",")}"
+    case GAct.In(s, from, to) => s"${agSet(from,"_")}→${to}?$s"
+    case GAct.Out(s, from, to) => s"${from}→${agSet(to,"_")}!$s"
     case GAct.IO("tau",_,_) => s"τ"
     case GAct.IO(s,from,to) if from.isEmpty && to.isEmpty => s"[$s]"
     case GAct.IO(s,from,to) => s"${agSet(from)}→${agSet(to)}:$s"
-  private def agSet(s:Set[_]): String =
-    if s.isEmpty then "∅" else s.mkString(",")
+  private def agSet(s:Set[_],empt:String = "∅"): String =
+    if s.isEmpty then empt else s.mkString(",")
 
   def apply(l:LocInfo): String = (l.snd,l.rcv) match
     case (false,false) => "globally"
