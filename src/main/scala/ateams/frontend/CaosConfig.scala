@@ -48,6 +48,9 @@ object CaosConfig extends Configurator[ASystem]:
     "race@global"
       -> "acts\n  start:  1->2, fifo@global;\n  finish: 2->1, fifo@global;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.finish!.R\ninit\n Ctr || R || R"
       -> "Race async - both actions send asynchronously, with a single shared FIFO buffer for eveyone. This results in more states (9) than the synchronous version (2), and one less than the receiver, and allows a runner to start twice before the other starts.",
+    "race-sync-async"
+      -> "\nacts\n start:  1->2, sync;\n finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n R = start?.\n     finish!c.R\ninit\n c:Ctr || r1:R || r2:R"
+      -> "Race sync & async - <code>start</code> action sends synchronously, while the <code>finish</code> action sends asynchronously, with a single FIFO buffer at the controller. This results in a very small specification and state space, probably closer to the developer's intention.",
     "race@unbounded"
       -> "acts\n  start:  1->2, sync;\n  rest:   1->2, fifo@rcv;\n  finish: 2->1, fifo@rcv;\nproc\n Ctr = start!.finish?.Ctr\n     + rest!r1,r2.Ctr\n R = start?.finish!c.R\n   + rest?.R\ninit\n c:Ctr || r1:R || r2:R"
       -> "Variation of the race example with an unbounded fifo growing forever.",
