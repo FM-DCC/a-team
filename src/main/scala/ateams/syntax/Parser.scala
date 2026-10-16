@@ -238,7 +238,6 @@ object Parser :
       .map((l1,n) => (l1.toList.toSet,n))
 
 
-
 /* 
   //////////////////////////////
   // Examples and experiments //
