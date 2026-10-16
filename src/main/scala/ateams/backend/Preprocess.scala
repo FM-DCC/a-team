@@ -20,12 +20,12 @@ object Preprocess:
 
   //// all preprocesses ////
   def apply(sy:ASystem): ASystem =
-    checkGuardedness(
+    //checkGuardedness(
     projectInits(
     projectProts(
     loadDefault(
       sy
-    ))))
+    )))//)
 
   ////// Preprocess: expand "default" synchronisation types ////
 
@@ -52,12 +52,28 @@ object Preprocess:
         case Proc.Choice(p1, p2) =>  getProcCalls(ps-p+p1,getProcCalls(ps-p+p2,done))
         case Proc.Par(p1, p2) => getProcCalls(ps-p+p1,getProcCalls(ps-p+p2,done))
       
+  def getAllAgents(sy: ASystem): Set[Agent] =
+    given s: ASystem = sy
+    given st: Set[ProcName] = Set()
+    sy.prots.values.toSet.flatMap(getAllAgents)
+
+  def getAllAgents(p:GProc)(using sy:ASystem, done: Set[ProcName]): Set[Agent] = p match
+    case Proc.End() => Set()
+    case Proc.ProcCall(pn) =>
+      if done.contains(pn) then Set()
+      else
+        val p2 = sy.prots.getOrElse(pn,sys.error(s"Protocol named $pn not found."))
+        getAllAgents(p2)(using sy,done+pn)
+    case Proc.Prefix(act, p) => getAgents(act)++getAllAgents(p)
+    case Proc.Choice(p1, p2) => getAllAgents(p1)++getAllAgents(p2)
+    case Proc.Par(p1, p2) => getAllAgents(p1)++getAllAgents(p2)
+
   def getAgents(sy: ASystem): Set[Agent] =
     sy.prots.values.toSet.flatMap(getAgents)
 
   def getAgents(p:GProc): Set[Agent] = p match
     case Proc.End() => Set()
-    case Proc.ProcCall(p) => Set()
+    case Proc.ProcCall(pn) => Set()
     case Proc.Prefix(act, p) => getAgents(act)++getAgents(p)
     case Proc.Choice(p1, p2) => getAgents(p1)++getAgents(p2)
     case Proc.Par(p1, p2) => getAgents(p1)++getAgents(p2)
@@ -81,16 +97,28 @@ object Preprocess:
   def projectProts(sy:ASystem): ASystem =
     val newProcs =
       for (pn,prot) <- sy.prots; ag<-getAgents(prot); proc <- projectProc(prot,ag)(using sy).toSet
-      yield (mkPName(pn,ag), proc)
+      yield (mkPName(pn,ag), fixUnguardedness(mkPName(pn,ag),proc,sy))
     sy.copy(defs = sy.defs ++ newProcs)
 
+  def fixUnguardedness(pn:ProcName,proc: LProc, sy: ASystem): LProc = proc match
+    case Proc.ProcCall(`pn`) => Proc.End()
+    case Proc.Choice(p1, p2) => 
+        Proc.Choice(fixUnguardedness(pn,p1,sy), fixUnguardedness(pn,p2,sy))
+    case Proc.Par(p1, p2) =>
+      Proc.Par(fixUnguardedness(pn,p1,sy), fixUnguardedness(pn,p2,sy))
+    case _ => proc
 
   // Project a single process - None means nothing was projected
   def projectProc(p:GProc,ag:Agent)(using sy:ASystem)
       : Option[LProc] = 
     p match
       case Proc.End() =>  Some(Proc.End())
-      case Proc.ProcCall(p2) => Some(Proc.ProcCall(mkPName(p2,ag)))
+      case Proc.ProcCall(p2) =>
+        val nextProcs = findNextProcs(p2,ag)(using sy,Set())
+        if nextProcs.isEmpty then None
+        else
+          val np = nextProcs.map(pn => Proc.ProcCall(mkPName(pn,ag)))
+          Some(np.reduce((p1,p2) => Proc.Choice(p1,p2)))        
       case Proc.Prefix(act, p2) => projectAct(act,ag) match
         case None => projectProc(p2,ag)
         case Some(lact) =>
@@ -106,7 +134,26 @@ object Preprocess:
         case (None,Some(x)) => Some(x)
         case (Some(x),Some(y)) => Some(Proc.Par(x,y))
     
-  def mkPName(pn:ProcName,a:Agent): ProcName = s"$pn$$$a"
+  def mkPName(pn:ProcName,a:Agent): ProcName = s"$pn/$a" //s"$pn$$$a"
+
+  // find global processes (or protocols) that can call agent ag in the next step, starting with process pn
+  def findNextProcs(pn:ProcName,ag:Agent)(using sy:ASystem,done:Set[ProcName]=Set()): Set[ProcName] =
+    if done.contains(pn) then Set()
+    else
+      sy.prots.get(pn) match
+        case None => sys.error(s"Protocol $pn not found.")
+        case Some(prot) => findNextProcs(pn,prot,ag)(using sy,done+pn)
+  // find global processes (or protocols) that can call agent ag in the next step, starting with process pn
+  def findNextProcs(pn:ProcName,p:GProc,ag:Agent)(using sy:ASystem,done:Set[ProcName]): Set[ProcName] =
+    p match
+      case Proc.End() => Set()
+      case Proc.ProcCall(p2) => findNextProcs(p2,ag)
+      case Proc.Prefix(GAct.In(_,_,`ag`), p2) => Set(pn)
+      case Proc.Prefix(GAct.Out(_,`ag`,_), p2) => Set(pn)
+      case Proc.Prefix(GAct.IO(_,from,to), p2) if from(ag) || to(ag) => Set(pn)
+      case Proc.Prefix(_, p2) => findNextProcs(pn,p2,ag)
+      case Proc.Choice(p1, p2) => findNextProcs(pn,p1,ag)++findNextProcs(pn,p2,ag)
+      case Proc.Par(p1, p2) => findNextProcs(pn,p1,ag)++findNextProcs(pn,p2,ag)
 
   // project an action
   def projectAct(act:GAct,ag:Agent)(using sy:ASystem): Option[LAct] =
@@ -130,7 +177,7 @@ object Preprocess:
   //// Project the INIT part ////
 
   def projectInits(sy:ASystem): ASystem =
-    val ags = getAgents(sy)
+    val ags = getAllAgents(sy)
     projectInits(sy,ags)
 
   def projectInits(sy:ASystem,ags:Set[Agent]): ASystem =
@@ -140,11 +187,11 @@ object Preprocess:
     val oldMain = sy.main.filterNot((ag,proc) => isProt(proc))
     val newMain = for (_,proc) <- sy.main.toSet
                       (ag,prot) <- expandProtoc(proc,ags,sy)
-                      if prot match
-                          case Proc.ProcCall(newName) =>
+                      // if prot match
+                          // case Proc.ProcCall(newName) =>
                             //println(s"CHECKING if $newName appears in ${sy.defs.mkString(",")}")
-                            sy.defs.contains(newName)
-                          case _ => true
+                            // sy.defs.contains(newName)
+                          // case _ => true
               yield
                 if sy.main.contains(ag) then
                   sys.error(s"Agent $ag appears in ${Show(proc)}, but it already exists.")
@@ -159,7 +206,12 @@ object Preprocess:
   def expandProtoc(proc:LProc,ags:Set[Agent],sy:ASystem): Set[(Agent,LProc)] =
     proc match
       case Proc.ProcCall(pn) if sy.prots.contains(pn) => 
-        ags.map(ag => ag -> Proc.ProcCall(mkPName(pn,ag)))
+        ags.map(ag => ag -> {
+          val nextProcs = findNextProcs(pn,ag)(using sy,Set())
+          val np = nextProcs.map(pn2 => Proc.ProcCall(mkPName(pn2,ag)))
+          np.reduce((p1,p2) => Proc.Choice(p1,p2))
+          //Proc.ProcCall(mkPName(pn,ag)))
+        })
       case _ => Set()
 
 

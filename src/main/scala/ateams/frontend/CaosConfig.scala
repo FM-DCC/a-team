@@ -66,6 +66,9 @@ object CaosConfig extends Configurator[ASystem]:
     "race-protocol-log"
       -> "acts\n  start:  1->2, sync;\n  finish: 2->1, fifo@snd;\n  log; // default is 1->1, sync;\n\nproc\n	// receiving logs from the Race\n  Logger = log? . Logger\nprot\n  Race = ctr -> r1,r2:start.\n         r1,r2 -> ctr:finish.\n         log!ctr. // or \"log!ctr-srv.\"\n         Race\ninit\n  Race || srv:Logger"
       -> "Race variation where the protocol is described in a new \"prot\" block, communicating with an existing process. The protocol also sends a log message to a logger process, which is defined in the \"proc\" block.",
+    "By corinne"
+      -> "acts\n  default: sync; //fifo@rcv; // fifo@global (prob)\n  req; res; ok; cnt;\n  noRef; ref; bye;\n\nprot\n	P0 = c->s:req\n  	  .s->c:res\n    	.P2\n  P0 = c->s:req\n      .s->c:res\n      .P2\n  P2 = s->l:cnt.P3\n  P3 = c->s:ok .P0\n     + c->s:ref.P4\n     + c->s:bye\n      .s->l:bye\n  P4 = s->c:res  .P2\n     + s->c:noRef.P3\n\ninit\n	P0"
+      -> "Example borrowed from [1] used to demonstrate the Corinne tool for choreographic automata. In Corine interactions are synchronous, hence variations with asynchronous communication of the same protocol are only possible in ATeam.</br></br> [1] Orlando S., Pasquale V.D., Barbanera F., Lanese I., Tuosto E. (2021). <a href=\"https://doi.org/10.1007/978-3-030-90636-8_5\">Corinne, a Tool for Choreography Automata</a>. Cham : Springer Science and Business Media Deutschland GmbH.",
     "priority-queue"
       -> "// Illustrating priority queues\nacts\n	default: prioqueue@rcv;\n           //fifo@rcv;\n  a:  1->1;\n  b: 1->1;\nproc\n A = a!c.a!c\n B = b!c\n C = a?.C + b?.C\n \ninit\n a:A || b:B || c:C"
       -> "Example of a system with a priority queue, where the order of messages is not FIFO but based on the lexicographic order of their names. In this example, the message 'a' has higher priority than 'b', so if both are sent, 'a' will be received first.",
@@ -158,7 +161,7 @@ object CaosConfig extends Configurator[ASystem]:
     //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
     //  "Structure" -> Set("Find structure (WiP)") -> false,
      "More..." -> Set("Maximum buffers' sizes","Architectural view (WiP)","priority-queue",
-        "race-protocol-log","race-protocol","View pretty data") -> false,
+        "race-protocol-log","race-protocol","View pretty data","By corinne") -> false,
   )
 
   //// Documentation below
