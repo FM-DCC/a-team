@@ -82,6 +82,7 @@ object Preprocess:
     case GAct.In(a, from, to) => Set(to) //from+to
     case GAct.Out(a, from, to) => Set(from) // to+from
     case GAct.IO(a, from, to) => from++to
+    case GAct.Internal(a, ag) => Set(ag)
   
   // def collectProtoc(sy:ASystem): Set[GProc] = 
   //   for proc <- sy.main.values.toSet; prot <- collectProtoc(proc,sy)

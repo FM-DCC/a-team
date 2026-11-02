@@ -68,7 +68,7 @@ object Semantics extends SOS[GAct,St]:
   def nextInternal(canGo: CanGo)(using st:St): Set[(GAct,Procs)] =
     // for case (a@GAct.IO(_,_,_),(n,p)) <- canGo
     for case (a@LAct.Internal(an),(n,p)) <- canGo
-      yield  GAct.IO(an,Set(),Set()) -> Map(n->p) // just the updates
+      yield  GAct.Internal(an,n) -> Map(n->p) // just the updates
 
   ///////////////////////////////////////
   // Semantics of synchronous messages //
@@ -320,6 +320,7 @@ object Semantics extends SOS[GAct,St]:
     case GAct.In(s,_,_) => s
     case GAct.Out(s,_,_) => s
     case GAct.IO(s,_,_) => s
+    case GAct.Internal(s,_) => s
   implicit def getCtx(st:St): Ctx = getCtx(st.sys)
   def getCtx(as:ASystem): Ctx =
     Ctx(as.msgs,as.defs,as.prots)
@@ -343,7 +344,8 @@ object Semantics extends SOS[GAct,St]:
   def arit(act: String)(using ctx:Ctx): (Intrv, Intrv) =
     aritSys(act)
   def aritSys(act: String)(using ctx:Ctx): (Intrv, Intrv) =
-    ctx.msgs.get(act).flatMap(_.arity).getOrElse(sys.error(s"[ar] Unknown action '$act'. Only know ${ctx.msgs.keys.mkString(",")}"))
+    ctx.msgs.get(act).flatMap(_.arity)
+    .getOrElse(sys.error(s"[ar] Unknown action '$act'. Only know ${ctx.msgs.keys.mkString(",")}"))
 
   def stype(act: String)(using ctx:Ctx): SyncType =
     ctx.msgs.get(act).flatMap(_.st).getOrElse(Internal)//sys.error(s"[st] Unknown action $act."))

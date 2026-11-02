@@ -33,6 +33,7 @@ object FindStructure:
     (act match
       case GAct.In(a, from, to) =>  Set()
       case GAct.Out(a, from, to) => Set()
+      case GAct.Internal(_,_) => Set()
       case GAct.IO(a, from, to) => 
         for in <- from; out <- to yield
           // s"  ${ids(out)}([${fix(out)}]);\n" +

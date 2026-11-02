@@ -90,9 +90,13 @@ object Show:
     // case GAct.Out(s, from, to) => s"$s!$from-${to.mkString(",")}"
     case GAct.In(s, from, to) => s"${agSet(from,"_")}→${to}?$s"
     case GAct.Out(s, from, to) => s"${from}→${agSet(to,"_")}!$s"
-    case GAct.IO("tau",_,_) => s"τ"
+    // case GAct.IO("tau",from,to) if to.isEmpty && from.size==1 => s"${from.head}:τ"
+    // case GAct.IO("tau",_,_) => s"τ"
     case GAct.IO(s,from,to) if from.isEmpty && to.isEmpty => s"[$s]"
+    case GAct.IO(s,from,to) if to.isEmpty && from.size==1 => s"[${from.head}:$s]"
     case GAct.IO(s,from,to) => s"${agSet(from)}→${agSet(to)}:$s"
+    case GAct.Internal("tau",ag) => s"[$ag:τ]"
+    case GAct.Internal(s,ag) => s"[$ag:$s]"
   private def agSet(s:Set[_],empt:String = "∅"): String =
     if s.isEmpty then empt else s.mkString(",")
 

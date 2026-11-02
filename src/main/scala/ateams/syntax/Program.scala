@@ -2,7 +2,6 @@ package ateams.syntax
 
 import Buffer.*
 
-
 /**
  * Internal structure to represent terms in A-Teams.
  */
@@ -45,6 +44,7 @@ object Program:
     case In (a:ActName, from:Set[Agent], to:Agent)
     case Out(a:ActName, from:Agent, to:Set[Agent])
     case IO (a:ActName, from:Set[Agent], to:Set[Agent])
+    case Internal(a:ActName, ag:Agent)
 
   /** Fields for the declaration of a message */
   case class MsgInfo(arity: Option[(Intrv,Intrv)], st:Option[SyncType])
