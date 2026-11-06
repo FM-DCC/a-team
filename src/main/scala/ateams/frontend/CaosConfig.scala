@@ -167,7 +167,7 @@ object CaosConfig extends Configurator[ASystem]:
   override val toggles: List[Toggle] = List(
     "Well-behaved" -> Set("Well-behaved?") -> false,
     "Well-behaved (simpler)" -> Set("Well-behaved? (without responsiveness/receptiveness)"),
-    "hide" -> Set("2PC async","2PC sync","hide") -> false,
+    "hide" -> Set("2PC async","2PC sync","hide") -> false, // also hide the button
     //  "Hide semantics" -> Set("Run semantics", "Build LTS", "Local components"),
     //  "Hide state space info" -> Set("Number of states and edges"),
     //  "Max buffers' sizes" -> Set("Maximum buffers' sizes") -> false,
